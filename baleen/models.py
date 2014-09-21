@@ -20,6 +20,7 @@ Object Document Models for use with Mongo and mongoengine
 import hashlib
 import mongoengine as me
 
+from datetime import datetime
 from baleen.config import settings
 
 ##########################################################################
@@ -53,12 +54,17 @@ def connect(**kwargs):
 
 class Feed(me.Document):
 
-    type      = me.StringField( required=True, choices=FEEDTYPES, default="rss")
-    title     = me.StringField( max_length=256 )
-    xmlurl    = me.URLField( required=True, unique=True )
+    type      = me.StringField(required=True, choices=FEEDTYPES, default="rss")
+    title     = me.StringField(max_length=256)
+    xmlurl    = me.URLField(required=True, unique=True)
     htmlurl   = me.URLField()
-    category  = me.StringField( required=True )
+    category  = me.StringField(required=True)
+    created   = me.DateTimeField(default=datetime.now, required=True)
+    updated   = me.DateTimeField(default=datetime.now, required=True)
 
+    @classmethod
+    def pre_save(cls, sender, document, **kwargs):
+        document.updated = datetime.now()
 
     meta      = {
         'collection': 'feeds',
@@ -72,6 +78,13 @@ class Post(me.Document):
     pubdate   = me.DateTimeField()
     content   = me.StringField( required=True )
     signature = me.StringField( required=True, max_length=64, min_length=64, unique=True )
+    created   = me.DateTimeField(default=datetime.now, required=True)
+    updated   = me.DateTimeField(default=datetime.now, required=True)
+
+    @classmethod
+    def pre_save(cls, sender, document, **kwargs):
+        document.updated   = datetime.now()
+        document.signature = document.hash()
 
     meta      = {
         'collection': 'posts',
@@ -85,7 +98,9 @@ class Post(me.Document):
         sha.update(self.content)
         return sha.hexdigest()
 
-    def save(self, *args, **kwargs):
-        if not self.signature:
-            self.signature = self.hash()
-        return super(Post, self).save(*args, **kwargs)
+##########################################################################
+## Signals
+##########################################################################
+
+me.signals.pre_save.connect(Feed.pre_save, sender=Feed)
+me.signals.pre_save.connect(Post.pre_save, sender=Post)

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # baleen
 # Admin script for executing Baleen commands.
 #
@@ -20,9 +21,52 @@ Admin script for executing Baleen commands.
 import sys
 import baleen
 import argparse
+import baleen.opml
+
+##########################################################################
+## Module Constants
+##########################################################################
+
+PROG = {
+    "version": baleen.get_version(),
+    "epilog": "Not intended for production use.",
+    "description": "Administrative utility for Baleen ingestor.",
+}
+
+##########################################################################
+## Command Functions
+##########################################################################
+
+def ingest_opml(args):
+    """
+    Imports the OPML file to MongoDB
+    """
+    count = 0
+    for path in args.opml:
+        count += baleen.opml.ingest(path)
+    return "Ingested %i feeds from %i OPML files" % (count, len(args.opml))
+
+##########################################################################
+## Main Method and functionality
+##########################################################################
 
 def main(*argv):
-    pass
+
+    parser     = argparse.ArgumentParser(**PROG)
+    subparsers = parser.add_subparsers(title='commands', description='Baleen utilities')
+
+    # Ingest Command
+    ingest_parser = subparsers.add_parser('import', help='Import a list of feeds from an OPML file.')
+    ingest_parser.add_argument('opml', nargs="+", type=str, help='OPML file(s) to import to database.')
+    ingest_parser.set_defaults(func=ingest_opml)
+
+    # Handle input from the command line
+    args = parser.parse_args()                # Parse the arguments
+    try:
+        msg = "%s\n" % str(args.func(args))    # Call the default function
+        parser.exit(0, msg)                    # Exit clearnly with message
+    except Exception as e:
+        parser.error(str(e))                   # Exit with error
 
 if __name__ == '__main__':
     main(*sys.argv[1:])
