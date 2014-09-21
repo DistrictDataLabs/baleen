@@ -1,1 +1,8 @@
 # Configuration file for the Baleen application
+
+debug: true
+testing: false
+database:
+    host: localhost
+    port: 27017
+    name: baleen
