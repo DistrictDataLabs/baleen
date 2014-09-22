@@ -40,6 +40,15 @@ PROG = {
 ## Command Functions
 ##########################################################################
 
+def ingest_feeds(args):
+    """
+    Ingests the RSS feeds to MongoDB
+    """
+    db.connect()
+    ingestor = baleen.feed.MongoFeedIngestor()
+    ingestor.ingest(verbose=args.verbose)
+    return ""
+
 def ingest_opml(args):
     """
     Imports the OPML file to MongoDB
@@ -68,9 +77,14 @@ def main(*argv):
     subparsers = parser.add_subparsers(title='commands', description='Baleen utilities')
 
     # Ingest Command
-    ingest_parser = subparsers.add_parser('import', help='Import a list of feeds from an OPML file.')
-    ingest_parser.add_argument('opml', nargs="+", type=str, help='OPML file(s) to import to database.')
-    ingest_parser.set_defaults(func=ingest_opml)
+    ingest_parser = subparsers.add_parser('ingest', help='Ingests the RSS feeds to MongoDB')
+    ingest_parser.add_argument('-v', '--verbose', action="store_true", default=False, help='Print details.')
+    ingest_parser.set_defaults(func=ingest_feeds)
+
+    # Import Command
+    import_parser = subparsers.add_parser('import', help='Import a list of feeds from an OPML file.')
+    import_parser.add_argument('opml', nargs="+", type=str, help='OPML file(s) to import to database.')
+    import_parser.set_defaults(func=ingest_opml)
 
     # Summary Command
     summary_parser = subparsers.add_parser('summary', help='Performs a summary of the fields that will be returned on ingest.')
@@ -79,11 +93,11 @@ def main(*argv):
 
     # Handle input from the command line
     args = parser.parse_args()                # Parse the arguments
-    try:
-        msg = "%s\n" % str(args.func(args))    # Call the default function
-        parser.exit(0, msg)                    # Exit clearnly with message
-    except Exception as e:
-        parser.error(str(e))                   # Exit with error
+    # try:
+    msg = "%s\n" % str(args.func(args))    # Call the default function
+    parser.exit(0, msg)                    # Exit clearnly with message
+    # except Exception as e:
+    #     parser.error(str(e))                   # Exit with error
 
 if __name__ == '__main__':
     main(*sys.argv[1:])

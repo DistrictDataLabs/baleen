@@ -66,6 +66,7 @@ class Feed(me.DynamicDocument):
 
     version   = me.StringField(choices=FEEDTYPES)
     etag      = me.StringField()
+    modified  = me.StringField()
     title     = me.StringField(max_length=256)
     link      = me.URLField(required=True, unique=True)
     urls      = me.DictField()
@@ -92,6 +93,8 @@ class Feed(me.DynamicDocument):
 
     def __unicode__(self):
         return self.title
+
+
 
 class Post(me.DynamicDocument):
 

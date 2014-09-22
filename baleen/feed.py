@@ -29,6 +29,7 @@ from copy import copy
 from baleen.opml import OPML
 from collections import Counter
 from baleen.utils import localnow
+from baleen.logger import IngestLogger
 from dateutil import parser as dtparser
 
 ##########################################################################
@@ -154,6 +155,12 @@ class FeedIngestor(object):
         meta['fields'] = dict(flds)
         return meta
 
+    def ingest(self):
+        """
+        Intended as the entry point for ingestion
+        """
+        raise NotImplementedError("Subclasses must implement")
+
     def __len__(self):
         return sum(1 for feed in self.feeds())
 
@@ -166,8 +173,11 @@ class MongoFeedIngestor(FeedIngestor):
     Uses the Mongo feed collection to go out and ingest posts.
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger', IngestLogger())
+        self.status = "PENDING"
         self.current_feed = None
+        self.counts = None
 
     def get_feed_urls(self):
         """
@@ -178,53 +188,80 @@ class MongoFeedIngestor(FeedIngestor):
         for feed in db.Feed.objects.only('link'):
             yield feed.link
 
-    def feeds(self):
+    def update_feed(self, feed, result):
+        """
+        Updates a feed with information from the feedparser result.
+        """
+        feed.fetched = localnow()
+        if 'etag' in result:     feed.etag     = result.etag
+        if 'modified' in result: feed.modified = result.modified
+        if 'version' in result:  feed.version  = result.version
+        if 'href' in result:     feed.link     = result.href
+
+        for key, value in result.feed.items():
+            if key in ('updated', 'updated_parsed', 'id',
+                       'published', 'published_parsed', 'category'):
+                # Ignore these generated or protected fields
+                continue
+
+            elif key == 'link':
+                feed.urls['htmlurl'] = value
+
+            elif key == 'links':
+                for idx, link in enumerate(value):
+                    if 'rel' in link:
+                        feed.urls[link['rel'] + str(idx)] = link['href']
+                    else:
+                        feed.urls["link%i" % idx] = link['href']
+            else:
+                setattr(feed, key, value)
+
+        return feed
+
+    def feeds(self, save=True):
         """
         Returns the feedparser feed for each url in the ingestor.
         """
         for url in self.get_feed_urls():
-            feed   = db.Feed.objects.get(link=url)
-            result = feedparser.parse(url, etag=feed.etag)
-            if not result.entries:
-                # Nothing returned, continue
-                continue
-
-            # Update feed properties
-            feed.fetched = localnow()
-            if 'etag' in result:    feed.etag    = result.etag
-            if 'version' in result: feed.version = result.version
-            if 'href' in result:    feed.link    = result.href
-
-            for key, value in result.feed.items():
-                if key in ('updated', 'updated_parsed', 'id',
-                           'published', 'published_parsed', 'category'):
-                    # Ignore these generated or protected fields
+            try:
+                feed   = db.Feed.objects.get(link=url)
+                result = feedparser.parse(url, etag=feed.etag, modified=feed.modified)
+                if not result.entries:
+                    # Nothing returned, continue
+                    self.logger.warning("No entries available for feed %s (%s)" %
+                                        (feed.title, feed.id))
                     continue
 
-                elif key == 'link':
-                    feed.urls['htmlurl'] = value
+                # Update feed properties
+                feed = self.update_feed(feed, result)
+                self.current_feed = feed
 
-                elif key == 'links':
-                    for idx, link in enumerate(value):
-                        if 'rel' in link:
-                            feed.urls[link['rel'] + str(idx)] = link['href']
-                        else:
-                            feed.urls["link%i" % idx] = link['href']
-                else:
-                    setattr(feed, key, value)
+                if save: feed.save()
+                self.counts['feeds'] += 1
 
-            feed.save()
-            self.current_feed = feed
-            yield result
+                yield result
+            except Exception as e:
+                self.logger.error("Feed Error for feed %s (%s): %s" % (feed.title, feed.id, str(e)))
+                self.counts['errors'] += 1
+                continue
 
-    def posts(self):
+    def posts(self, save=True):
         """
         For every post that is fetched by super, yields the models.Post
         """
-        for post in super(MongoFeedIngestor, self).posts():
-            post = db.Post(feed=self.current_feed, **post)
-            post.save()
-            yield post
+        for idx, post in enumerate(super(MongoFeedIngestor, self).posts()):
+            try:
+                post = db.Post(feed=self.current_feed, **post)
+
+                if save: post.save()
+                self.counts['entries'] += 1
+
+                yield post
+            except Exception as e:
+                self.logger.error("Post Error for feed %s (%s) on entry %i: %s"
+                    % (self.current_feed.title, self.current_feed.id, idx, str(e)))
+                self.counts['errors'] += 1
+                continue
 
     def wrangle(self, entry):
         """
@@ -234,6 +271,25 @@ class MongoFeedIngestor(FeedIngestor):
         entry = super(MongoFeedIngestor, self).wrangle(entry)
         if 'id' in entry: del entry['id']
         return entry
+
+    def ingest(self, verbose=True):
+        """
+        Entry point to ingestion
+        """
+        self.logger.info("Starting Ingest of Feeds from Mongo to Posts in Mongo")
+        self.status = "INGESTING"
+        self.counts = Counter()
+
+        for post in self.posts():
+            if verbose:
+                print post
+
+        self.status  = "FINISHED"
+        msg = "Finished Ingest: %(feeds)i feeds, %(entries)i entries, %(errors)i errors"
+        msg = msg % self.counts
+        self.logger.info(msg)
+        if verbose: print msg
+
 
     def __len__(self):
         return db.Feed.objects.count()
@@ -261,5 +317,4 @@ if __name__ == '__main__':
     db.connect()
     ingestor = MongoFeedIngestor()
     # ingestor = OPMLFeedIngestor('fixtures/feedly.opml')
-    for post in ingestor.posts():
-        print post
+    ingestor.ingest()
