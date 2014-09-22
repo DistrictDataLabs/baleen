@@ -19,9 +19,12 @@ Admin script for executing Baleen commands.
 ##########################################################################
 
 import sys
+import json
 import baleen
 import argparse
 import baleen.opml
+import baleen.feed
+import baleen.models as db
 
 ##########################################################################
 ## Module Constants
@@ -46,6 +49,15 @@ def ingest_opml(args):
         count += baleen.opml.ingest(path)
     return "Ingested %i feeds from %i OPML files" % (count, len(args.opml))
 
+def summary(args):
+    """
+    Performs a summary of the fields that will be returned on ingest
+    """
+    db.connect()
+    ingestor = baleen.feed.MongoFeedIngestor()
+    json.dump(ingestor.fields(), args.out, indent=2)
+    return ""
+
 ##########################################################################
 ## Main Method and functionality
 ##########################################################################
@@ -59,6 +71,11 @@ def main(*argv):
     ingest_parser = subparsers.add_parser('import', help='Import a list of feeds from an OPML file.')
     ingest_parser.add_argument('opml', nargs="+", type=str, help='OPML file(s) to import to database.')
     ingest_parser.set_defaults(func=ingest_opml)
+
+    # Summary Command
+    summary_parser = subparsers.add_parser('summary', help='Performs a summary of the fields that will be returned on ingest.')
+    summary_parser.add_argument('-w', '--write', dest='out', type=argparse.FileType('w'), default=sys.stdout, help='File to write the summary out to.')
+    summary_parser.set_defaults(func=summary)
 
     # Handle input from the command line
     args = parser.parse_args()                # Parse the arguments

@@ -36,8 +36,13 @@ def ingest(path, **kwargs):
     opml = OPML(path)
     rows = 0
     for feed in opml:
-        feed.pop('text')        # Unneeded for database
-        feed = db.Feed(**feed)  # Construct without an ObjectId
+        feed.pop('type')                    # Unneeded for database
+        feed.pop('text')                    # Unneeded for database
+        feed['link'] = feed.pop('xmlurl')   # Rename the XML URL
+        feed['urls'] = {
+            'htmlurl': feed.pop('htmlurl')  # Add htmlurl to urls
+        }
+        feed = db.Feed(**feed)              # Construct without an ObjectId
 
         try:
             feed.save()

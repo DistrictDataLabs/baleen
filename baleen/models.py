@@ -28,10 +28,20 @@ from baleen.config import settings
 ##########################################################################
 
 FEEDTYPES = (
-    'rss',
     'atom',
-    'xml',
-    'json'
+    'atom01',
+    'atom02',
+    'atom03',
+    'atom10',
+    'cdf',
+    'rss',
+    'rss090',
+    'rss091n',
+    'rss092',
+    'rss093',
+    'rss094',
+    'rss10',
+    'rss20',
 )
 
 ##########################################################################
@@ -52,13 +62,15 @@ def connect(**kwargs):
 ## Models
 ##########################################################################
 
-class Feed(me.Document):
+class Feed(me.DynamicDocument):
 
-    type      = me.StringField(required=True, choices=FEEDTYPES, default="rss")
+    version   = me.StringField(choices=FEEDTYPES)
+    etag      = me.StringField()
     title     = me.StringField(max_length=256)
-    xmlurl    = me.URLField(required=True, unique=True)
-    htmlurl   = me.URLField()
+    link      = me.URLField(required=True, unique=True)
+    urls      = me.DictField()
     category  = me.StringField(required=True)
+    fetched   = me.DateTimeField(default=None)
     created   = me.DateTimeField(default=datetime.now, required=True)
     updated   = me.DateTimeField(default=datetime.now, required=True)
 
@@ -70,13 +82,25 @@ class Feed(me.Document):
         'collection': 'feeds',
     }
 
-class Post(me.Document):
+    @property
+    def xmlurl(self):
+        return self.link
+
+    @property
+    def htmlurl(self):
+        return self.urls.get('htmlurl')
+
+    def __unicode__(self):
+        return self.title
+
+class Post(me.DynamicDocument):
 
     feed      = me.ReferenceField(Feed)
     title     = me.StringField( max_length=512 )
     url       = me.URLField( required=True, unique=True )
     pubdate   = me.DateTimeField()
     content   = me.StringField( required=True )
+    tags      = me.ListField(me.StringField(max_length=256))
     signature = me.StringField( required=True, max_length=64, min_length=64, unique=True )
     created   = me.DateTimeField(default=datetime.now, required=True)
     updated   = me.DateTimeField(default=datetime.now, required=True)
@@ -95,8 +119,11 @@ class Post(me.Document):
         Returns the SHA256 hash of the content.
         """
         sha = hashlib.sha256()
-        sha.update(self.content)
+        sha.update(self.content.encode('UTF-8'))
         return sha.hexdigest()
+
+    def __unicode__(self):
+        return self.title
 
 ##########################################################################
 ## Signals
