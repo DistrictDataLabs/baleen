@@ -94,8 +94,6 @@ class Feed(me.DynamicDocument):
     def __unicode__(self):
         return self.title
 
-
-
 class Post(me.DynamicDocument):
 
     feed      = me.ReferenceField(Feed)

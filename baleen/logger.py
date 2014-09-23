@@ -20,6 +20,7 @@ Logging utility for Baleen
 import logging
 import logging.config
 from baleen.utils import *
+from baleen.config import settings
 
 ##########################################################################
 ## Logging configuration
@@ -50,6 +51,10 @@ DEFAULT_LOGGING = {
             'filename': 'baleen.log',
             'maxBytes': '16777216', # 16 MB
             'formatter': 'simple',
+        },
+        'mongolog': {
+            'level': 'INFO',
+            'class': 'baleen.mongolog.MongoHandler',
         }
     },
     'loggers': {
@@ -60,7 +65,7 @@ DEFAULT_LOGGING = {
         },
         'baleen.ingest': {
             'level': 'INFO',
-            'handlers': ['logfile'],
+            'handlers': ['logfile', 'mongolog'],
             'propagate': True,
         }
     },
@@ -68,6 +73,10 @@ DEFAULT_LOGGING = {
 
 # SET LOGGING CONFIG HERE!!
 logging.config.dictConfigClass(DEFAULT_LOGGING).configure()
+
+##########################################################################
+## Logger Class
+##########################################################################
 
 class Logger(object):
     """
@@ -118,3 +127,4 @@ class IngestLogger(Logger):
     """
 
     logger = logging.getLogger('baleen.ingest')
+
