@@ -55,3 +55,4 @@ target/
 
 # Local configurations
 conf/baleen.yaml
+fixtures/corpus

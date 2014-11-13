@@ -123,6 +123,21 @@ class Post(me.DynamicDocument):
         sha.update(self.content.encode('UTF-8'))
         return sha.hexdigest()
 
+    def htmlize(self):
+        """
+        Returns an HTML string of the content of the Post
+        """
+
+        template = (
+            u"<!doctype html>\n"
+            u"<html>\n"
+            u"<head>\n\t<meta charset=\"utf-8\"\n>"
+            u"\t<title>%s</title>\n</head>\n"
+            u"<body>\n\n%s\n\n</body>\n</html>\n"
+        )
+
+        return template % (self.title, self.content)
+
     def __unicode__(self):
         return self.title
 

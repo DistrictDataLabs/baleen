@@ -67,6 +67,12 @@ def summary(args):
     json.dump(ingestor.fields(), args.out, indent=2)
     return ""
 
+def export(args):
+    """
+    Exports an HTML corpus at the specified location.
+    """
+    pass
+
 ##########################################################################
 ## Main Method and functionality
 ##########################################################################
