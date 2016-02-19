@@ -68,7 +68,7 @@ class OPML(object):
         Reads the file to capture all the categories
         """
         with open(self.path, 'r') as data:
-            soup = BeautifulSoup(data)
+            soup = BeautifulSoup(data, 'xml')
             for topic in soup.select('body > outline'):
                 yield topic['title']
 
@@ -87,7 +87,7 @@ class OPML(object):
         from the OPML file; also captures category data.
         """
         with open(self.path, 'r') as data:
-            soup = BeautifulSoup(data)
+            soup = BeautifulSoup(data, 'xml')
             for topic in soup.select('body > outline'):
                 for feed in topic.find_all('outline'):
                     data = feed.attrs.copy()

@@ -121,10 +121,10 @@ class Logger(object):
     def critical(self, message, *args, **kwargs):
         return self.log(logging.CRITICAL, message, *args, **kwargs)
 
+
 class IngestLogger(Logger):
     """
-    Performs logging for the coruscate process with the log options above.
+    Performs logging for the baleen process with the log options above.
     """
 
     logger = logging.getLogger('baleen.ingest')
-

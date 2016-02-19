@@ -4,9 +4,11 @@ feedparser==5.2.1
 ## Database
 pymongo==3.2.1
 mongoengine==0.10.6
+blinker==1.4
 
 ## Parsing
 beautifulsoup4==4.4.1
+lxml==3.5.0
 
 ## Configuration
 confire==0.2.0
