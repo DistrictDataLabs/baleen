@@ -20,6 +20,12 @@ Testing for the baleen module
 import unittest
 
 ##########################################################################
+## Module Constants
+##########################################################################
+
+TEST_VERSION = "0.1" ## Also the expected version onf the package
+
+##########################################################################
 ## Test Cases
 ##########################################################################
 
@@ -45,4 +51,4 @@ class InitializationTest(unittest.TestCase):
         Assert that the version is sane
         """
         import baleen
-        self.assertEqual("0.1.0", baleen.get_version())
+        self.assertEqual(TEST_VERSION, baleen.__version__)

@@ -1,0 +1,3 @@
+Baleen is a tool for ingesting formal natural language data from the discourse of professional and amateur writers: e.g. bloggers and news outlets. Rather than performing web scraping, Baleen focuses on data ingestion through the use of RSS feeds. It performs as much raw data collection as it can, saving data into a Mongo document store.
+
+For more, please see the full documentation at: http://baleen-ingest.readthedocs.org/en/latest/
