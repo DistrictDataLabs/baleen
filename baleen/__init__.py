@@ -18,14 +18,10 @@ research.
 ## Imports
 ##########################################################################
 
+from .version import get_version
+
 ##########################################################################
-## Vesioning
+## Package Version
 ##########################################################################
 
-__version__ = (0,1,0)
-
-def get_version():
-    """
-    Returns the string containing the version number
-    """
-    return "%i.%i.%i" % __version__
+__version__ = get_version()
