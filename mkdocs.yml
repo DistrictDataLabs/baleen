@@ -1,2 +1,7 @@
 site_name: Baleen
 theme: readthedocs
+
+pages:
+    - "Introduction": index.md
+    - "Service Architecture": service.md
+    - "About Baleen": about.md
