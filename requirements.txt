@@ -1,12 +1,27 @@
-PyYAML==3.11
-beautifulsoup4==4.3.2
-blinker==1.3
+## Requests
+feedparser==5.2.1
+
+## Database
+pymongo==3.2.1
+mongoengine==0.10.6
+blinker==1.4
+
+## Parsing
+beautifulsoup4==4.4.1
+lxml==3.5.0
+
+## Configuration
 confire==0.2.0
-coverage==3.7.1
-feedparser==5.1.3
-mongoengine==0.8.7
-nose==1.3.4
-pymongo==2.7.2
-python-dateutil==2.2
-six==1.8.0
-wsgiref==0.1.2
+PyYAML==3.11
+
+## Utilities
+python-dateutil==2.4.2
+six==1.10.0
+
+## Testing
+## Uncomment and install for development
+#nose==1.3.7
+#coverage==4.0.3
+#mock==1.3.0
+#funcsigs==0.4
+#pbr==1.8.1

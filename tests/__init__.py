@@ -33,7 +33,7 @@ class InitializationTest(unittest.TestCase):
 
     def test_initialization(self):
         """
-        Tests a simple world fact by asserting that 10*10 is 100.
+        Tests a simple world fact by asserting that 10*10 is 100
         """
         self.assertEqual(10*10, 100)
 
