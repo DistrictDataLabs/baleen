@@ -28,8 +28,8 @@ import baleen.models as db
 from copy import copy
 from baleen.opml import OPML
 from collections import Counter
-from baleen.utils import localnow
-from baleen.logger import IngestLogger
+from baleen.utils.timez import localnow
+from baleen.utils.logger import IngestLogger
 from dateutil import parser as dtparser
 
 ##########################################################################

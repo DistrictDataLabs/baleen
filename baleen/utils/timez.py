@@ -1,4 +1,4 @@
-# baleen.utils
+# baleen.utils.timez
 # Utility functions for Baleen
 #
 # Author:   Benjamin Bengfort <benjamin@bengfort.com>

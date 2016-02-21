@@ -1,4 +1,4 @@
-# baleen.mongolog
+# baleen.utils.mongolog
 # Handlers and formatters for logging to Mongo
 #
 # Author:   Benjamin Bengfort <benjamin@bengfort.com>
@@ -20,12 +20,12 @@ Handlers and formatters for logging to Mongo
 import getpass
 import logging
 import logging.config
-from baleen.utils import *
+from baleen.utils.timez import *
 from baleen.config import settings
 
 from datetime import datetime
 from socket import gethostname
-from pymongo import Connection
+from pymongo import MongoClient
 from pymongo.errors import OperationFailure, PyMongoError
 
 ##########################################################################
@@ -44,7 +44,6 @@ class MongoFormatter(logging.Formatter):
 
         ## Get the dictionary ready for Mongo
         data    = record.__dict__.copy()
-        print data
 
         ## Get the log message as intended via super
         message   = super(MongoFormatter, self).format(record)
@@ -112,7 +111,7 @@ class MongoHandler(logging.Handler):
         Connect to the Mongo database.
         """
         try:
-            self.connection = Connection(host=self.host, port=self.port)
+            self.connection = MongoClient(host=self.host, port=self.port)
         except PyMongoError:
             if self.fail_silently:
                 return
@@ -127,7 +126,6 @@ class MongoHandler(logging.Handler):
         Close the connection to the Mongo database.
         """
         if self.connection is not None:
-            self.connection.disconnect()
             self.connection = None
 
     def emit(self, record):
