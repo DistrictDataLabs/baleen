@@ -38,7 +38,6 @@ class BaleenConfiguration(confire.Configuration):
     Meaningful defaults and required configurations.
 
     debug:    the app will print or log debug statements
-    testing:  the app will not overwrite important resources
     database: connection information for mongo
     """
 
@@ -49,8 +48,9 @@ class BaleenConfiguration(confire.Configuration):
     ]
 
     debug    = True
-    testing  = True
     database = MongoConfiguration()
+    logfile  = 'baleen.log'
+    loglevel = 'DEBUG'
 
 
 ## Load settings immediately for import

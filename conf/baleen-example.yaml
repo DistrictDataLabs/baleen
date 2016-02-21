@@ -1,7 +1,8 @@
 # Configuration file for the Baleen application
 
 debug: true
-testing: false
+logfile: 'baleen.log'
+loglevel: 'DEBUG'
 database:
     host: localhost
     port: 27017
