@@ -62,13 +62,3 @@ def strptimez(dtstr, dtfmt):
     delta  = timedelta(hours = offset/100)
     utctsp = datetime.strptime(dtstr, dtfmt) - delta
     return utctsp.replace(tzinfo=tzutc())
-
-def dthandler(obj, dtftmt="%Y-%m-%dT%H:%M:%S"):
-    """
-    JSON helper function that provides a handler for Python datetime objects,
-    returning the ISO 8601 format.
-    """
-    dthandler = None
-    if isinstance(obj, datetime) or isinstance(obj, date):
-       dthandler = obj.strftime(dtftmt)
-    return dthandler

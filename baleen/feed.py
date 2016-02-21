@@ -51,8 +51,10 @@ class FeedIngestor(object):
             for url in self.feed_urls:
                 yield url
         else:
-            raise NotImplementedError(("Subclasses must either provide a list of",
-                                       " feed_urls or override get_feed_urls."))
+            raise NotImplementedError((
+                "Subclasses must either provide a list of "
+                "feed_urls or override get_feed_urls."
+            ))
 
     def feeds(self):
         """
@@ -308,7 +310,7 @@ class OPMLFeedIngestor(FeedIngestor):
 
     def get_feed_urls(self):
         for feed in self.opml:
-            yield feed['link']
+            yield feed['xmlUrl']
 
     def __len__(self):
         return len(self.opml)
