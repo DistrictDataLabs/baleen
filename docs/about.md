@@ -47,6 +47,14 @@ The release versions that are sent to the Python package index (PyPI) are also t
 
 The versioning uses a three part version system, "a.b.c" - "a" represents a major release that may not be backwards compatible. "b" is incremented on minor releases that may contain extra features, but are backwards compatible. "c" releases are bug fixes or other micro changes that developers should feel free to immediately update to.
 
+### Version 0.2
+
+* **tag**: [v0.2](https://github.com/bbengfort/baleen/releases/tag/v0.2)
+* **deployment**: Tuesday, March 1, 2016
+* **commit**: (see tag)
+
+This update was a push to get Baleen running on EC2 on an hourly basis in preparation for PyCon. We updated all of Baleen's dependencies to their latest versions, added tests and other important fixtures, and organized the code a bit better. New functionality includes the ability to fetch the post webpage from the link, export the corpus to disk using the command line utility, and run in the background using the schedule library. 
+
 ### Version 0.1
 
 * **tag**: [v0.1](https://github.com/bbengfort/baleen/releases/tag/v0.1)
