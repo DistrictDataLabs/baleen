@@ -18,6 +18,7 @@ Admin script for executing Baleen commands.
 ## Imports
 ##########################################################################
 
+import os
 import sys
 import json
 import baleen
@@ -25,6 +26,7 @@ import argparse
 import baleen.opml
 import baleen.feed
 import baleen.models as db
+import baleen.export
 
 ##########################################################################
 ## Module Constants
@@ -71,7 +73,47 @@ def export(args):
     """
     Exports an HTML corpus at the specified location.
     """
-    pass
+
+    # Connect to database
+    db.connect()
+
+    # Export from the database
+    exporter = baleen.export.MongoExporter()
+    exporter.export(args.location[0], categories=args.categories)
+
+    # Perform counts of export
+    root = args.location[0]
+    cats = filter(
+        os.path.isdir, [os.path.join(root, cat) for cat in os.listdir(root)]
+    )
+    docs = sum(len(os.listdir(d)) for d in cats)
+
+    return (
+        "Exported {} documents in {} categories "
+        "as well as a readme to {}.".format(
+            docs, len(cats), root
+        )
+    )
+
+
+##########################################################################
+## Console Parsers
+##########################################################################
+
+def csv(type=int):
+    """
+    Argparse type for comma seperated values. Also parses the type, e.g. int.
+    """
+    def parser(s):
+        try:
+            parse = lambda p: type(p.strip())
+            return map(parse, s.split(","))
+        except Exception as e:
+            raise argparse.ArgumentTypeError(
+                "Could not parse CSV value to type {}: {!r}".format(type.__name__, s)
+            )
+
+    return parser
 
 ##########################################################################
 ## Main Method and functionality
@@ -88,14 +130,15 @@ def main(*argv):
     ingest_parser.set_defaults(func=ingest_feeds)
 
     # Import Command
-    import_parser = subparsers.add_parser('import', help='Import a list of feeds from an OPML file.')
+    import_parser = subparsers.add_parser('import', help='Import a list of feeds from an OPML file')
     import_parser.add_argument('opml', nargs="+", type=str, help='OPML file(s) to import to database.')
     import_parser.set_defaults(func=ingest_opml)
 
-    # Summary Command
-    summary_parser = subparsers.add_parser('summary', help='Performs a summary of the fields that will be returned on ingest.')
-    summary_parser.add_argument('-w', '--write', dest='out', type=argparse.FileType('w'), default=sys.stdout, help='File to write the summary out to.')
-    summary_parser.set_defaults(func=summary)
+    # Export Command
+    export_parser = subparsers.add_parser('export', help='Export the raw HTML corpus for doing NLP')
+    export_parser.add_argument('-C', '--categories', type=csv(str), default=None, help='Specify categories to export')
+    export_parser.add_argument('location', nargs= 1, type=str, help='Location to write the corpus out to.')
+    export_parser.set_defaults(func=export)
 
     # Handle input from the command line
     args = parser.parse_args()                # Parse the arguments
