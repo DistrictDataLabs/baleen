@@ -1,4 +1,9 @@
 site_name: Baleen
+repo_name: GitHub
+repo_url: https://github.com/bbengfort/baleen
+site_description: An automated ingestion service for blogs to construct a corpus for NLP research.
+site_author: District Data Labs
+copyright: Built by District Data Labs, licensed by <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
 theme: readthedocs
 
 pages:

@@ -137,7 +137,9 @@ class FeedIngestor(object):
 
         ## Fetch the content if requested.
         if settings.fetch_html:
-            post['content'] = self.fetch(post.get('url'))
+            page = self.fetch(post.get('url'))
+            if page:
+                post['content'] = page
 
         return post
 
@@ -214,7 +216,7 @@ class MongoFeedIngestor(FeedIngestor):
 
         NOTE: You must connect to the MongoDB before calling this method!
         """
-        for feed in db.Feed.objects.only('link'):
+        for feed in db.Feed.objects(active=True).only('link'):
             yield feed.link
 
     def update_feed(self, feed, result):

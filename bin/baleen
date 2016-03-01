@@ -111,7 +111,7 @@ def run(args):
     """
     logger = IngestLogger()
     logger.info("Starting baleen ingestion service every 10 minutes.")
-    schedule.every(10).minutes.do(partial(ingest_feeds, args))
+    schedule.every().hour.do(partial(ingest_feeds, args))
 
     while True:
         try:
