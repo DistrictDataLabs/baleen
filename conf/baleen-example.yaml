@@ -1,8 +1,16 @@
 # Configuration file for the Baleen application
 
+# Basic Flags
 debug: true
+
+# Logging Information
 logfile: 'baleen.log'
 loglevel: 'DEBUG'
+
+# Use Requests to fetch complete HTML
+fetch_html: True
+
+# Database Information
 database:
     host: localhost
     port: 27017

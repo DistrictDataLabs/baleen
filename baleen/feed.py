@@ -22,12 +22,14 @@ fetch the feeds and then saves the documents to a Mongo collection.
 ## Imports
 ##########################################################################
 
+import requests
 import feedparser
 import baleen.models as db
 
 from copy import copy
 from baleen.opml import OPML
 from collections import Counter
+from baleen.config import settings
 from baleen.utils.timez import localnow
 from baleen.utils.logger import IngestLogger
 from dateutil import parser as dtparser
@@ -133,7 +135,32 @@ class FeedIngestor(object):
             post['mimetype'] = selected.get('type')
             post['content']  = selected.get('value')
 
+        ## Fetch the content if requested.
+        if settings.fetch_html:
+            post['content'] = self.fetch(post.get('url'))
+
         return post
+
+    def fetch(self, url):
+        """
+        Fetches the given url and returns the content, capturing errors.
+        """
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                return response.text
+            else:
+                self.logger.error(
+                    "Could not fetch '{}': {} {}".format(
+                        url, response.status_code, response.reason
+                    )
+                )
+        except Exception as e:
+            self.logger.error(
+                "Could not fetch '{}': {}".format(
+                    url, str(e)
+                )
+            )
 
     def fields(self):
         """
