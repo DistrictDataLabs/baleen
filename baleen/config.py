@@ -47,11 +47,11 @@ class BaleenConfiguration(confire.Configuration):
         os.path.abspath("conf/baleen.yaml"),     # Local configuration
     ]
 
-    debug    = True
-    database = MongoConfiguration()
-    logfile  = 'baleen.log'
-    loglevel = 'DEBUG'
-
+    debug      = True
+    database   = MongoConfiguration()
+    logfile    = 'baleen.log'                    # Location to write log
+    loglevel   = 'DEBUG'                         # Log messages to record
+    fetch_html = True                            # Actually fetch HTML link
 
 ## Load settings immediately for import
 settings = BaleenConfiguration.load()
