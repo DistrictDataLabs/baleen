@@ -65,7 +65,9 @@ Now to install various tools with the Ubuntu package manager, aptitude:
 
 ```bash
 $ sudo apt-get update && sudo apt-get upgrade
-$ sudo apt-get install python-pip python-dev build-essential git
+$ sudo apt-get install python-pip python-dev \
+    build-essential git \
+    libxml2-dev libxslt1-dev zlib1g-dev
 ```
 
 And installing Python packages with pip:
@@ -118,6 +120,62 @@ Note that on Ubuntu you will also have to edit the `/etc/init/mongo.conf` startu
 
 ### Baleen Setup
 
-The strategy we'll use to deploy Baleen is to clone the repository to `/var/apps/baleen`. We will then create a virtual environment in `/var/envs/baleen` in order to maintain our Python packages there. It is the hope that we can then simply update Baleen by pulling from our desired branch. This mechanism has a few complications over `pip install`, but as we're in a development mode right now, it may be easier to just pull.
+The strategy we'll use to deploy Baleen is to clone the repository to `/var/apps/baleen`. We will then create a virtual environment in `/var/envs/baleen` in order to maintain our Python packages there. It is the hope that we can then simply update Baleen by pulling from our desired branch. This mechanism has a few complications over `pip install` (we have to add a .pth file so that import will find baleen), but as we're in a development mode right now, it may be easier to just pull.
 
-In order to run Baleen as a background service, we will use [upstart](http://upstart.ubuntu.com/), Ubuntu's event based init daemon. This is also how MongoDB is started and stopped as well.  
+```bash
+$ cd /var/apps
+$ git clone https://github.com/bbengfort/baleen.git
+$ cd baleen/
+$ venv.init -a $(pwd) -r requirements.txt
+$ echo $(pwd) > $(get_python_lib)/baleen.pth
+```
+
+In order to run Baleen as a background service, we will use [upstart](http://upstart.ubuntu.com/), Ubuntu's event based init daemon. This is also how MongoDB is started and stopped as well. Let's move our configuration files as follows:
+
+```bash
+$ sudo cp conf/baleen.conf /etc/init/
+$ sudo cp conf/baleen-example.yaml /etc/baleen.yaml
+```
+
+You can edit the /etc/baleen.yaml as required for the system, probably something like:
+
+```yaml
+# Basic Flags
+debug: true
+
+# Logging Information
+logfile: '/data/logs/baleen/baleen.log'
+loglevel: 'INFO'
+
+# Use Requests to fetch complete HTML
+fetch_html: true
+
+# Database Information
+database:
+    host: localhost
+    port: 27017
+    name: baleen
+```
+
+Make sure that the configuration is working by printing the settings:
+
+```python
+>>> from baleen.config import settings
+>>> print settings
+```
+
+You should see your configuration data, which means it worked! Next import the OPML feeds as follows:
+
+```bash
+$ bin/baleen import fixtures/feedly.opml
+```
+
+If everything is setup with the Python app and environment, this should work without issue. Next up, start the baleen service:
+
+```bash
+$ sudo service baleen start
+```
+
+You can check if it's working by using the `psg baleen` command (one of the aliases added above). If you're having trouble see what's going on in `/var/log/upstart/baleen.log` or the baleen log itself.
+
+That's it! Baleen should now be running once an hour, every hour!

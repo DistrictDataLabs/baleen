@@ -31,6 +31,7 @@ import baleen.models as db
 import baleen.export
 
 from functools import partial
+from baleen.config import settings
 from baleen.utils.logger import IngestLogger
 
 ##########################################################################
@@ -70,12 +71,35 @@ def ingest_opml(args):
 
 def summary(args):
     """
-    Performs a summary of the fields that will be returned on ingest
+    Print info about Baleen from the database
     """
+    # Setup output and connect to database.
+    output = []
     db.connect()
-    ingestor = baleen.feed.MongoFeedIngestor()
-    json.dump(ingestor.fields(), args.out, indent=2)
-    return ""
+
+    # Printout configuration details as necessary.
+    if args.config:
+        output.append(u"Configuration:")
+        output.append(unicode(settings))
+        output.append(u"")
+
+    output.append(u"Baleen Status:")
+    output.append(
+        u"{} Feeds and {} Posts".format(
+            db.Feed.objects.count(), db.Post.objects.count()
+        )
+    )
+
+    latest = db.Post.objects.order_by('-id').first()
+    output.extend([
+        u"",
+        u"Latest Post: ",
+        u"    Title: \"{}\"".format(latest.title),
+        u"    Feed: \"{}\"".format(latest.feed.title),
+        u"    Fetched: {}".format(latest.created.strftime("%Y-%m-%d %H:%M:%S"))
+    ])
+
+    return u"\n".join(output).encode('utf-8', errors='replace')
 
 
 def export(args):
@@ -110,7 +134,7 @@ def run(args):
     Runs the ingest command every hour.
     """
     logger = IngestLogger()
-    logger.info("Starting baleen ingestion service every 10 minutes.")
+    logger.info("Starting baleen ingestion service every hour.")
     schedule.every().hour.do(partial(ingest_feeds, args))
 
     while True:
@@ -172,13 +196,18 @@ def main(*argv):
     run_parser.add_argument('-v', '--verbose', action="store_true", default=False, help='Print details.')
     run_parser.set_defaults(func=run)
 
+    # Info Command
+    summary_parser = subparsers.add_parser('info', help='Print info about Baleen from the database')
+    summary_parser.add_argument('-c', '--config', action='store_true', default=False, help='Print configuration.')
+    summary_parser.set_defaults(func=summary)
+
     # Handle input from the command line
     args = parser.parse_args()                # Parse the arguments
-    # try:
-    msg = "%s\n" % str(args.func(args))    # Call the default function
-    parser.exit(0, msg)                    # Exit clearnly with message
-    # except Exception as e:
-    #     parser.error(str(e))                   # Exit with error
+    try:
+        msg = "%s\n" % str(args.func(args))    # Call the default function
+        parser.exit(0, msg)                    # Exit clearnly with message
+    except Exception as e:
+        parser.error(str(e))                   # Exit with error
 
 if __name__ == '__main__':
     main(*sys.argv[1:])
