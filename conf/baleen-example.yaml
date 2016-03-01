@@ -1,4 +1,5 @@
 # Configuration file for the Baleen application
+# This file belongs in: /etc/baleen.yaml
 
 # Basic Flags
 debug: true

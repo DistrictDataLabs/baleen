@@ -71,6 +71,7 @@ class Feed(me.DynamicDocument):
     link      = me.URLField(required=True, unique=True)
     urls      = me.DictField()
     category  = me.StringField(required=True)
+    active    = me.BooleanField(default=True)
     fetched   = me.DateTimeField(default=None)
     created   = me.DateTimeField(default=datetime.now, required=True)
     updated   = me.DateTimeField(default=datetime.now, required=True)

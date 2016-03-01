@@ -66,7 +66,7 @@ DEFAULT_LOGGING = {
         'baleen.ingest': {
             'level': 'INFO',
             'handlers': ['logfile', 'mongolog'],
-            'propagate': True,
+            'propagate': False,
         }
     },
 }

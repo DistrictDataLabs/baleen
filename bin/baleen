@@ -21,12 +21,17 @@ Admin script for executing Baleen commands.
 import os
 import sys
 import json
+import time
 import baleen
 import argparse
+import schedule
 import baleen.opml
 import baleen.feed
 import baleen.models as db
 import baleen.export
+
+from functools import partial
+from baleen.utils.logger import IngestLogger
 
 ##########################################################################
 ## Module Constants
@@ -37,6 +42,7 @@ PROG = {
     "epilog": "Not intended for production use.",
     "description": "Administrative utility for Baleen ingestor.",
 }
+
 
 ##########################################################################
 ## Command Functions
@@ -51,6 +57,7 @@ def ingest_feeds(args):
     ingestor.ingest(verbose=args.verbose)
     return ""
 
+
 def ingest_opml(args):
     """
     Imports the OPML file to MongoDB
@@ -60,6 +67,7 @@ def ingest_opml(args):
         count += baleen.opml.ingest(path)
     return "Ingested %i feeds from %i OPML files" % (count, len(args.opml))
 
+
 def summary(args):
     """
     Performs a summary of the fields that will be returned on ingest
@@ -68,6 +76,7 @@ def summary(args):
     ingestor = baleen.feed.MongoFeedIngestor()
     json.dump(ingestor.fields(), args.out, indent=2)
     return ""
+
 
 def export(args):
     """
@@ -95,6 +104,24 @@ def export(args):
         )
     )
 
+
+def run(args):
+    """
+    Runs the ingest command every hour.
+    """
+    logger = IngestLogger()
+    logger.info("Starting baleen ingestion service every 10 minutes.")
+    schedule.every().hour.do(partial(ingest_feeds, args))
+
+    while True:
+        try:
+            schedule.run_pending()
+            time.sleep(1)
+        except (KeyboardInterrupt, SystemExit):
+            break
+
+    logger.info("Stopping baleen ingestion service.")
+    return ""
 
 ##########################################################################
 ## Console Parsers
@@ -139,6 +166,11 @@ def main(*argv):
     export_parser.add_argument('-C', '--categories', type=csv(str), default=None, help='Specify categories to export')
     export_parser.add_argument('location', nargs= 1, type=str, help='Location to write the corpus out to.')
     export_parser.set_defaults(func=export)
+
+    # Run Command (same args as ingest)
+    run_parser = subparsers.add_parser('run', help='Runs the ingest command every hour')
+    run_parser.add_argument('-v', '--verbose', action="store_true", default=False, help='Print details.')
+    run_parser.set_defaults(func=run)
 
     # Handle input from the command line
     args = parser.parse_args()                # Parse the arguments
