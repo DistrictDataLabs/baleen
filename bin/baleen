@@ -18,13 +18,21 @@ Admin script for executing Baleen commands.
 ## Imports
 ##########################################################################
 
+import os
 import sys
 import json
+import time
 import baleen
 import argparse
+import schedule
 import baleen.opml
 import baleen.feed
 import baleen.models as db
+import baleen.export
+
+from functools import partial
+from baleen.config import settings
+from baleen.utils.logger import IngestLogger
 
 ##########################################################################
 ## Module Constants
@@ -35,6 +43,7 @@ PROG = {
     "epilog": "Not intended for production use.",
     "description": "Administrative utility for Baleen ingestor.",
 }
+
 
 ##########################################################################
 ## Command Functions
@@ -49,6 +58,7 @@ def ingest_feeds(args):
     ingestor.ingest(verbose=args.verbose)
     return ""
 
+
 def ingest_opml(args):
     """
     Imports the OPML file to MongoDB
@@ -58,20 +68,103 @@ def ingest_opml(args):
         count += baleen.opml.ingest(path)
     return "Ingested %i feeds from %i OPML files" % (count, len(args.opml))
 
+
 def summary(args):
     """
-    Performs a summary of the fields that will be returned on ingest
+    Print info about Baleen from the database
     """
+    # Setup output and connect to database.
+    output = []
     db.connect()
-    ingestor = baleen.feed.MongoFeedIngestor()
-    json.dump(ingestor.fields(), args.out, indent=2)
-    return ""
+
+    # Printout configuration details as necessary.
+    if args.config:
+        output.append(u"Configuration:")
+        output.append(unicode(settings))
+        output.append(u"")
+
+    output.append(u"Baleen Status:")
+    output.append(
+        u"{} Feeds and {} Posts".format(
+            db.Feed.objects.count(), db.Post.objects.count()
+        )
+    )
+
+    latest = db.Post.objects.order_by('-id').first()
+    output.extend([
+        u"",
+        u"Latest Post: ",
+        u"    Title: \"{}\"".format(latest.title),
+        u"    Feed: \"{}\"".format(latest.feed.title),
+        u"    Fetched: {}".format(latest.created.strftime("%Y-%m-%d %H:%M:%S"))
+    ])
+
+    return u"\n".join(output).encode('utf-8', errors='replace')
+
 
 def export(args):
     """
     Exports an HTML corpus at the specified location.
     """
-    pass
+
+    # Connect to database
+    db.connect()
+
+    # Export from the database
+    exporter = baleen.export.MongoExporter()
+    exporter.export(args.location[0], categories=args.categories)
+
+    # Perform counts of export
+    root = args.location[0]
+    cats = filter(
+        os.path.isdir, [os.path.join(root, cat) for cat in os.listdir(root)]
+    )
+    docs = sum(len(os.listdir(d)) for d in cats)
+
+    return (
+        "Exported {} documents in {} categories "
+        "as well as a readme to {}.".format(
+            docs, len(cats), root
+        )
+    )
+
+
+def run(args):
+    """
+    Runs the ingest command every hour.
+    """
+    logger = IngestLogger()
+    logger.info("Starting baleen ingestion service every hour.")
+    schedule.every().hour.do(partial(ingest_feeds, args))
+
+    while True:
+        try:
+            schedule.run_pending()
+            time.sleep(1)
+        except (KeyboardInterrupt, SystemExit):
+            break
+
+    logger.info("Stopping baleen ingestion service.")
+    return ""
+
+##########################################################################
+## Console Parsers
+##########################################################################
+
+def csv(type=int):
+    """
+    Argparse type for comma seperated values. Also parses the type, e.g. int.
+    """
+    def parser(s):
+        try:
+            parse = lambda p: type(p.strip())
+            return map(parse, s.split(","))
+        except Exception as e:
+            raise argparse.ArgumentTypeError(
+                "Could not parse CSV value to type {}: {!r}".format(type.__name__, s)
+            )
+
+    return parser
 
 ##########################################################################
 ## Main Method and functionality
@@ -88,22 +181,33 @@ def main(*argv):
     ingest_parser.set_defaults(func=ingest_feeds)
 
     # Import Command
-    import_parser = subparsers.add_parser('import', help='Import a list of feeds from an OPML file.')
+    import_parser = subparsers.add_parser('import', help='Import a list of feeds from an OPML file')
     import_parser.add_argument('opml', nargs="+", type=str, help='OPML file(s) to import to database.')
     import_parser.set_defaults(func=ingest_opml)
 
-    # Summary Command
-    summary_parser = subparsers.add_parser('summary', help='Performs a summary of the fields that will be returned on ingest.')
-    summary_parser.add_argument('-w', '--write', dest='out', type=argparse.FileType('w'), default=sys.stdout, help='File to write the summary out to.')
+    # Export Command
+    export_parser = subparsers.add_parser('export', help='Export the raw HTML corpus for doing NLP')
+    export_parser.add_argument('-C', '--categories', type=csv(str), default=None, help='Specify categories to export')
+    export_parser.add_argument('location', nargs= 1, type=str, help='Location to write the corpus out to.')
+    export_parser.set_defaults(func=export)
+
+    # Run Command (same args as ingest)
+    run_parser = subparsers.add_parser('run', help='Runs the ingest command every hour')
+    run_parser.add_argument('-v', '--verbose', action="store_true", default=False, help='Print details.')
+    run_parser.set_defaults(func=run)
+
+    # Info Command
+    summary_parser = subparsers.add_parser('info', help='Print info about Baleen from the database')
+    summary_parser.add_argument('-c', '--config', action='store_true', default=False, help='Print configuration.')
     summary_parser.set_defaults(func=summary)
 
     # Handle input from the command line
     args = parser.parse_args()                # Parse the arguments
-    # try:
-    msg = "%s\n" % str(args.func(args))    # Call the default function
-    parser.exit(0, msg)                    # Exit clearnly with message
-    # except Exception as e:
-    #     parser.error(str(e))                   # Exit with error
+    try:
+        msg = "%s\n" % str(args.func(args))    # Call the default function
+        parser.exit(0, msg)                    # Exit clearnly with message
+    except Exception as e:
+        parser.error(str(e))                   # Exit with error
 
 if __name__ == '__main__':
     main(*sys.argv[1:])

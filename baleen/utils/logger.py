@@ -1,4 +1,4 @@
-# baleen.logger
+# baleen.utils.logger
 # Logging utility for Baleen
 #
 # Author:   Benjamin Bengfort <benjamin@bengfort.com>
@@ -19,7 +19,7 @@ Logging utility for Baleen
 
 import logging
 import logging.config
-from baleen.utils import *
+from baleen.utils.timez import *
 from baleen.config import settings
 
 ##########################################################################
@@ -41,32 +41,32 @@ DEFAULT_LOGGING = {
             'class': 'logging.NullHandler',
         },
         'console': {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
         'logfile': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'baleen.log',
-            'maxBytes': '16777216', # 16 MB
+            'filename': settings.logfile,
+            'maxBytes': '536870912', # 512 MB
             'formatter': 'simple',
         },
         'mongolog': {
             'level': 'INFO',
-            'class': 'baleen.mongolog.MongoHandler',
+            'class': 'baleen.utils.mongolog.MongoHandler',
         }
     },
     'loggers': {
         'baleen': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
+            'level': settings.loglevel,
+            'handlers': ['logfile'],
             'propagagte': True,
         },
         'baleen.ingest': {
             'level': 'INFO',
             'handlers': ['logfile', 'mongolog'],
-            'propagate': True,
+            'propagate': False,
         }
     },
 }
@@ -121,10 +121,10 @@ class Logger(object):
     def critical(self, message, *args, **kwargs):
         return self.log(logging.CRITICAL, message, *args, **kwargs)
 
+
 class IngestLogger(Logger):
     """
-    Performs logging for the coruscate process with the log options above.
+    Performs logging for the baleen process with the log options above.
     """
 
     logger = logging.getLogger('baleen.ingest')
-

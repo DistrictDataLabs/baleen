@@ -57,3 +57,4 @@ target/
 # Local configurations
 conf/baleen.yaml
 fixtures/corpus
+fixtures/ddl-feedly.opml

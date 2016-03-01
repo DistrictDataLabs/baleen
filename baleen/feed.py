@@ -22,14 +22,16 @@ fetch the feeds and then saves the documents to a Mongo collection.
 ## Imports
 ##########################################################################
 
+import requests
 import feedparser
 import baleen.models as db
 
 from copy import copy
 from baleen.opml import OPML
 from collections import Counter
-from baleen.utils import localnow
-from baleen.logger import IngestLogger
+from baleen.config import settings
+from baleen.utils.timez import localnow
+from baleen.utils.logger import IngestLogger
 from dateutil import parser as dtparser
 
 ##########################################################################
@@ -51,8 +53,10 @@ class FeedIngestor(object):
             for url in self.feed_urls:
                 yield url
         else:
-            raise NotImplementedError(("Subclasses must either provide a list of",
-                                       " feed_urls or override get_feed_urls."))
+            raise NotImplementedError((
+                "Subclasses must either provide a list of "
+                "feed_urls or override get_feed_urls."
+            ))
 
     def feeds(self):
         """
@@ -131,7 +135,34 @@ class FeedIngestor(object):
             post['mimetype'] = selected.get('type')
             post['content']  = selected.get('value')
 
+        ## Fetch the content if requested.
+        if settings.fetch_html:
+            page = self.fetch(post.get('url'))
+            if page:
+                post['content'] = page
+
         return post
+
+    def fetch(self, url):
+        """
+        Fetches the given url and returns the content, capturing errors.
+        """
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                return response.text
+            else:
+                self.logger.error(
+                    "Could not fetch '{}': {} {}".format(
+                        url, response.status_code, response.reason
+                    )
+                )
+        except Exception as e:
+            self.logger.error(
+                "Could not fetch '{}': {}".format(
+                    url, str(e)
+                )
+            )
 
     def fields(self):
         """
@@ -185,7 +216,7 @@ class MongoFeedIngestor(FeedIngestor):
 
         NOTE: You must connect to the MongoDB before calling this method!
         """
-        for feed in db.Feed.objects.only('link'):
+        for feed in db.Feed.objects(active=True).only('link'):
             yield feed.link
 
     def update_feed(self, feed, result):
@@ -308,7 +339,7 @@ class OPMLFeedIngestor(FeedIngestor):
 
     def get_feed_urls(self):
         for feed in self.opml:
-            yield feed['link']
+            yield feed['xmlUrl']
 
     def __len__(self):
         return len(self.opml)

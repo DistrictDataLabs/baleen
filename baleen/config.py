@@ -38,7 +38,6 @@ class BaleenConfiguration(confire.Configuration):
     Meaningful defaults and required configurations.
 
     debug:    the app will print or log debug statements
-    testing:  the app will not overwrite important resources
     database: connection information for mongo
     """
 
@@ -48,10 +47,11 @@ class BaleenConfiguration(confire.Configuration):
         os.path.abspath("conf/baleen.yaml"),     # Local configuration
     ]
 
-    debug    = True
-    testing  = True
-    database = MongoConfiguration()
-
+    debug      = True
+    database   = MongoConfiguration()
+    logfile    = 'baleen.log'                    # Location to write log
+    loglevel   = 'DEBUG'                         # Log messages to record
+    fetch_html = True                            # Actually fetch HTML link
 
 ## Load settings immediately for import
 settings = BaleenConfiguration.load()

@@ -1,7 +1,17 @@
 # Configuration file for the Baleen application
+# This file belongs in: /etc/baleen.yaml
 
+# Basic Flags
 debug: true
-testing: false
+
+# Logging Information
+logfile: 'baleen.log'
+loglevel: 'DEBUG'
+
+# Use Requests to fetch complete HTML
+fetch_html: True
+
+# Database Information
 database:
     host: localhost
     port: 27017

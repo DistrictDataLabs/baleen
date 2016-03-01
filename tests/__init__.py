@@ -23,7 +23,7 @@ import unittest
 ## Module Constants
 ##########################################################################
 
-TEST_VERSION = "0.1" ## Also the expected version onf the package
+TEST_VERSION = "0.2" ## Also the expected version onf the package
 
 ##########################################################################
 ## Test Cases
@@ -33,7 +33,7 @@ class InitializationTest(unittest.TestCase):
 
     def test_initialization(self):
         """
-        Tests a simple world fact by asserting that 10*10 is 100.
+        Tests a simple world fact by asserting that 10*10 is 100
         """
         self.assertEqual(10*10, 100)
 

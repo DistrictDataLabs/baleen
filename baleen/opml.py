@@ -38,9 +38,9 @@ def ingest(path, **kwargs):
     for feed in opml:
         feed.pop('type')                    # Unneeded for database
         feed.pop('text')                    # Unneeded for database
-        feed['link'] = feed.pop('xmlurl')   # Rename the XML URL
+        feed['link'] = feed.pop('xmlUrl')   # Rename the XML URL
         feed['urls'] = {
-            'htmlurl': feed.pop('htmlurl')  # Add htmlurl to urls
+            'htmlurl': feed.pop('htmlUrl')  # Add htmlurl to urls
         }
         feed = db.Feed(**feed)              # Construct without an ObjectId
 
@@ -68,7 +68,7 @@ class OPML(object):
         Reads the file to capture all the categories
         """
         with open(self.path, 'r') as data:
-            soup = BeautifulSoup(data)
+            soup = BeautifulSoup(data, 'xml')
             for topic in soup.select('body > outline'):
                 yield topic['title']
 
@@ -87,7 +87,7 @@ class OPML(object):
         from the OPML file; also captures category data.
         """
         with open(self.path, 'r') as data:
-            soup = BeautifulSoup(data)
+            soup = BeautifulSoup(data, 'xml')
             for topic in soup.select('body > outline'):
                 for feed in topic.find_all('outline'):
                     data = feed.attrs.copy()
