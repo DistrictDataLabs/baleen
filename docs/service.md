@@ -67,7 +67,8 @@ Now to install various tools with the Ubuntu package manager, aptitude:
 $ sudo apt-get update && sudo apt-get upgrade
 $ sudo apt-get install python-pip python-dev \
     build-essential git \
-    libxml2-dev libxslt1-dev zlib1g-dev
+    libxml2-dev libxslt1-dev zlib1g-dev \
+    libffi-dev libssl-dev
 ```
 
 And installing Python packages with pip:
@@ -127,7 +128,13 @@ $ cd /var/apps
 $ git clone https://github.com/bbengfort/baleen.git
 $ cd baleen/
 $ venv.init -a $(pwd) -r requirements.txt
-$ echo $(pwd) > $(get_python_lib)/baleen.pth
+(baleen) $ echo $(pwd) > $(get_python_lib)/baleen.pth
+```
+
+**Note**: On Ubuntu 14.04 you also need to install the requests security package, see [SSL InsecurePlatform error when using Requests package](http://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package):
+
+```bash
+(baleen) $ pip install requests[security]
 ```
 
 In order to run Baleen as a background service, we will use [upstart](http://upstart.ubuntu.com/), Ubuntu's event based init daemon. This is also how MongoDB is started and stopped as well. Let's move our configuration files as follows:

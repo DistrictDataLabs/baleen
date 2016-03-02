@@ -272,7 +272,11 @@ class MongoFeedIngestor(FeedIngestor):
 
                 yield result
             except Exception as e:
-                self.logger.error("Feed Error for feed %s (%s): %s" % (feed.title, feed.id, str(e)))
+                self.logger.error(
+                    u"Feed Error for feed {} ({}): {}".format(
+                        feed.title, feed.id, unicode(e)
+                    )
+                )
                 self.counts['errors'] += 1
                 continue
 
@@ -289,8 +293,9 @@ class MongoFeedIngestor(FeedIngestor):
 
                 yield post
             except Exception as e:
-                self.logger.error("Post Error for feed %s (%s) on entry %i: %s"
-                    % (self.current_feed.title, self.current_feed.id, idx, str(e)))
+                self.logger.error(u"Post Error for feed {} ({}) on entry {}: {}".format(
+                    self.current_feed.title, self.current_feed.id, idx, unicode(e))
+                )
                 self.counts['errors'] += 1
                 continue
 
