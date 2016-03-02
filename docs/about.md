@@ -51,7 +51,7 @@ The versioning uses a three part version system, "a.b.c" - "a" represents a majo
 
 * **tag**: [v0.2](https://github.com/bbengfort/baleen/releases/tag/v0.2)
 * **deployment**: Tuesday, March 1, 2016
-* **commit**: (see tag)
+* **commit**: [8e4e06e](https://github.com/bbengfort/baleen/commit/8e4e06e793b4ef949e83ab4c6d1715b03ae33957)
 
 This update was a push to get Baleen running on EC2 on an hourly basis in preparation for PyCon. We updated all of Baleen's dependencies to their latest versions, added tests and other important fixtures, and organized the code a bit better. New functionality includes the ability to fetch the post webpage from the link, export the corpus to disk using the command line utility, and run in the background using the schedule library. 
 
