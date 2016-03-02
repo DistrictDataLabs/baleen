@@ -15,6 +15,10 @@ lxml==3.5.0
 confire==0.2.0
 PyYAML==3.11
 
+## Command Line
+commis==0.2
+colorama==0.3.6
+
 ## Utilities
 schedule==0.3.2
 python-dateutil==2.4.2
