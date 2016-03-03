@@ -20,12 +20,15 @@ Testing for the OPML reader and ingestion function.
 import os
 import unittest
 
+from .test_models import MongoTestMixin
+
 try:
     from unittest import mock
 except ImportError:
     import mock
 
-from baleen.opml import OPML
+from baleen.opml import OPML, load_opml
+from baleen.models import Feed
 
 ##########################################################################
 ## Fixtures
@@ -35,18 +38,34 @@ FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
 FEEDLY   = os.path.join(FIXTURES, "feedly.opml")
 
 ##########################################################################
-## Test Ingestion
+## Test Load OPML command
 ##########################################################################
 
-class IngestionTests(unittest.TestCase):
+class LoadOPMLTests(MongoTestMixin, unittest.TestCase):
 
-    @unittest.skip("not implemented yet")
-    def test_ingest_integrated(self):
+    def test_load_opml_integrated(self):
         """
-        Test the integration of the ingest helper function.
+        Test the integration of the ingest helper function
         """
-        raise NotImplementedError("Not Implemented Yet")
+        self.assertEqual(Feed.objects.count(), 0)
+        self.assertEqual(load_opml(FEEDLY), 36)
+        self.assertEqual(Feed.objects.count(), 36)
 
+        for feed in Feed.objects():
+            self.assertIn('xmlUrl', feed.urls)
+            self.assertIn('htmlUrl', feed.urls)
+
+    def test_load_opml_no_duplicates(self):
+        """
+        Assert multiple calls to the load_opml creates no duplicates
+        """
+        self.assertEqual(Feed.objects.count(), 0)
+        self.assertEqual(load_opml(FEEDLY), 36)
+        self.assertEqual(Feed.objects.count(), 36)
+
+        for _ in xrange(10):
+            self.assertEqual(load_opml(FEEDLY), 0)
+            self.assertEqual(Feed.objects.count(), 36)
 
 ##########################################################################
 ## OPML Reader Test
@@ -56,7 +75,7 @@ class OPMLTests(unittest.TestCase):
 
     def test_fixture(self):
         """
-        Assert the required opml fixture is available.
+        Assert the required opml fixture is available
         """
         self.assertTrue(os.path.exists(FEEDLY))
         self.assertTrue(os.path.isfile(FEEDLY))

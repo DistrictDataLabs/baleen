@@ -22,7 +22,7 @@ import baleen.models as db
 
 from commis import Command
 from functools import partial
-from baleen.feed import MongoFeedIngestor
+# from baleen.feed import MongoFeedIngestor
 from baleen.utils.logger import IngestLogger
 
 ##########################################################################

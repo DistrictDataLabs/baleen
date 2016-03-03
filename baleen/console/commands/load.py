@@ -18,7 +18,8 @@ Loads an OPML file from disk into the database.
 ##########################################################################
 
 from commis import Command
-from baleen.opml import ingest as load_opml
+from baleen import models as db
+from baleen.opml import load_opml
 
 ##########################################################################
 ## Command
@@ -37,7 +38,9 @@ class LoadOPMLCommand(Command):
     }
 
     def handle(self, args):
-        count = 0
-        for path in args.opml:
-            count += load_opml(path)
-        return "Ingested %i feeds from %i OPML files" % (count, len(args.opml))
+        # Connect to the database
+        db.connect()
+
+        # Load the OPML files into the database
+        count = sum(load_opml(path) for path in args.opml)
+        return "Ingested {} feeds from {} OPML files".format(count, len(args.opml))

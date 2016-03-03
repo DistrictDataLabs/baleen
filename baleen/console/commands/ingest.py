@@ -20,7 +20,7 @@ Handles the ingestion utility both for OPML and feeds.
 import baleen.models as db
 
 from commis import Command
-from baleen.feed import MongoFeedIngestor
+# from baleen.feed import MongoFeedIngestor
 
 ##########################################################################
 ## Command

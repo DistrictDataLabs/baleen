@@ -23,15 +23,14 @@ from collections import Counter
 from mongoengine.errors import *
 
 ##########################################################################
-## Ingestion function
+## Load Database function
 ##########################################################################
 
-def ingest(path, **kwargs):
+def load_opml(path):
     """
-    Ingests an OPML file into the Mongo database; returns the count of the
+    Loads an OPML file into the Mongo database; returns the count of the
     number of documents added to the database.
     """
-    db.connect(**kwargs)
 
     opml = OPML(path)
     rows = 0
@@ -40,7 +39,8 @@ def ingest(path, **kwargs):
         feed.pop('text')                    # Unneeded for database
         feed['link'] = feed.pop('xmlUrl')   # Rename the XML URL
         feed['urls'] = {
-            'htmlurl': feed.pop('htmlUrl')  # Add htmlurl to urls
+            'xmlUrl':  feed['link'],        # Add xmlUrl to urls
+            'htmlUrl': feed.pop('htmlUrl'), # Add htmlUrl to urls
         }
         feed = db.Feed(**feed)              # Construct without an ObjectId
 
@@ -99,10 +99,9 @@ class OPML(object):
 
     def __str__(self):
         counts = self.counts()
-        return "OPML with %i categories and %i rss feeds" % (len(counts), sum(counts.values()))
+        return "OPML with {} categories and {} feeds".format(
+            len(counts), sum(counts.values())
+        )
 
     def __repr__(self):
-        return "<%s at %s>" % (self.__class__.__name__, self.path)
-
-if __name__ == '__main__':
-    print ingest('fixtures/feedly.opml')
+        return "<{} at {}>".format(self.__class__.__name__, self.path)
