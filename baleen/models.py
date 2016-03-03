@@ -52,11 +52,11 @@ def connect(**kwargs):
     """
     Wrapper for mongoengine connect - connects with configuration details.
     """
-    name = kwargs.get('name', settings.database.name)
-    host = kwargs.get('host', settings.database.host)
-    port = kwargs.get('port', settings.database.port)
+    name = kwargs.pop('name', settings.database.name)
+    host = kwargs.pop('host', settings.database.host)
+    port = kwargs.pop('port', settings.database.port)
 
-    return me.connect(name, host=host, port=port)
+    return me.connect(name, host=host, port=port, **kwargs)
 
 ##########################################################################
 ## Models
@@ -93,7 +93,7 @@ class Feed(me.DynamicDocument):
         return self.urls.get('htmlurl')
 
     def __unicode__(self):
-        return self.title
+        return self.title if self.title else self.link
 
 class Post(me.DynamicDocument):
 
@@ -140,7 +140,7 @@ class Post(me.DynamicDocument):
         return template % (self.title, self.content)
 
     def __unicode__(self):
-        return self.title
+        return self.title if self.title else self.link
 
 ##########################################################################
 ## Signals

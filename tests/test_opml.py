@@ -31,7 +31,7 @@ from baleen.opml import OPML
 ## Fixtures
 ##########################################################################
 
-FIXTURES = os.path.join(os.path.dirname(__file__), "..", "fixtures")
+FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
 FEEDLY   = os.path.join(FIXTURES, "feedly.opml")
 
 ##########################################################################
@@ -67,18 +67,22 @@ class OPMLTests(unittest.TestCase):
         """
         opml = OPML(FEEDLY)
         expected = [
-            u'cooking',
-            u'cinema',
-            u'gaming',
-            u'tech',
-            u'essays',
+            u'news',
+            u'do it yourself',
             u'business',
-            u'design',
-            u'sports',
-            u'books',
+            u'gaming',
             u'data science',
-            u'do it yourself'
+            u'essays',
+            u'politics',
+            u'tech',
+            u'cinema',
+            u'books',
+            u'sports',
+            u'cooking',
+            u'design'
         ]
+
+        print list(opml.categories())
 
         self.assertEqual(list(opml.categories()), expected)
 
@@ -87,7 +91,7 @@ class OPMLTests(unittest.TestCase):
         Test the OPML len built in
         """
         opml = OPML(FEEDLY)
-        self.assertEqual(len(opml), 102)
+        self.assertEqual(len(opml), 36)
 
     def test_counts(self):
         """
@@ -95,23 +99,28 @@ class OPMLTests(unittest.TestCase):
         """
         opml = OPML(FEEDLY)
         expected = {
-            'cooking': 9,
-            'cinema': 10,
-            'gaming': 8,
-            'tech': 14,
+            'cooking': 4,
+            'cinema': 3,
+            'gaming': 3,
+            'tech': 3,
             'essays': 2,
-            'business': 8,
-            'design': 15,
-            'sports': 7,
-            'books': 6,
-            'data science': 15,
-            'do it yourself': 8,
+            'business': 3,
+            'design': 2,
+            'sports': 3,
+            'books': 3,
+            'data science': 4,
+            'do it yourself': 2,
+            'news': 2,
+            'politics': 2,
         }
         counts = opml.counts()
 
         for key, val in expected.items():
             self.assertIn(key, counts)
-            self.assertEqual(counts[key], val)
+            self.assertEqual(
+                counts[key], val,
+                "{} mismatch: {} vs {}".format(key, counts[key], val)
+            )
 
     def test_item_iterator_detail(self):
         """
