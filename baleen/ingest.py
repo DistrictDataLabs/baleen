@@ -29,7 +29,25 @@ from baleen.wrangle import PostWrangler
 from baleen.utils.logger import LoggingMixin
 from baleen.utils.decorators import memoized
 
+from datetime import datetime
 from collections import Counter
+
+
+##########################################################################
+## Helper Functions
+##########################################################################
+
+def stype(obj):
+    """
+    Returns the string of the type. Used to count exception types.
+    """
+    if isinstance(obj, BaleenError):
+        if hasattr(obj, "original"):
+            return "{} ({})".format(
+                type(obj).__name__, type(obj.original).__name__
+            )
+    return type(obj).__name__
+
 
 ##########################################################################
 ## Base Ingestion Class
@@ -51,6 +69,7 @@ class Ingestor(LoggingMixin):
         self.jobid   = None         # Unique job id for every run
         self.options = options      # Any other options passed in
         self._feeds  = feeds        # Allows pass in feed collection
+        self.errors  = Counter()    # Count the number of error types
 
     @property
     def name(self):
@@ -124,6 +143,7 @@ class Ingestor(LoggingMixin):
                 self.counts['feeds'] += 1
             except SynchronizationError as e:
                 self.counts['feed_error'] += 1
+                self.errors[stype(e)] += 1
                 self.logger.error(
                     u"Error on Feed {} ({}): {}".format(
                         idx+1, fsync.feed, unicode(e)
@@ -141,6 +161,7 @@ class Ingestor(LoggingMixin):
                 self.counts["posts"] += 1
             except WranglingError as e:
                 self.counts["errors"] += 1
+                self.errors[stype(e)] += 1
                 self.logger.error(
                     u"Post Error for feed {} on entry {}: {}".format(
                         fsync.feed, idx, unicode(e)
@@ -156,8 +177,12 @@ class Ingestor(LoggingMixin):
             try:
                 post.fetch()
             except FetchError as e:
-                u"Fetch Error for post \"{}\" ({}): {}".format(
-                    post.post.title, post.post.url, unicode(e)
+                self.counts["fetch_error"] += 1
+                self.errors[stype(e)] += 1
+                self.logger.error(
+                    u"Fetch Error for post \"{}\" ({}): {}".format(
+                        post.post.title, post.post.url, unicode(e)
+                    )
                 )
 
     def ingest(self):
@@ -193,15 +218,49 @@ class Ingestor(LoggingMixin):
 class MongoIngestor(Ingestor):
     """
     Ingests feeds that are stored in the database.
+    This type of ingestor also tracks information into the database.
     """
 
     def feeds(self):
         """
         Returns an iterator of all active feeds from the database
         """
-        db.connect()
         for feed in db.Feed.objects(active=True):
             yield feed
+
+    def started(self):
+        """
+        Save a record about the job start to the database.
+        """
+        super(MongoIngestor, self).started()
+        self.job = db.Job(jobid=self.jobid, name=self.name)
+        self.job.save()
+
+    def failed(self, exception):
+        """
+        Save information about the failure to the database.
+        """
+        super(MongoIngestor, self).failed(exception)
+        self.job.failed = True
+        self.job.reason = unicode(exception)
+        self.job.finished = datetime.now()
+        self.job.save()
+
+    def finished(self):
+        """
+        Update the job record in the database.
+        """
+        super(MongoIngestor, self).finished()
+        self.job.reason = u"OK"
+        self.job.finished = datetime.now()
+        self.job.counts = self.counts
+        self.job.errors = self.errors
+        self.job.totals = {
+            "feeds": db.Feed.objects.count(),
+            "posts": db.Post.objects.count(),
+            "jobs": db.Job.objects.count(),
+        }
+        self.job.save()
 
 ##########################################################################
 ## OPML Ingestion Class
