@@ -23,7 +23,7 @@ from baleen.models import Feed, Post
 from baleen.utils.timez import localnow
 from baleen.exceptions import FeedTypeError
 from baleen.exceptions import SynchronizationError
-from baleen.utils.decorators import memoized
+from baleen.utils.decorators import memoized, reraise
 
 
 ##########################################################################
@@ -124,6 +124,7 @@ class FeedSync(object):
         # Otherwise just return the parse of the URL
         return feedparser.parse(self.url)
 
+    @reraise(klass=SynchronizationError)
     def sync(self, save=True):
         """
         Calls the feedparser.parse function correctly but also synchronizes

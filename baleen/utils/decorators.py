@@ -21,6 +21,7 @@ import time
 
 from functools import wraps
 from baleen.utils.timez import Timer
+from baleen.exceptions import BaleenError
 
 ##########################################################################
 ## Memoization
@@ -48,18 +49,50 @@ def memoized(fget):
 ## Timer functions
 ##########################################################################
 
-def timeit(func, wall_clock=True):
+def timeit(func):
     """
     Returns the number of seconds that a function took along with the result
     """
-    
+
     @wraps(func)
     def timer_wrapper(*args, **kwargs):
         """
         Inner function that uses the Timer context object
         """
-        with Timer(wall_clock) as timer:
+        with Timer() as timer:
             result = func(*args, **kwargs)
 
         return result, timer
+
     return timer_wrapper
+
+
+##########################################################################
+## Exception Handling
+##########################################################################
+
+def reraise(klass=BaleenError, message=None, trap=Exception):
+    """
+    Catches exceptions (those specified by trap) and then reraises the
+    exception type specified by class. Also embeds the original exception as
+    a property of the new exception: `error.original`. Finally you can
+    specify another message to raise, otherwise the error string is used.
+    """
+
+    def reraise_decorator(func):
+
+        @wraps(func)
+        def reraise_wrapper(*args, **kwargs):
+            """
+            Capture Wrapper
+            """
+            try:
+                return func(*args, **kwargs)
+            except trap as e:
+                error = klass(message or str(e))
+                error.original = e
+                raise error
+
+        return reraise_wrapper
+
+    return reraise_decorator
