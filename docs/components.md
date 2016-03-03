@@ -37,7 +37,7 @@ The ingestion portion of the Baleen service is the most critical and the require
 
 In order to synchronize feeds, we use the [feedparser](https://pypi.python.org/pypi/feedparser) library and to fetch documents from the web, we use [Requests](http://docs.python-requests.org/en/master/). A single `Ingest` instance takes as input an iterable of feeds from either MongoDB or from an OPML file. When run it maintains two queues: a feed processing queue and a page processing queue (so that it can be threaded or multiprocessed).
 
-Feed processing is performed by a `FeedSync` object which takes a single feed as input. The `FeedSync` object fetches the RSS via feedparser, and iterates through all posts, wrangling them and saving them to Mongo. The PageFetch object takes a post as input, and searches for the web page to download.
+Feed processing is performed by a `FeedSync` object which takes a single feed as input. The `FeedSync` object fetches the RSS via feedparser, and iterates through all posts, wrangling them and saving them to Mongo. The `PageWrangler` object takes a post as input, wrangles the data from a variety of feed types, then fetches the complete web page.
 
 Once the `Ingest` instance has cleared it's work queue, it logs various information and terminates. Note that the `Ingest` instance is responsible for error handling and logging, while the sync and fetch utilities must raise exceptions.
 
@@ -47,4 +47,4 @@ The import utility uses an `OPMLReader` to load and parse the OPML file from dis
 
 Note, we've found that the best way to create OPML files is to use the [Feedly](https://feedly.com) app, which allows us to organize our feeds. Under their "organize feeds" section, they also have an Export OPML link (and an import OPML link).
 
-The export utility creates a categorized corpus structure ready for NLTK using the `MongoExport` class. Each category from the TOC structure of the OPML is a directory in the corpus on disk, then each post is written as an HTML file. The exporter also writes a README file with information about the contents fo the corpus. Key concerns here involve HTML sanitization (removing scripts) and readability (extracting only the text we want to analyze). 
+The export utility creates a categorized corpus structure ready for NLTK using the `MongoExport` class. Each category from the TOC structure of the OPML is a directory in the corpus on disk, then each post is written as an HTML file. The exporter also writes a README file with information about the contents fo the corpus. Key concerns here involve HTML sanitization (removing scripts) and readability (extracting only the text we want to analyze).
