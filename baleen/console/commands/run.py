@@ -38,6 +38,7 @@ class RunCommand(Command):
     args = {}
 
     def ingest(self, args):
+        db.connect()
         ingestor = MongoIngestor()
         ingestor.ingest()
 

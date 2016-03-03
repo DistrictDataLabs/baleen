@@ -58,6 +58,7 @@ class IngestCommand(Command):
             ingestor = Ingestor(args.feeds)
             raise ConsoleError("feed ingestion is an untested utility!")
 
+        db.connect()
         ingestor.ingest()
         return (
             "Processed {feeds} feeds ({timer}): "

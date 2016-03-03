@@ -17,6 +17,7 @@ Object Document Models for use with Mongo and mongoengine
 ## Imports
 ##########################################################################
 
+import baleen
 import hashlib
 import mongoengine as me
 
@@ -148,9 +149,36 @@ class Post(me.DynamicDocument):
     def __unicode__(self):
         return self.title if self.title else self.url
 
+
+class Job(me.DynamicDocument):
+
+    jobid     = me.UUIDField(binary=False, required=True)
+    name      = me.StringField(max_length=128, default="Unknown")
+    failed    = me.BooleanField(default=False)
+    reason    = me.StringField(max_length=512)
+    version   = me.StringField(max_length=10, default=baleen.get_version)
+    started   = me.DateTimeField(default=datetime.now, required=True)
+    finished  = me.DateTimeField(default=None)
+    updated   = me.DateTimeField(default=datetime.now, required=True)
+    errors    = me.MapField(field=me.IntField())
+    counts    = me.MapField(field=me.IntField())
+    totals    = me.MapField(field=me.IntField())
+
+    @classmethod
+    def pre_save(cls, sender, document, **kwargs):
+        document.updated = datetime.now()
+
+    meta      = {
+        'collection': 'jobs',
+    }
+
+    def __unicode__(self):
+        return "{} Job {}".format(self.name, self.jobid)
+
 ##########################################################################
 ## Signals
 ##########################################################################
 
 me.signals.pre_save.connect(Feed.pre_save, sender=Feed)
+me.signals.pre_save.connect(Post.pre_save, sender=Post)
 me.signals.pre_save.connect(Post.pre_save, sender=Post)
