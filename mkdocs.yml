@@ -8,5 +8,6 @@ theme: readthedocs
 
 pages:
     - "Introduction": index.md
+    - "Component Architecture": components.md
     - "Service Architecture": service.md
     - "About Baleen": about.md

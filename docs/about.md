@@ -47,13 +47,29 @@ The release versions that are sent to the Python package index (PyPI) are also t
 
 The versioning uses a three part version system, "a.b.c" - "a" represents a major release that may not be backwards compatible. "b" is incremented on minor releases that may contain extra features, but are backwards compatible. "c" releases are bug fixes or other micro changes that developers should feel free to immediately update to.
 
+### Version 0.3
+
+* **tag**: [v0.3](https://github.com/bbengfort/baleen/releases/tag/v0.3)
+* **deployment**: Thursday, March 3, 2016
+* **commit**: (see tag)
+
+Releases one day after another! The reason is because Baleen needs to be running in production to gather a large enough corpus for PyCon. Version 0.3 is a major release that implements the revised component architecture. It should hopefully be more stable, give more visibility into what's going on, be easier to update and fix, and have a few more features. Features include tracking ingestion jobs in the Mongo database (so we can add a web application), synchronization of feeds and wrangling of posts are not coupled. Added Commis for easier console utility management, and finally added some other tools and tests. 
+
+### Version 0.2.1
+
+* **tag**: [v0.2.1](https://github.com/bbengfort/baleen/releases/tag/v0.2.1)
+* **deployment**: Wednesday, March 2, 2016
+* **commit**: [85aa949](https://github.com/bbengfort/baleen/commit/85aa949f8fae453a491b0129dcb1ad6d02832e3e)
+
+Hotfix for an error that caused unicode strings to kill the ingestion in a try/except block (as it was being written to the logger)! This error was so serious it needed to be fixed right away, even in the middle of Version 0.3 updates.
+
 ### Version 0.2
 
 * **tag**: [v0.2](https://github.com/bbengfort/baleen/releases/tag/v0.2)
 * **deployment**: Tuesday, March 1, 2016
-* **commit**: (see tag)
+* **commit**: [8e4e06e](https://github.com/bbengfort/baleen/commit/8e4e06e793b4ef949e83ab4c6d1715b03ae33957)
 
-This update was a push to get Baleen running on EC2 on an hourly basis in preparation for PyCon. We updated all of Baleen's dependencies to their latest versions, added tests and other important fixtures, and organized the code a bit better. New functionality includes the ability to fetch the post webpage from the link, export the corpus to disk using the command line utility, and run in the background using the schedule library. 
+This update was a push to get Baleen running on EC2 on an hourly basis in preparation for PyCon. We updated all of Baleen's dependencies to their latest versions, added tests and other important fixtures, and organized the code a bit better. New functionality includes the ability to fetch the post webpage from the link, export the corpus to disk using the command line utility, and run in the background using the schedule library.
 
 ### Version 0.1
 

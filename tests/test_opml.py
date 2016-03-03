@@ -20,33 +20,52 @@ Testing for the OPML reader and ingestion function.
 import os
 import unittest
 
+from .test_models import MongoTestMixin
+
 try:
     from unittest import mock
 except ImportError:
     import mock
 
-from baleen.opml import OPML
+from baleen.opml import OPML, load_opml
+from baleen.models import Feed
 
 ##########################################################################
 ## Fixtures
 ##########################################################################
 
-FIXTURES = os.path.join(os.path.dirname(__file__), "..", "fixtures")
+FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
 FEEDLY   = os.path.join(FIXTURES, "feedly.opml")
 
 ##########################################################################
-## Test Ingestion
+## Test Load OPML command
 ##########################################################################
 
-class IngestionTests(unittest.TestCase):
+class LoadOPMLTests(MongoTestMixin, unittest.TestCase):
 
-    @unittest.skip("not implemented yet")
-    def test_ingest_integrated(self):
+    def test_load_opml_integrated(self):
         """
-        Test the integration of the ingest helper function.
+        Test the integration of the ingest helper function
         """
-        raise NotImplementedError("Not Implemented Yet")
+        self.assertEqual(Feed.objects.count(), 0)
+        self.assertEqual(load_opml(FEEDLY), 36)
+        self.assertEqual(Feed.objects.count(), 36)
 
+        for feed in Feed.objects():
+            self.assertIn('xmlUrl', feed.urls)
+            self.assertIn('htmlUrl', feed.urls)
+
+    def test_load_opml_no_duplicates(self):
+        """
+        Assert multiple calls to the load_opml creates no duplicates
+        """
+        self.assertEqual(Feed.objects.count(), 0)
+        self.assertEqual(load_opml(FEEDLY), 36)
+        self.assertEqual(Feed.objects.count(), 36)
+
+        for _ in xrange(10):
+            self.assertEqual(load_opml(FEEDLY), 0)
+            self.assertEqual(Feed.objects.count(), 36)
 
 ##########################################################################
 ## OPML Reader Test
@@ -56,7 +75,7 @@ class OPMLTests(unittest.TestCase):
 
     def test_fixture(self):
         """
-        Assert the required opml fixture is available.
+        Assert the required opml fixture is available
         """
         self.assertTrue(os.path.exists(FEEDLY))
         self.assertTrue(os.path.isfile(FEEDLY))
@@ -67,18 +86,22 @@ class OPMLTests(unittest.TestCase):
         """
         opml = OPML(FEEDLY)
         expected = [
-            u'cooking',
-            u'cinema',
-            u'gaming',
-            u'tech',
-            u'essays',
+            u'news',
+            u'do it yourself',
             u'business',
-            u'design',
-            u'sports',
-            u'books',
+            u'gaming',
             u'data science',
-            u'do it yourself'
+            u'essays',
+            u'politics',
+            u'tech',
+            u'cinema',
+            u'books',
+            u'sports',
+            u'cooking',
+            u'design'
         ]
+
+        print list(opml.categories())
 
         self.assertEqual(list(opml.categories()), expected)
 
@@ -87,7 +110,7 @@ class OPMLTests(unittest.TestCase):
         Test the OPML len built in
         """
         opml = OPML(FEEDLY)
-        self.assertEqual(len(opml), 102)
+        self.assertEqual(len(opml), 36)
 
     def test_counts(self):
         """
@@ -95,23 +118,28 @@ class OPMLTests(unittest.TestCase):
         """
         opml = OPML(FEEDLY)
         expected = {
-            'cooking': 9,
-            'cinema': 10,
-            'gaming': 8,
-            'tech': 14,
+            'cooking': 4,
+            'cinema': 3,
+            'gaming': 3,
+            'tech': 3,
             'essays': 2,
-            'business': 8,
-            'design': 15,
-            'sports': 7,
-            'books': 6,
-            'data science': 15,
-            'do it yourself': 8,
+            'business': 3,
+            'design': 2,
+            'sports': 3,
+            'books': 3,
+            'data science': 4,
+            'do it yourself': 2,
+            'news': 2,
+            'politics': 2,
         }
         counts = opml.counts()
 
         for key, val in expected.items():
             self.assertIn(key, counts)
-            self.assertEqual(counts[key], val)
+            self.assertEqual(
+                counts[key], val,
+                "{} mismatch: {} vs {}".format(key, counts[key], val)
+            )
 
     def test_item_iterator_detail(self):
         """
