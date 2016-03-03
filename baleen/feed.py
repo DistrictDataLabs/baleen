@@ -19,7 +19,7 @@ Handles the synchronization of documents from an RSS feeds.
 
 import feedparser
 
-from baleen.models import Feed, Post
+from baleen.models import Feed
 from baleen.utils.timez import localnow
 from baleen.exceptions import FeedTypeError
 from baleen.exceptions import SynchronizationError
@@ -174,3 +174,12 @@ class FeedSync(object):
             self.feed.save()
 
         return result
+
+    def entries(self, save=True):
+        """
+        A helper function to simultaneously call sync and iterate over the
+        entries from the feed. This is the usual method of interacting with
+        the feed sync object. Note that this just returns raw dicts not Posts.
+        """
+        result = self.sync(save=save)
+        return result.entries

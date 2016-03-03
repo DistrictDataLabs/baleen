@@ -36,3 +36,17 @@ class SynchronizationError(BaleenError):
     Something went wrong with feed synchronization
     """
     pass
+
+
+class WranglingError(BaleenError):
+    """
+    Something went wrong wrangling a post
+    """
+    pass
+
+
+class FetchError(WranglingError):
+    """
+    Could not fetch the webpage for the post.
+    """
+    pass
