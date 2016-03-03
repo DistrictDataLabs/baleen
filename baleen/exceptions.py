@@ -31,14 +31,21 @@ class FeedTypeError(BaleenError):
     pass
 
 
-class SynchronizationError(BaleenError):
+class IngestionError(BaleenError):
+    """
+    Something went wrong specifically with the ingestion process
+    """
+    pass
+
+
+class SynchronizationError(IngestionError):
     """
     Something went wrong with feed synchronization
     """
     pass
 
 
-class WranglingError(BaleenError):
+class WranglingError(IngestionError):
     """
     Something went wrong wrangling a post
     """
@@ -47,6 +54,6 @@ class WranglingError(BaleenError):
 
 class FetchError(WranglingError):
     """
-    Could not fetch the webpage for the post.
+    Could not fetch the webpage for the post
     """
     pass

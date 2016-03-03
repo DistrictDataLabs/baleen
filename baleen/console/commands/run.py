@@ -17,12 +17,13 @@ Runs the ingestor in the background every hour.
 ## Imports
 ##########################################################################
 
+import time
 import schedule
 import baleen.models as db
 
 from commis import Command
 from functools import partial
-# from baleen.feed import MongoFeedIngestor
+from baleen.ingest import MongoIngestor
 from baleen.utils.logger import IngestLogger
 
 ##########################################################################
@@ -33,22 +34,15 @@ class RunCommand(Command):
 
     name = 'run'
     help = 'Runs the ingest command every hour'
-    args = {
-        ('-v', '--verbose'): {
-            "action":"store_true",
-            "default":False,
-            "help":'Print details.',
-        }
-    }
+    args = {}
 
     def ingest(self, args):
-        db.connect()
-        ingestor = MongoFeedIngestor()
-        ingestor.ingest(verbose=args.verbose)
+        ingestor = MongoIngestor()
+        ingestor.ingest()
 
     def handle(self, args):
         logger = IngestLogger()
-        logger.info("Starting baleen ingestion service every hour.")
+        logger.info("Starting Baleen ingestion service every hour.")
         schedule.every().hour.do(partial(self.ingest, args))
 
         while True:
@@ -56,7 +50,8 @@ class RunCommand(Command):
                 schedule.run_pending()
                 time.sleep(1)
             except (KeyboardInterrupt, SystemExit):
-                break
-
-        logger.info("Stopping baleen ingestion service.")
-        return ""
+                logger.info("Stopping Baleen ingestion service.")
+                return ""
+            except Exception as e:
+                logger.critical(str(e))
+                return str(e)

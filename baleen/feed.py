@@ -146,10 +146,13 @@ class FeedSync(object):
         self.feed.fetched = localnow()
 
         # Update the feed properties from the result.
-        if 'etag' in result:     self.feed.etag     = result.etag
-        if 'modified' in result: self.feed.modified = result.modified
-        if 'version' in result:  self.feed.version  = result.version
-        if 'href' in result:     self.feed.link     = result.href
+        for key in ('etag', 'modified', 'version'):
+            if key in result and getattr(result, key):
+                setattr(self.feed, key, getattr(result, key))
+
+        # Update the link via the href
+        if 'href' in result and result.href:
+            self.feed.link = result.href
 
         # Update the feed items from the result.
         for key, val in result.feed.items():

@@ -24,11 +24,11 @@ module provides.
 import requests
 
 from copy import deepcopy
-from baleen.models import Post
-from baleen.config import settings
-from baleen.exceptions import WranglingError, FetchError
-from baleen.utils.decorators import memoized, reraise
 from dateutil import parser as dtparser
+
+from baleen.models import Post
+from baleen.utils.decorators import reraise
+from baleen.exceptions import WranglingError, FetchError
 
 ##########################################################################
 ## Module Constants
