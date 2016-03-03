@@ -17,6 +17,7 @@ A utility to print out information about the Baleen state.
 ## Imports
 ##########################################################################
 
+import baleen
 import baleen.models as db
 
 from commis import Command
@@ -49,12 +50,22 @@ class SummaryCommand(Command):
             output.append(unicode(settings))
             output.append(u"")
 
-        output.append(u"Baleen Status:")
+        output.append(u"Baleen v{} Status:".format(baleen.get_version()))
         output.append(
             u"{} Feeds and {} Posts".format(
                 db.Feed.objects.count(), db.Post.objects.count()
             )
         )
+
+        latest = db.Feed.objects.order_by('-updated').first()
+        output.extend([
+            u"",
+            u"Latest Feed: ",
+            u"    Title: \"{}\"".format(latest.title),
+            u"    eTag: \"{}\"".format(latest.etag),
+            u"    Modified: {}".format(latest.modified),
+            u"    Posts: {}".format(latest.count_posts())
+        ])
 
         latest = db.Post.objects.order_by('-id').first()
         output.extend([

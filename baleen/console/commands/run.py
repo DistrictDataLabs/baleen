@@ -18,6 +18,7 @@ Runs the ingestor in the background every hour.
 ##########################################################################
 
 import time
+import baleen
 import schedule
 import baleen.models as db
 
@@ -42,7 +43,10 @@ class RunCommand(Command):
 
     def handle(self, args):
         logger = IngestLogger()
-        logger.info("Starting Baleen ingestion service every hour.")
+        logger.info(
+            "Starting Baleen v{} ingestion service every hour.".format(baleen.get_version())
+        )
+
         schedule.every().hour.do(partial(self.ingest, args))
 
         while True:
@@ -50,7 +54,7 @@ class RunCommand(Command):
                 schedule.run_pending()
                 time.sleep(1)
             except (KeyboardInterrupt, SystemExit):
-                logger.info("Stopping Baleen ingestion service.")
+                logger.info("Graceful shutdown of Baleen ingestion service.")
                 return ""
             except Exception as e:
                 logger.critical(str(e))

@@ -92,6 +92,12 @@ class Feed(me.DynamicDocument):
     def htmlurl(self):
         return self.urls.get('htmlUrl')
 
+    def count_posts(self):
+        """
+        Count the number of associated posts
+        """
+        return Post.objects(feed=self).count()
+
     def __unicode__(self):
         return self.title if self.title else self.link
 
