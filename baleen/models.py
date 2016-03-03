@@ -90,7 +90,7 @@ class Feed(me.DynamicDocument):
 
     @property
     def htmlurl(self):
-        return self.urls.get('htmlurl')
+        return self.urls.get('htmlUrl')
 
     def __unicode__(self):
         return self.title if self.title else self.link
@@ -140,7 +140,7 @@ class Post(me.DynamicDocument):
         return template % (self.title, self.content)
 
     def __unicode__(self):
-        return self.title if self.title else self.link
+        return self.title if self.title else self.url
 
 ##########################################################################
 ## Signals
