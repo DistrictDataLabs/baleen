@@ -1,4 +1,4 @@
-# test.utils_tests.timez_tests
+# test.utils_tests.test_timez
 # Testing for the timez time helpers library.
 #
 # Author:   Benjamin Bengfort <benjamin@bengfort.com>
@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: timez_tests.py [] benjamin@bengfort.com $
+# ID: test_timez.py [] benjamin@bengfort.com $
 
 """
 Testing for the timez time helpers library.
