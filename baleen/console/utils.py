@@ -24,17 +24,17 @@ import argparse
 ## Console Parsers
 ##########################################################################
 
-def csv(type=int):
+def csv(ptype=int):
     """
     Argparse type for comma seperated values. Also parses the type, e.g. int.
     """
     def parser(s):
         try:
-            parse = lambda p: type(p.strip())
+            parse = lambda p: ptype(p.strip())
             return map(parse, s.split(","))
-        except Exception as e:
+        except Exception:
             raise argparse.ArgumentTypeError(
-                "Could not parse CSV value to type {}: {!r}".format(type.__name__, s)
+                "Could not parse CSV value to type {}: {!r}".format(ptype.__name__, s)
             )
 
     return parser

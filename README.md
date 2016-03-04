@@ -1,8 +1,10 @@
 # Baleen
 **An automated ingestion service for blogs to construct a corpus for NLP research.**
 
+[![PyPI version][pypi_img]][pypi_href]
 [![Build Status][travis_img]][travis_href]
 [![Coverage Status][coveralls_img]][coverals_href]
+[![Code Health][health_img]][health_href]
 [![Documentation Status][rtfd_img]][rtfd_href]
 [![Stories in Ready][waffle_img]][waffle_href]
 
@@ -89,10 +91,14 @@ The image used in this README, ["Space Whale"][spacewhale.jpg] by [hbitik](http:
 
 
 <!-- References -->
+[pypi_img]: https://badge.fury.io/py/baleen.svg
+[pypi_href]: https://badge.fury.io/py/baleen
 [travis_img]: https://travis-ci.org/bbengfort/baleen.svg?branch=master
 [travis_href]: https://travis-ci.org/bbengfort/baleen/
 [coveralls_img]: https://coveralls.io/repos/github/bbengfort/baleen/badge.svg?branch=master
 [coverals_href]: https://coveralls.io/github/bbengfort/baleen?branch=master
+[health_img]: https://landscape.io/github/bbengfort/baleen/master/landscape.svg?style=flat
+[health_href]: https://landscape.io/github/bbengfort/baleen/master
 [waffle_img]: https://badge.waffle.io/bbengfort/baleen.png?label=ready&title=Ready
 [waffle_href]: https://waffle.io/bbengfort/baleen
 [rtfd_img]: https://readthedocs.org/projects/baleen-ingest/badge/?version=latest

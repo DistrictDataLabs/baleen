@@ -82,7 +82,7 @@ class FeedSync(object):
             return self.MODEL
 
         if isinstance(self.feed, dict):
-            if not 'xmlUrl' in self.feed:
+            if 'xmlUrl' not in self.feed:
                 raise FeedTypeError(
                     "Dictionary object does not contain 'xmlUrl' key!"
                 )

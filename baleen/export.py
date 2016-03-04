@@ -93,6 +93,7 @@ class MongoExporter(object):
         """
         In the root directory writes each file and a README
         """
+        categories = categories or self.categories
 
         if not os.path.exists(root):
             os.mkdir(root)
@@ -100,7 +101,7 @@ class MongoExporter(object):
         if not os.path.isdir(root):
             raise Exception("%s is not a directory!" % root)
 
-        for category in self.categories:
+        for category in categories:
             dirname = os.path.join(root, category.replace(" ", "_"))
             if not os.path.exists(dirname):
                 os.mkdir(dirname)
@@ -119,4 +120,3 @@ if __name__ == '__main__':
     connect()
     exporter = MongoExporter()
     exporter.export('fixtures/corpus')
-

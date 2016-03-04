@@ -21,7 +21,6 @@ import os
 import baleen.models as db
 
 from commis import Command
-from baleen.config import settings
 from baleen.console.utils import csv
 from baleen.export import MongoExporter
 

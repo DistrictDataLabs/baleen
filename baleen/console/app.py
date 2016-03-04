@@ -20,7 +20,6 @@ http://bbengfort.github.io/tutorials/2016/01/23/console-utility-commis.html
 
 from commis import color
 from commis import ConsoleProgram
-from commis.exceptions import ConsoleError
 
 from baleen.console.commands import *
 from baleen.version import get_version

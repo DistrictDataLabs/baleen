@@ -26,7 +26,7 @@ from baleen.config import settings
 from datetime import datetime
 from socket import gethostname
 from pymongo import MongoClient
-from pymongo.errors import OperationFailure, PyMongoError
+from pymongo.errors import PyMongoError
 
 ##########################################################################
 ## Mongo Formatter/Handler

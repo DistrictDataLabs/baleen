@@ -17,8 +17,6 @@ Decorators and function utilities for Baleen.
 ## Imports
 ##########################################################################
 
-import time
-
 from functools import wraps
 from baleen.utils.timez import Timer
 from baleen.exceptions import BaleenError
