@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: __init__.py [] benjamin@bengfort.com $
+# ID: __init__.py [5ad94d7] benjamin@bengfort.com $
 
 """
 An automated ingestion service for blogs to construct a corpus for NLP

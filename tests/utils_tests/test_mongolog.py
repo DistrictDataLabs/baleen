@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: test_mongolog.py [] benjamin@bengfort.com $
+# ID: test_mongolog.py [df0c71b] benjamin@bengfort.com $
 
 """
 Simple tests for logging to MongoDB

@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: load.py [] benjamin@bengfort.com $
+# ID: load.py [da54aa8] benjamin@bengfort.com $
 
 """
 Loads an OPML file from disk into the database.

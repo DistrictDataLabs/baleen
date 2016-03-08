@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: opml.py [] benjamin@bengfort.com $
+# ID: opml.py [b2f890b] benjamin@bengfort.com $
 
 """
 Reads opml files and gives back outline data

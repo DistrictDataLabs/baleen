@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: feed.py [] benjamin@bengfort.com $
+# ID: feed.py [e4baa55] benjamin@bengfort.com $
 
 """
 Handles the synchronization of documents from an RSS feeds.

@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: ingest.py [] benjamin@bengfort.com $
+# ID: ingest.py [4ee79a0] benjamin@bengfort.com $
 
 """
 The ingestion runner that implements ingestion for a collection of feeds.

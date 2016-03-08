@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: utils.py [] benjamin@bengfort.com $
+# ID: timez.py [caaaaca] benjamin@bengfort.com $
 
 """
 Utility functions for Baleenc

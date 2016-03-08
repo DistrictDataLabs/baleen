@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: run.py [] benjamin@bengfort.com $
+# ID: run.py [da54aa8] benjamin@bengfort.com $
 
 """
 Runs the ingestor in the background every hour.

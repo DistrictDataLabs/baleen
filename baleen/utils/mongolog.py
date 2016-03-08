@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: mongolog.py [] benjamin@bengfort.com $
+# ID: mongolog.py [caaaaca] benjamin@bengfort.com $
 
 """
 Handlers and formatters for logging to Mongo

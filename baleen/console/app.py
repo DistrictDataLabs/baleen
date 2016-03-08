@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: app.py [] benjamin@bengfort.com $
+# ID: app.py [da54aa8] benjamin@bengfort.com $
 
 """
 Definition of the Baleen Utility app and commands

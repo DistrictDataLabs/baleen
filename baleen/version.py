@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: version.py [] benjamin@bengfort.com $
+# ID: version.py [edff1dd] benjamin@bengfort.com $
 
 """
 Stores version information such that it can be read by setuptools.

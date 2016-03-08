@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: baleen.console.utils.py [] benjamin@bengfort.com $
+# ID: utils.py [da54aa8] benjamin@bengfort.com $
 
 """
 Argparse extensions and utilities.

@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: decorators.py [] benjamin@bengfort.com $
+# ID: decorators.py [538b33d] benjamin@bengfort.com $
 
 """
 Decorators and function utilities for Baleen.

@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: test_decorators.py [] benjamin@bengfort.com $
+# ID: test_decorators.py [538b33d] benjamin@bengfort.com $
 
 """
 Testing the decorators utility package.

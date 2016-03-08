@@ -7,7 +7,7 @@
 # Copyright (C) 2016 University of Maryland
 # For license information, see LICENSE.txt
 #
-# ID: __init__.py [] benjamin@bengfort.com $
+# ID: __init__.py [caaaaca] benjamin@bengfort.com $
 
 """
 Utilities and helpers functions for the Baleen project.

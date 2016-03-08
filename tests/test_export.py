@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: test_export.py [] benjamin@bengfort.com $
+# ID: test_export.py [2988c53] benjamin@bengfort.com $
 
 """
 Test the export module - to generate a corpus for machine learning.

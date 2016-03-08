@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: export.py [] benjamin@bengfort.com $
+# ID: export.py [da54aa8] benjamin@bengfort.com $
 
 """
 Export utility to dump an HTML corpus to disk from the database.

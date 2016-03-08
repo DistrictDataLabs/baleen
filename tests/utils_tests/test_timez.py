@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: test_timez.py [] benjamin@bengfort.com $
+# ID: test_timez.py [df0c71b] benjamin@bengfort.com $
 
 """
 Testing for the timez time helpers library.

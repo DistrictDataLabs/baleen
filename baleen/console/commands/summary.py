@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: summary.py [] benjamin@bengfort.com $
+# ID: summary.py [da54aa8] benjamin@bengfort.com $
 
 """
 A utility to print out information about the Baleen state.

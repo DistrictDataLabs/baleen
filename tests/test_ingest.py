@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: test_ingest.py [] benjamin@bengfort.com $
+# ID: test_ingest.py [df0c71b] benjamin@bengfort.com $
 
 """
 Test the ingestor mechanism in an integration fashion.

@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: export.py [] benjamin@bengfort.com $
+# ID: export.py [eb962e7] benjamin@bengfort.com $
 
 """
 Export an HTML corpus for analyses with NLTK

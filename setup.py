@@ -8,7 +8,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt and NOTICE.md
 #
-# ID: setup.py [] benjamin@bengfort.com $
+# ID: setup.py [5ad94d7] benjamin@bengfort.com $
 
 """
 Setup script for installing baleen.
