@@ -1,0 +1,9 @@
+mongo:
+   image: mongo:3.2.3
+app:
+   build: .
+   dockerfile: Dockerfile-app
+   volumes:
+      - .:/baleen
+   links:
+      - mongo
