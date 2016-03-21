@@ -65,8 +65,8 @@ $ bin/baleen --help
 7. Import the feeds from the `feedly.opml` file in the fixtures.
 
     ```
-$ bin/baleen import fixtures/feedly.opml
-Ingested 101 feeds from 1 OPML files
+$ bin/baleen load tests/fixtures/feedly.opml
+Ingested 36 feeds from 1 OPML files
     ```
 
 8. Perform an ingestion of the feeds that were imported from the `feedly.opml` file.
@@ -76,6 +76,40 @@ $ bin/baleen ingest
     ```
 
 Your Mongo database collections should be created as you add new documents to them, and at this point you're ready to develop!
+
+## Docker Setup
+
+Included in this repository are files related to setting up the development environment using docker if you wish.
+
+1. Install Docker Machine and Docker Compose e.g. with [Docker Toolbox](https://www.docker.com/products/docker-toolbox).
+
+2. Clone the repository
+
+    ```
+$ git clone git@github.com:bbengfort/baleen.git
+$ cd baleen
+    ```
+    
+3. Create your local configuration file. Edit it with your configuration details; your MongoDB server will be at host `mongo`.
+
+    ```
+$ cp conf/baleen-example.yaml conf/baleen.yaml
+    ```
+
+    ```yaml
+debug: true
+testing: false
+database:
+    host: mongo
+    port: 27017
+    name: baleen
+    ```
+    
+4. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 5-8.
+
+    ```
+    docker exec -it baleen_app_1 /bin/bash
+    ```
 
 ## About
 
