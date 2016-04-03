@@ -24,15 +24,20 @@ schedule==0.3.2
 python-dateutil==2.4.2
 six==1.10.0
 
+## Web
+flask==0.10.1
+flask-admin==1.4.0
+flask-mongoengine==0.7.5
+
 ## Testing
 ## Uncomment and install for development
-#nose==1.3.7
-#coverage==4.0.3
-#mock==1.3.0
-#funcsigs==0.4
-#pbr==1.8.1
-#mongomock==3.2.1
-#sentinels==0.0.6
+nose==1.3.7
+coverage==4.0.3
+mock==1.3.0
+funcsigs==0.4
+pbr==1.8.1
+mongomock==3.2.1
+sentinels==0.0.6
 
 ## Building
 ## Uncomment and install for deployment
