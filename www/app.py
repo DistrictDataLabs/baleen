@@ -1,31 +1,30 @@
-from flask import Flask
-from flask_admin import Admin
-from flask_mongoengine import MongoEngine
-from flask_admin.contrib.pymongo import ModelView
+from flask import Flask, render_template
+
+# get all the models Ben already described with mongoengine from baleen source
 import baleen.models as db
+
+# set up an app instance
 app = Flask(__name__)
-app.debug = True
-app.config['MONGODB_SETTINGS'] = {'DB': 'baleen', "HOST": "mongo"}
-
-me_db = MongoEngine()
-me_db.init_app(app)
-
-# admin = Admin(app)
-#
-# class JobView(ModelView):
-#     column_filters = ['name']
-#
-# admin.add_view(JobView(db.Job, name="job", endpoint="job"))
+# set debug to true to get debug pages when there is an error
+# app.debug = True
 
 @app.route("/")
 def index():
+    # connect to the database
     db.connect()
+    # get all the stuff we want
     feeds = db.Feed.objects()
     feed_count = feeds.count()
-    feeds_topics_count = len(set([feed.category for feed in feeds]))
-    import pdb; pdb.set_trace()
+    feeds_topics = set([feed.category for feed in feeds])
+    feeds_topics_counts = len(feeds_topics)
 
-    return """{feed_count} feeds in {topic_count} topics""".format(feed_count=feed_count, topic_count=feeds_topics_count)
+    # load all the data into the templates/feed_list.html template
+    return render_template('feed_list.html',
+                           feeds=feeds,
+                           feeds_topics=feeds_topics,
+                           feed_count=feed_count,
+                           topic_count=feeds_topics_counts)
 
 if __name__ == "__main__":
+    # if you run this file as a script, it will start the flask server
     app.run(host="0.0.0.0")
