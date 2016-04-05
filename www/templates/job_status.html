@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Status Page</title>
+</head>
+<body>
+<p><h1>Job Execution Status</h1></p>
+    <p>Started:  {{latest_job.started.strftime('%A %B %d, %Y %I:%M %p')}}</p>
+    <p>Finished: {{latest_job.finished.strftime('%A %B %d, %Y %I:%M %p')}}</p>
+    <p><h1>Ingestion Report</h1></p>
+    <p>Feeds: {{latest_job.counts.feeds}}</p>
+    <p>New Articles: {{latest_job.counts.posts}}</p>
+    <p>Fetch Errors: {{latest_job.counts.fetch_error}}</p>
+    <p>Errors: {{latest_job.counts.errors}}</p>
+    <p><h1>Logs</h1></p>
+</body>
+</html>

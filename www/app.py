@@ -25,6 +25,16 @@ def index():
                            feed_count=feed_count,
                            topic_count=feeds_topics_counts)
 
+@app.route("/job_status")
+def latest_job():
+    # get the last job executed
+    db.connect()
+    latest_job = db.Job.objects.order_by('-finished').first()
+
+    # load all data into job_status template
+    return render_template('job_status.html',
+                           latest_job=latest_job)
+
 if __name__ == "__main__":
     # if you run this file as a script, it will start the flask server
     app.run(host="0.0.0.0")
