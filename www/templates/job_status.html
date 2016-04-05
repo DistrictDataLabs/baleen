@@ -14,5 +14,8 @@
     <p>Fetch Errors: {{latest_job.counts.fetch_error}}</p>
     <p>Errors: {{latest_job.counts.errors}}</p>
     <p><h1>Logs</h1></p>
+    {% for item in logitems %}
+        <p>{{item}}</p>
+    {% endfor %}
 </body>
 </html>
