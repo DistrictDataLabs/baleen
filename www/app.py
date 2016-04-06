@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-import os,codecs
+import os,codecs,datetime
 from itertools import islice
 import baleen
 
@@ -43,6 +43,9 @@ def latest_job():
     latest_job = db.Job.objects.order_by('-started').first()
     latest_feed = db.Feed.objects.order_by('-updated').first()
     latest_post = db.Post.objects.order_by('-id').first()
+    now = datetime.datetime.now()
+    td = datetime.datetime.now() - latest_job.started
+    running_time = str(td)
     logitems = get_logs()
 
     # load all data into job_status template
@@ -52,6 +55,7 @@ def latest_job():
                            latest_post=latest_post,
                            version=version,
                            counts=counts,
+                           running_time=running_time,
                            logitems=logitems)
 
 if __name__ == "__main__":

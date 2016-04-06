@@ -24,24 +24,24 @@
         {% endfor %}
         <p>&nbsp&nbsp&nbsp&nbsp<b>Errors:</b></p>
         {% for key,value in latest_job.errors.iteritems() %}
-        <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b/>{{key}}:</b>&nbsp{{value}}</p>
+        <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{key}}:&nbsp{{value}}</p>
         {% endfor %}
     {% endif %}
 {% else %}
-    <p>&nbsp&nbsp&nbsp&nbsp<b>Currently Running</b></p>
+    <p>&nbsp&nbsp&nbsp&nbsp<b>Currently Running for</b>&nbsp{{running_time}}</p>
 {% endif %}
 <p></p>
 <p><b>Latest Feed:</b></p>
 <p>&nbsp&nbsp&nbsp&nbsp<b>Title:</b>&nbsp"{{latest_feed.title}}"</p>
 <p>&nbsp&nbsp&nbsp&nbsp<b>eTag:</b>&nbsp"{{latest_feed.etag}}"</p>
-<p>&nbsp&nbsp&nbsp&nbsp<b>Modified:</b>&nbsp"{{latest_feed.modified}}"</p>
-<p>&nbsp&nbsp&nbsp&nbsp<b>Updated:</b>&nbsp"{{latest_feed.updated.strftime('%A %B %d, %Y %I:%M %p')}}"</p>
-<p>&nbsp&nbsp&nbsp&nbsp<b>Posts:</b>&nbsp"{{latest_feed.count_posts}}"</p>
+<p>&nbsp&nbsp&nbsp&nbsp<b>Modified:</b>&nbsp{{latest_feed.modified}}</p>
+<p>&nbsp&nbsp&nbsp&nbsp<b>Updated:</b>&nbsp{{latest_feed.updated.strftime('%A %B %d, %Y %I:%M %p')}}</p>
+<p>&nbsp&nbsp&nbsp&nbsp<b>Posts:</b>&nbsp{{latest_feed.count_posts()}}</p>
 <p></p>
 <p><b>Latest Post:</b></p>
 <p>&nbsp&nbsp&nbsp&nbsp<b>Title:</b>&nbsp"{{latest_post.title}}"</p>
 <p>&nbsp&nbsp&nbsp&nbsp<b>Feed:</b>&nbsp"{{latest_post.feed.title}}"</p>
-<p>&nbsp&nbsp&nbsp&nbsp<b>Fetched:</b>&nbsp"{{latest_feed.created.strftime('%A %B %d, %Y %I:%M %p')}}"</p>
+<p>&nbsp&nbsp&nbsp&nbsp<b>Fetched:</b>&nbsp{{latest_feed.created.strftime('%A %B %d, %Y %I:%M %p')}}</p>
 <p></p>
 <p><h2>Logs</h2></p>
 {% for item in logitems %}
