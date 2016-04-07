@@ -28,7 +28,7 @@ from baleen.opml import load_opml
 class LoadOPMLCommand(Command):
 
     name = 'load'
-    help = 'Loads an OPML file from disk into the database.'
+    help = 'loads an OPML file from disk into the database'
     args = {
         'opml': {
             'nargs': "+",

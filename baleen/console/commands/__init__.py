@@ -22,3 +22,4 @@ from .export import ExportCommand
 from .load import LoadOPMLCommand
 from .summary import SummaryCommand
 from .run import RunCommand
+from .serve import ServeCommand

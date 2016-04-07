@@ -30,7 +30,7 @@ from baleen.ingest import Ingestor, MongoIngestor, OPMLIngestor
 class IngestCommand(Command):
 
     name = 'ingest'
-    help = 'Ingests the RSS feeds to MongoDB'
+    help = 'ingests the RSS feeds to MongoDB'
     args = {
         '--opml': {
             'type': str,
