@@ -24,21 +24,33 @@ schedule==0.3.2
 python-dateutil==2.4.2
 six==1.10.0
 
-## Web
-flask==0.10.1
-flask-admin==1.4.0
+## Web Admin
+Flask==0.10.1
+Flask-Admin==1.4.0
+Flask-WTF==0.12
 flask-mongoengine==0.7.5
+WTForms==2.1
+Jinja2==2.8
+itsdangerous==0.24
+MarkupSafe==0.23
+Werkzeug==0.11.5
 
 ## Testing
 ## Uncomment and install for development
-nose==1.3.7
-coverage==4.0.3
-mock==1.3.0
-funcsigs==0.4
-pbr==1.8.1
-mongomock==3.2.1
-sentinels==0.0.6
+#nose==1.3.7
+#coverage==4.0.3
+#mock==1.3.0
+#funcsigs==0.4
+#pbr==1.8.1
+#mongomock==3.2.1
+#sentinels==0.0.6
 
 ## Building
 ## Uncomment and install for deployment
 #wheel==0.29.0
+
+## Pip Freeze Stuff
+#Python==2.7.10
+#pip==8.1.1
+#setuptools==0.9.7
+#wsgiref==0.1.2

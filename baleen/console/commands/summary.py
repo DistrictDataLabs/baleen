@@ -31,7 +31,7 @@ from baleen.utils.timez import HUMAN_DATETIME
 class SummaryCommand(Command):
 
     name = 'info'
-    help = 'Print info about Baleen from the database'
+    help = 'print info about Baleen from the database'
     args = {
         ('-c', '--config'): {
             'action': 'store_true',
