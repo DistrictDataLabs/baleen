@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: utils.py [] benjamin@bengfort.com $
+# ID: timez.py [caaaaca] benjamin@bengfort.com $
 
 """
 Utility functions for Baleenc
@@ -21,7 +21,7 @@ import re
 import time
 
 from dateutil.tz import tzlocal, tzutc
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 ##########################################################################
@@ -119,7 +119,7 @@ class Timer(object):
         self.started  = self.time()
         return self
 
-    def __exit__(self, type, value, tb):
+    def __exit__(self, typ, value, tb):
         self.finished = self.time()
         self.elapsed  = self.finished - self.started
 

@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: __init__.py [] benjamin@bengfort.com $
+# ID: __init__.py [5ad94d7] benjamin@bengfort.com $
 
 """
 Testing for the baleen module
@@ -23,7 +23,7 @@ import unittest
 ## Module Constants
 ##########################################################################
 
-TEST_VERSION = "0.3" ## Also the expected version onf the package
+TEST_VERSION = "0.3.1" ## Also the expected version onf the package
 
 ##########################################################################
 ## Test Cases

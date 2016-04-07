@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: feed.py [] benjamin@bengfort.com $
+# ID: feed.py [e4baa55] benjamin@bengfort.com $
 
 """
 Handles the synchronization of documents from an RSS feeds.
@@ -82,7 +82,7 @@ class FeedSync(object):
             return self.MODEL
 
         if isinstance(self.feed, dict):
-            if not 'xmlUrl' in self.feed:
+            if 'xmlUrl' not in self.feed:
                 raise FeedTypeError(
                     "Dictionary object does not contain 'xmlUrl' key!"
                 )

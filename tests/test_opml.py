@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: test_opml.py [] benjamin@bengfort.com $
+# ID: test_opml.py [a0d0da3] benjamin@bengfort.com $
 
 """
 Testing for the OPML reader and ingestion function.

@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: test_feed.py [] benjamin@bengfort.com $
+# ID: test_feed.py [2988c53] benjamin@bengfort.com $
 
 """
 Test the feed module - the main entry point to Baleen

@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: app.py [] benjamin@bengfort.com $
+# ID: app.py [da54aa8] benjamin@bengfort.com $
 
 """
 Definition of the Baleen Utility app and commands
@@ -20,7 +20,6 @@ http://bbengfort.github.io/tutorials/2016/01/23/console-utility-commis.html
 
 from commis import color
 from commis import ConsoleProgram
-from commis.exceptions import ConsoleError
 
 from baleen.console.commands import *
 from baleen.version import get_version
@@ -37,6 +36,7 @@ COMMANDS    = [
     LoadOPMLCommand,
     SummaryCommand,
     RunCommand,
+    ServeCommand,
 ]
 
 

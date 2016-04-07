@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: wrangle.py [] benjamin@bengfort.com $
+# ID: wrangle.py [568d540] benjamin@bengfort.com $
 
 """
 Wrangles the post objects from a synchronized feed.

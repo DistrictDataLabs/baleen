@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: mongolog.py [] benjamin@bengfort.com $
+# ID: mongolog.py [caaaaca] benjamin@bengfort.com $
 
 """
 Handlers and formatters for logging to Mongo
@@ -26,7 +26,7 @@ from baleen.config import settings
 from datetime import datetime
 from socket import gethostname
 from pymongo import MongoClient
-from pymongo.errors import OperationFailure, PyMongoError
+from pymongo.errors import PyMongoError
 
 ##########################################################################
 ## Mongo Formatter/Handler

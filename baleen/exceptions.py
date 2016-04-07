@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: exceptions.py [] benjamin@bengfort.com $
+# ID: exceptions.py [538b33d] benjamin@bengfort.com $
 
 """
 Exceptions hierarchy for the Baleen module.

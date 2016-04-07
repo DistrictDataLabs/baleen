@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: ingest.py [] benjamin@bengfort.com $
+# ID: ingest.py [da54aa8] benjamin@bengfort.com $
 
 """
 Handles the ingestion utility both for OPML and feeds.
@@ -30,7 +30,7 @@ from baleen.ingest import Ingestor, MongoIngestor, OPMLIngestor
 class IngestCommand(Command):
 
     name = 'ingest'
-    help = 'Ingests the RSS feeds to MongoDB'
+    help = 'ingests the RSS feeds to MongoDB'
     args = {
         '--opml': {
             'type': str,

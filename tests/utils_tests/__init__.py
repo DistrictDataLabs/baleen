@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: __init__.py [] benjamin@bengfort.com $
+# ID: __init__.py [2988c53] benjamin@bengfort.com $
 
 """
 Tests for the Baleen utilities package.

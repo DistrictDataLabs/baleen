@@ -1,0 +1,43 @@
+/* Baleen specific styles for various things. */
+
+html,
+body {
+  height: 100%;
+}
+
+/*body {
+  padding-top: 70px;
+}*/
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto;
+  /* Negative indent footer by its height */
+  margin: 0 auto -76px;
+  /* Pad bottom by footer height */
+  padding: 0 0 106px;
+}
+
+.navbar-brand-img {
+    width: 22px;
+    height: 22px;
+    float: left;
+    margin: -3px 4px 0 0;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+    background-color: #fff;
+    border-top: 1px solid #eee;
+    height: 76px;
+    padding: 30px 15px;
+}
+
+.app-tabs .tab-pane {
+    margin-top: 20px;
+}
+
+#loading img {
+    margin: 200px auto;
+}

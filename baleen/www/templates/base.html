@@ -1,0 +1,58 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    {% block meta %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="{% block author %}Sasan Bahadaran{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}baleen, ingestion, district data labs, nlp{% endblock %}">
+    <meta name="description" content="{% block description %}An automated ingestion service for blogs to construct a corpus for NLP research.{% endblock %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock %}
+
+    <title>{% block title %}Baleen Status{% endblock %}</title>
+
+    <!-- Shortcut Icons -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+
+    {% block stylesheets %}
+    <!-- CDN CSS Files -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/yeti/bootstrap.min.css" rel="stylesheet" integrity="sha384-yxFy3Tt84CcGRj9UI7RA25hoUMpUPoFzcdPtK3hBdNgEGnh9FdKgMVM+lbAZTKN2" crossorigin="anonymous">
+
+    <!-- Static CSS Files -->
+    <link href="{{ url_for('static', filename='css/baleen.css') }}" rel="stylesheet">
+    {% endblock %}
+  </head>
+  <body>
+
+    <div id="wrap">
+
+      {% block navbar %}
+        {% include 'components/navbar.html' %}
+      {% endblock %}
+
+      <!-- Begin page content -->
+      <div id="content">
+      {% block body %}
+      {% endblock %}
+      </div>
+
+    </div>
+
+
+    {% block footer %}
+      {% include 'components/footer.html' %}
+    {% endblock %}
+
+    {% block modals %}{% endblock %}
+
+    {% block javascripts %}
+    <!-- CDN JS Files -->
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    {% endblock %}
+
+  </body>
+</html>

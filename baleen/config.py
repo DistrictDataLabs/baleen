@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: config.py [] benjamin@bengfort.com $
+# ID: config.py [5b443de] benjamin@bengfort.com $
 
 """
 Uses confire to get meaningful configurations from a yaml file
@@ -33,6 +33,16 @@ class MongoConfiguration(confire.Configuration):
     port = 27017
     name = "baleen"
 
+
+class ServerConfiguration(confire.Configuration):
+    """
+    Configuration for the web server to run an admin UI.
+    """
+
+    host = "127.0.0.1"
+    port = 5000
+
+
 class BaleenConfiguration(confire.Configuration):
     """
     Meaningful defaults and required configurations.
@@ -49,6 +59,7 @@ class BaleenConfiguration(confire.Configuration):
 
     debug      = True
     database   = MongoConfiguration()
+    server     = ServerConfiguration()
     logfile    = 'baleen.log'                    # Location to write log
     loglevel   = 'DEBUG'                         # Log messages to record
     fetch_html = True                            # Actually fetch HTML link

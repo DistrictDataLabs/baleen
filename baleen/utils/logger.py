@@ -7,7 +7,7 @@
 # Copyright (C) 2014 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: logger.py [] benjamin@bengfort.com $
+# ID: logger.py [caaaaca] benjamin@bengfort.com $
 
 """
 Logging utility for Baleen

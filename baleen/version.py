@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: version.py [] benjamin@bengfort.com $
+# ID: version.py [edff1dd] benjamin@bengfort.com $
 
 """
 Stores version information such that it can be read by setuptools.
@@ -20,7 +20,7 @@ Stores version information such that it can be read by setuptools.
 __version_info__ = {
     'major': 0,
     'minor': 3,
-    'micro': 0,
+    'micro': 1,
     'releaselevel': 'final',
     'serial': 0,
 }

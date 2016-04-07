@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: load.py [] benjamin@bengfort.com $
+# ID: load.py [da54aa8] benjamin@bengfort.com $
 
 """
 Loads an OPML file from disk into the database.
@@ -28,7 +28,7 @@ from baleen.opml import load_opml
 class LoadOPMLCommand(Command):
 
     name = 'load'
-    help = 'Loads an OPML file from disk into the database.'
+    help = 'loads an OPML file from disk into the database'
     args = {
         'opml': {
             'nargs': "+",

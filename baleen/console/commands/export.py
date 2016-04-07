@@ -7,7 +7,7 @@
 # Copyright (C) 2016 Bengfort.com
 # For license information, see LICENSE.txt
 #
-# ID: export.py [] benjamin@bengfort.com $
+# ID: export.py [da54aa8] benjamin@bengfort.com $
 
 """
 Export utility to dump an HTML corpus to disk from the database.
@@ -21,7 +21,6 @@ import os
 import baleen.models as db
 
 from commis import Command
-from baleen.config import settings
 from baleen.console.utils import csv
 from baleen.export import MongoExporter
 
@@ -32,7 +31,7 @@ from baleen.export import MongoExporter
 class ExportCommand(Command):
 
     name = 'export'
-    help = 'Export the raw HTML corpus for doing NLP'
+    help = 'export the raw HTML corpus for doing NLP'
     args = {
         ('-C', '--categories'): {
             'type': csv(str),

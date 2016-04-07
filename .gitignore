@@ -58,3 +58,4 @@ target/
 conf/baleen.yaml
 fixtures/corpus
 fixtures/feedly/*
+notebook
