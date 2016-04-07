@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-import os,codecs,datetime
+import os,codecs,datetime,re
 from itertools import islice
 import baleen
 
@@ -31,7 +31,7 @@ def index():
 def get_logs():
     infile = os.path.abspath(os.path.join(os.path.dirname(__file__),'..','baleen.log'))
     with codecs.open(infile,'r',encoding='utf8') as f:
-        logitems = list(islice(f,20))
+                logitems = list(islice(f,20))
     return logitems
 
 @app.route("/job_status")
