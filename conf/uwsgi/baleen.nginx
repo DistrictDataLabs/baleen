@@ -1,0 +1,78 @@
+server {
+    # Deny illegal Host headers
+    server_name _;
+    return 444;
+}
+
+server {
+    # The basics
+    listen 80;
+    server_tokens off;
+    server_name baleen.districtdatalabs.com;
+    client_max_body_size 3M;
+
+    # Logging
+    access_log /var/log/nginx/access_baleen.log;
+    error_log  /var/log/nginx/error_baleen.log;
+
+    # Locations and Root
+    root /var/www/baleen/;
+
+    location /static {
+        # Allow static content served at /static/ url.
+        # Content continues to ve available during downtime.
+        alias       /var/apps/baleen/baleen/www/static;
+        access_log  off;
+        expires     30d;
+    }
+
+    location /favicon.ico {
+        # Allow less intelligent browsers to still get favicon.
+        alias       /var/apps/baleen/baleen/www/static/img/favicon.ico;
+        access_log  off;
+        expires     30d;
+    }
+
+    location /humans.txt {
+        # Ensure that humans.txt is in the site root.
+        alias       /var/apps/baleen/baleen/www/static/humans.txt;
+        access_log  off;
+        expires     30d;
+    }
+
+    location /robots.txt {
+        # Ensure that robots.txt is in the site root.
+        alias       /var/apps/baleen/baleen/www/static/robots.txt;
+        access_log  off;
+        expires     30d;
+    }
+
+    # Maintenance Mode Settings
+    error_page 502 503 504 @maintenance;
+
+    location @maintenance {
+        # Create a directory in the site static files called "downtime"
+        # which should contain a "maintenance.html" file.
+        root /var/apps/baleen/baleen/www/static/downtime;
+        rewrite ^(.*)$ /maintenance.html break;
+    }
+
+    # Finally, the Django App!
+    location / {
+        # If there is a file called downtime in the public directory, go
+        # into maintenance mode and return downtime page if exists.
+        if (-f /var/www/downtime) {
+            return 503;
+        }
+
+        # uWSGI Settings
+        uwsgi_pass 127.0.0.1:3264;
+        proxy_set_header    Host                $host;
+        proxy_set_header    X-Real-IP           $remote_addr;
+        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Proto   $http_x_forwarded_proto;
+        add_header          X-Cache-Status      $upstream_cache_status;
+
+        include uwsgi_params;
+    }
+}
