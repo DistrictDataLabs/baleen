@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-import os,codecs,datetime,re
+import os,codecs,datetime
 from itertools import islice
 import baleen
 
@@ -31,7 +31,7 @@ def index():
 def get_logs():
     infile = os.path.abspath(os.path.join(os.path.dirname(__file__),'..','baleen.log'))
     with codecs.open(infile,'r',encoding='utf8') as f:
-                logitems = list(islice(f,20))
+        logitems = list(islice(f,20))
     return logitems
 
 @app.route("/job_status")
@@ -43,7 +43,6 @@ def latest_job():
     latest_job = db.Job.objects.order_by('-started').first()
     latest_feed = db.Feed.objects.order_by('-updated').first()
     latest_post = db.Post.objects.order_by('-id').first()
-    now = datetime.datetime.now()
     td = datetime.datetime.now() - latest_job.started
     running_time = str(td)
     logitems = get_logs()
