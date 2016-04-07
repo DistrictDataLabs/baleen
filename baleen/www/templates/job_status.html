@@ -34,7 +34,7 @@
 <p>&nbsp&nbsp&nbsp&nbsp<b>eTag:</b>&nbsp"{{latest_feed.etag}}"</p>
 <p>&nbsp&nbsp&nbsp&nbsp<b>Modified:</b>&nbsp{{latest_feed.modified}}</p>
 <p>&nbsp&nbsp&nbsp&nbsp<b>Updated:</b>&nbsp{{latest_feed.updated.strftime('%A %B %d, %Y %I:%M %p')}}</p>
-<p>&nbsp&nbsp&nbsp&nbsp<b>Posts:</b>&nbsp{{latest_feed.count_posts()}}</p>
+<!-- Note: the count posts had to be removed since it was taking too much memory --> 
 <p></p>
 <p><b>Latest Post:</b></p>
 <p>&nbsp&nbsp&nbsp&nbsp<b>Title:</b>&nbsp"{{latest_post.title}}"</p>
