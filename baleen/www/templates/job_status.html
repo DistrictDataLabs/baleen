@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Job Status Page</title>
-</head>
-<body>
-<p><h1>Job Status Page</h1></p>
+{% extends 'base.html' %}
+{% block title %}Job Status Page{% endblock %}
 
+{% block body %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
 <p><b>Baleen v{{version}}</b></p>
 <p>{{counts[0]}} Feeds and {{counts[1]}} Posts after {{counts[2]}} Jobs</p>
 <p><b>Latest Job:</b></p>
@@ -47,5 +45,8 @@
 {% for item in logitems %}
     <p>{{item}}</p>
 {% endfor %}
-</body>
-</html>
+
+    </div><!-- column ends -->
+  </div><!-- row ends -->
+</div><!-- container ends -->
+{% endblock %}

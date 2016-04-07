@@ -1,20 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<p><h1>Feeds</h1></p>
-{{ feed_count }} feeds in {{topic_count}} topics
+{% extends 'base.html' %}
+{% block title %}RSS Feed List{% endblock %}
 
-{% for topic in feeds_topics %}
-<h2>{{topic|capitalize}}</h2>
-    {% for feed in feeds %}
-        {% if feed.category == topic %}
-        <p><a href={{feed.urls.xmlUrl}}>{{feed.urls.xmlUrl}}</a></p>
-        {% endif %}
-    {% endfor %}
-{% endfor %}
-</body>
-</html>
+{% block body %}
+<div class="container">
+
+  <!-- Page Title -->
+  <div id="top" class="row">
+    <div class="col-xs-12">
+      <div class="page-header">
+        <h1>Feeds <small>{{ feed_count }} feeds in {{topic_count}} topics</small></h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feed Listing -->
+  <div class="row">
+    <div class="col-xs-12">
+      <!-- Feeds navigation -->
+      <div class="list-group">
+        {% for topic, feeds in feeds_topics|dictsort %}
+        <a class="list-group-item" href="#{{ topic|replace(" ", "-")|lower }}">
+          <span class="badge">{{ feeds.count() }}</span>
+          {{ topic|title }}
+        </a>
+        {% endfor %}
+      </div>
+
+      <!-- Converted the feeds list into a table -->
+        {% for topic, feeds in feeds_topics|dictsort %}
+          <h3 id="{{ topic|replace(" ", "-")|lower }}">{{ topic|title }} <small>({{ feeds.count() }} feeds)</small></h3>
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+              <th>Active</th>
+              <th>Title</th>
+              <th>Link</th>
+            </thead>
+            <tbody>
+            {% for feed in feeds %}
+            <tr>
+              <td><i class="fa fa{% if feed.active %}-check{% endif %}-square-o"></i>
+              <td>{{ feed.title }}</td>
+              <td><a href="{{ feed.link }}">{{ feed.link }}</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+          <a href="#top">Back to Top</a>
+        {% endfor %}
+    </div><!-- feed listing column ends -->
+  </div><!-- feed listing row ends -->
+
+</div><!-- container ends -->
+{% endblock%}

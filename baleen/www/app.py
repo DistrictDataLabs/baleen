@@ -49,8 +49,12 @@ def index():
     # get all the stuff we want
     feeds = db.Feed.objects()
     feed_count = feeds.count()
-    feeds_topics = set([feed.category for feed in feeds])
-    feeds_topics_counts = len(feeds_topics)
+    topics = set([feed.category for feed in db.Feed.objects.only('category')])
+    feeds_topics_counts = len(topics)
+    feeds_topics = {
+        topic: db.Feed.objects(category=topic)
+        for topic in topics
+    }
 
     # load all the data into the templates/feed_list.html template
     return render_template('feed_list.html',
@@ -65,7 +69,7 @@ def get_logs():
     logitems = islice(file,20)
     return logitems
 
-@app.route("/job_status")
+@app.route("/status/")
 def latest_job():
     # get the last job executed
     db.connect()
