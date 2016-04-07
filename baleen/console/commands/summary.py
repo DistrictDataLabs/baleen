@@ -1,4 +1,4 @@
-d# baleen.console.commands.summary
+# baleen.console.commands.summary
 # A utility to print out information about the Baleen state.
 #
 # Author:   Benjamin Bengfort <benjamin@bengfort.com>
@@ -89,7 +89,7 @@ class SummaryCommand(Command):
             u"    eTag: \"{}\"".format(latest.etag),
             u"    Modified: {}".format(latest.modified),
             u"    Updated: {}".format(latest.updated.strftime(HUMAN_DATETIME)),
-            # u"    Posts: {}".format(latest.count_posts()), # This is very slow need to fix. 
+            # u"    Posts: {}".format(latest.count_posts()), # This is very slow need to fix.
         ])
 
         latest = db.Post.objects.order_by('-id').first()
