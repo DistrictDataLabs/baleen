@@ -140,7 +140,7 @@ $ venv.init -a $(pwd) -r requirements.txt
 In order to run Baleen as a background service, we will use [upstart](http://upstart.ubuntu.com/), Ubuntu's event based init daemon. This is also how MongoDB is started and stopped as well. Let's move our configuration files as follows:
 
 ```bash
-$ sudo cp conf/baleen.conf /etc/init/
+$ sudo cp conf/upstart/baleen.conf /etc/init/
 $ sudo cp conf/baleen-example.yaml /etc/baleen.yaml
 ```
 
@@ -186,3 +186,43 @@ $ sudo service baleen start
 You can check if it's working by using the `psg baleen` command (one of the aliases added above). If you're having trouble see what's going on in `/var/log/upstart/baleen.log` or the baleen log itself.
 
 That's it! Baleen should now be running once an hour, every hour!
+
+## Web Admin
+
+In this section we'll talk about how to deploy Baleen's web admin functionality with [Nginx](https://www.nginx.com/resources/wiki/) + [uWSGI](https://uwsgi-docs.readthedocs.org/en/latest/). The Baleen Web Admin is a Flask application that resides in the `baleen.www` package. You can run a local, development version of the app using `baleen serve`. Generally speaking, these instructions follow the guide from [How To Serve Flask Applications with uWSGI and Nginx on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-14-04).
+
+Let's get started by installing the dependencies:
+
+```bash
+$ sudo apt-get install nginx uwsgi uwsgi-plugin-python
+```
+
+Then move the configuration files from the repository to the correct places:
+
+```bash
+$ sudo cp conf/uwsgi/baleen.ini /etc/uwsgi/apps-available/
+$ sudo cp conf/uwsgi/baleen-nginx /etc/nginx/sites-available/baleen
+```
+
+Then symlink those configurations to the correct enabled directories:
+
+```bash
+$ sudo ln -s /etc/uwsgi/apps-available/baleen.ini /etc/uwsgi/apps-enabled/baleen.ini
+$ sudo ln -s /etc/nginx/sites-available/baleen /etc/nginx/sites-enabled/baleen
+$ sudo rm /etc/nginx/sites-enabled/default
+```
+
+Then start the uwsgi service and restart nginx:
+
+```bash
+$ sudo service uwsgi start baleen
+$ sudo service nginx restart
+```
+
+That may seem simple - but it took a while to sort out the configurations, which is the main part of the effort. If the configurations are wrong, the place to look for log information that might help you detect the issues are in:
+
+- /var/log/uwsgi/apps/baleen.log
+- /var/log/nginx/access_baleen.log
+- /var/log/nginx/error_baleen.log
+
+Now you should be able to go to load your web server's DNS address on port 80 and see the Baleen application! 

@@ -48,6 +48,10 @@ database:
     host: localhost
     port: 27017
     name: baleen
+server:
+    host: 127.0.0.1
+    port: 5000
+
     ```
 
 5. Run the tests to make sure everything is ok.
@@ -89,7 +93,7 @@ Included in this repository are files related to setting up the development envi
 $ git clone git@github.com:bbengfort/baleen.git
 $ cd baleen
     ```
-    
+
 3. Create your local configuration file. Edit it with your configuration details; your MongoDB server will be at host `mongo`.
 
     ```
@@ -103,13 +107,28 @@ database:
     host: mongo
     port: 27017
     name: baleen
+server:
+    host: 127.0.0.1
+    port: 5000
     ```
-    
+
 4. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 5-8.
 
     ```
     docker exec -it baleen_app_1 /bin/bash
     ```
+
+## Web Admin
+
+There is a simple Flask application that ships with Baleen that provides information about the current status of the Baleen ingestion. This app can be run locally in development with the following command:
+
+    $ bin/baleen serve
+
+You can then reach the website at [http://127.0.0.1:5000/](http://127.0.0.1:5000/). Note that the host and port can be configured in the YAML configuration file or as command line arguments to the serve command.
+
+### Deployment
+
+The web application is deployed in production as an Nginx + uWSGI + Flask application that is managed by upstart.
 
 ## About
 

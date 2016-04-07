@@ -1,3 +1,12 @@
+# baleen.nginx
+#
+# Author:  Benjamin Bengfort
+# Created: Thu Apr 07 12:14:03 2016 -0400
+#
+# Nginx configuration for the Baleen web admin app.
+# For more details on this configuration see the Baleen deployment docs.
+# This file belongs in: /etc/nginx/sites-available/baleen
+
 server {
     # Deny illegal Host headers
     server_name _;
@@ -28,7 +37,7 @@ server {
 
     location /favicon.ico {
         # Allow less intelligent browsers to still get favicon.
-        alias       /var/apps/baleen/baleen/www/static/img/favicon.ico;
+        alias       /var/apps/baleen/baleen/www/static/favicon.ico;
         access_log  off;
         expires     30d;
     }
