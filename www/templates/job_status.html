@@ -20,7 +20,7 @@
         <p>&nbsp&nbsp&nbsp&nbsp<b>Finished:</b>&nbsp{{latest_job.finished.strftime('%A %B %d, %Y %I:%M %p')}}</p>
         <p>&nbsp&nbsp&nbsp&nbsp<b>Counts:</b></p>
         {% for key,value in latest_job.counts.iteritems() %}
-        <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b/>{{key}}:</b>&nbsp{{value}}</p>
+        <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{key}}:&nbsp{{value}}</p>
         {% endfor %}
         <p>&nbsp&nbsp&nbsp&nbsp<b>Errors:</b></p>
         {% for key,value in latest_job.errors.iteritems() %}
