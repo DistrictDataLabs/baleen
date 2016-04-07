@@ -9,3 +9,6 @@ app:
       - .:/baleen
    links:
       - mongo
+   ports:
+      - 5000:5000
+   restart: always
