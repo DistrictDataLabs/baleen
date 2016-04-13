@@ -23,6 +23,8 @@ import mongoengine as me
 
 from datetime import datetime
 from baleen.config import settings
+from baleen.utils.timez import humanizedelta
+
 
 ##########################################################################
 ## Module Constants
@@ -174,8 +176,61 @@ class Job(me.DynamicDocument):
         'collection': 'jobs',
     }
 
+    def duration(self, humanize=False):
+        """
+        Returns the timedelta of the duration.
+        """
+        finished = self.finished or datetime.now()
+        delta = finished - self.started
+
+        if humanize:
+            return humanizedelta(
+                days=delta.days,
+                seconds=delta.seconds,
+                microseconds=delta.microseconds
+            )
+        return delta
+
     def __unicode__(self):
         return "{} Job {}".format(self.name, self.jobid)
+
+
+class Log(me.DynamicDocument):
+
+    level     = me.DictField()
+    message   = me.StringField(max_length=4096)
+    host      = me.StringField(max_length=255)
+    user      = me.StringField(max_length=255)
+    error     = me.DictField()
+    logger    = me.StringField(max_length=255)
+    asctime   = me.StringField(max_length=64)
+    timestamp = me.DateTimeField()
+
+    meta      = {
+        'collection': 'logs',
+    }
+
+    @property
+    def bootstrap_class(self):
+        """
+        Uses the log level to determine the bootstrap class.
+        """
+        levels = {
+            "DEBUG": "success",
+            "INFO": "info",
+            "WARNING": "warning",
+            "WARN": "warning",
+            "ERROR": "danger",
+            "CRITICAL": "danger",
+        }
+
+        key = self.level.get('name')
+        if key and key in levels:
+            return levels[key]
+        return ""
+
+    def __unicode__(self):
+        return self.message
 
 ##########################################################################
 ## Signals
