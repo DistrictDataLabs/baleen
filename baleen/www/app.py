@@ -22,7 +22,7 @@ import baleen
 
 from baleen.config import settings
 from baleen.models import Feed, Post, Job, Log
-from baleen.utils.timez import HUMAN_DATETIME
+from baleen.utils.timez import WEB_UTC_DATETIME
 
 from flask import Flask, render_template, request
 from flask.ext.mongoengine import MongoEngine
@@ -100,7 +100,7 @@ def status():
                            latest_post=latest_post,
                            version=version,
                            counts=counts,
-                           dtfmt=HUMAN_DATETIME,
+                           dtfmt=WEB_UTC_DATETIME,
                            recent_jobs=Job.objects.order_by('-started').limit(10))
 
 

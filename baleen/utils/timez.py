@@ -36,6 +36,7 @@ ISO8601_DATETIME = "%Y-%m-%dT%H:%M:%S%z"
 ISO8601_DATE     = "%Y-%m-%d"
 ISO8601_TIME     = "%H:%M:%S"
 COMMON_DATETIME  = "%d/%b/%Y:%H:%M:%S %z"
+WEB_UTC_DATETIME = "%a, %b %d, %Y at %H:%M UTC"
 
 ##########################################################################
 ## Module helper function
