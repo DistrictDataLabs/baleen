@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% block title %}Job Status Page{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <!-- Page Title -->
+  <div id="top" class="row">
+    <div class="col-xs-12">
+      <div class="page-header">
+        <h1>Baleen v{{ version }} Status</h1>
+        <p class="lead">{{ counts['posts']|humanize('intcomma') }} posts for {{ counts['feeds']|humanize('intcomma') }} feeds after {{ counts['jobs']|humanize('intcomma') }} jobs</p>
+      </div>
+
+      <h2>Latest Job</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-6">
+
+      <!-- Info Panel -->
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading {% if latest_job.failed %}panel-danger{% elif not latest_job.finished %}panel-info{% endif %}">
+          Job Info
+        </div>
+
+        <!-- Table -->
+        <table class="table table-hover">
+          <tr>
+            <td>Type</td>
+            <td>{{ latest_job.name }} v{{ latest_job.version }}</td>
+          </tr>
+          <tr>
+            <td>Job ID</td>
+            <td>{{ latest_job.jobid }}</td>
+          </tr>
+          <tr>
+            <td>Started</td>
+            <td>{{ latest_job.started.strftime(dtfmt) }} ({{ latest_job.started|humanize('naturaltime') }})</td>
+          </tr>
+          <tr>
+            <td>Finished</td>
+            <td>{% if latest_job.finished %}{{ latest_job.finished.strftime(dtfmt) }} ({{ latest_job.finished|humanize('naturaltime') }}){% else %}Currently Running!{% endif %}</td>
+          </tr>
+          <tr>
+            <td>Duration</td>
+            <td>{{ latest_job.duration(humanize=True) }}</td>
+          </tr>
+          {% if latest_job.failed %}
+          <tr>
+            <td>Failed!</td>
+            <td>{{ latest_job.reason }}</td>
+          </tr>
+          {% endif %}
+        </table>
+      </div>
+
+      <!-- Post Panel -->
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Latest Post</div>
+
+        <!-- Table -->
+        <table class="table table-hover">
+          <tr>
+            <td>Title</td>
+            <td><a href="{{ latest_post.url }}" target="_blank">{{ latest_post.title }}</a></td>
+          </tr>
+          <tr>
+            <td>Feed</td>
+            <td>{{ latest_post.feed.title }}</td>
+          </tr>
+          <tr>
+            <td>Published</td>
+            <td>{{ latest_post.pubdate.strftime(dtfmt) }}</td>
+          </tr>
+          <tr>
+            <td>Fetched</td>
+            <td>{{ latest_post.updated.strftime(dtfmt) }} ({{ latest_post.updated|humanize('naturaltime') }})</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Feed Panel -->
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Latest Feed</div>
+
+        <!-- Table -->
+        <table class="table table-hover">
+          <tr>
+            <td>Title</td>
+            <td><a href="{{ latest_feed.link }}" target="_blank">{{ latest_feed.title }}</a></td>
+          </tr>
+          <tr>
+            <td>eTag</td>
+            <td>{{ latest_feed.etag }}</td>
+          </tr>
+          <tr>
+            <td>Modified</td>
+            <td>{{ latest_feed.modified }}</td>
+          </tr>
+          <tr>
+            <td>Updated</td>
+            <td>{{ latest_feed.updated.strftime(dtfmt) }} ({{ latest_feed.updated|humanize('naturaltime') }})</td>
+          </tr>
+        </table>
+      </div>
+
+    </div><!-- left column ends -->
+
+    <div class="col-xs-6">
+
+      <!-- Counts Panel -->
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Counts</div>
+
+        <!-- List group -->
+        <ul class="list-group">
+          {% for key, value in latest_job.counts.items() %}
+          <li class="list-group-item">
+            <span class="badge">{{ value|humanize('intcomma') }}</span>
+            {{ key.replace("_", " ").title() }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Errors Panel -->
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Errors</div>
+
+        <!-- List group -->
+        <ul class="list-group">
+          {% for key, value in latest_job.errors.items() %}
+          <li class="list-group-item">
+            <span class="badge">{{ value|humanize('intcomma') }}</span>
+            {{ key }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div><!-- right column ends -->
+  </div><!-- row ends -->
+
+  <!-- Jobs listing -->
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h2>Job History</h2>
+
+      <table class="table table-hover table-striped table-bordered">
+        <thead>
+          <th>Job</th>
+          <th>Job ID</th>
+          <th>Posts</th>
+          <th>Errors</th>
+          <th>Started</th>
+          <th>Duration</th>
+        </thead>
+        <tbody>
+          {% for job in recent_jobs %}
+          <tr class="{% if job.failed %}danger{% endif %}">
+            <td>{{ job.name }} v{{ job.version }}</td>
+            <td>{{ job.jobid }}</td>
+            <td>{% if 'posts' in job.counts %}{{ job.counts['posts']|humanize('intcomma') }}{% else %}N/A{% endif %}</td>
+            <td>{% if 'errors' in job.counts %}{{ job.counts['errors']|humanize('intcomma') }}{% else %}N/A{% endif %}</td>
+            <td>{{ job.started|humanize('naturaltime') }}</td>
+            <td>{{ job.duration(humanize=True) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div><!-- container ends -->
+{% endblock %}
