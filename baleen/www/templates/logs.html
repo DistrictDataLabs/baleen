@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Baleen Log Records{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <!-- Page Title -->
+  <div id="top" class="row">
+    <div class="col-xs-12">
+      <div class="page-header">
+        <h1>Log Records</h1>
+        <p class="text-muted">Page {{ page }} of {{ num_pages }} &middot; {{ num_logs|humanize('intcomma') }} log records</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log table -->
+  <div class="row">
+    <div class="col-md-12">
+
+      <table class="table table-hover table-bordered">
+        <tbody>
+          {% for log in logs %}
+          <tr>
+            <td class="{{ log.bootstrap_class }}">{{ log.message }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td>No log records yet</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <nav>
+        <ul class="pager">
+          <li class="previous{% if not prev %} disabled{% endif %}"><a href="{% if prev %}/logs/?page={{ prev }}&per_page={{ per_page }}{% else %}#{% endif %}">
+            <span aria-hidden="true">&larr;</span> Newer
+          </a></li>
+          <li class="next{% if not next %} disabled{% endif %}"><a href="{% if next %}/logs/?page={{ next }}&per_page={{ per_page }}{% else %}#{% endif %}">
+            Older <span aria-hidden="true">&rarr;</span>
+          </a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+{% endblock %}
