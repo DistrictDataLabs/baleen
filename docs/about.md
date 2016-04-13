@@ -48,11 +48,21 @@ The release versions that are sent to the Python package index (PyPI) are also t
 
 The versioning uses a three part version system, "a.b.c" - "a" represents a major release that may not be backwards compatible. "b" is incremented on minor releases that may contain extra features, but are backwards compatible. "c" releases are bug fixes or other micro changes that developers should feel free to immediately update to.
 
+### Version 0.3.2
+
+* **tag**: [v0.3.2](https://github.com/bbengfort/baleen/releases/tag/v0.3.2)
+* **deployment**: Wednesday, April 13, 2016
+* **commit**: (see tag)
+
+Some changes to the web application to attempt to solve SEGFAULT errors and to make the status and the logs more readable. This is just a quick hotfix to make sure we have decent monitoring in the app.
+
+The app can be found online at [http://baleen.districtdatalabs.com](http://baleen.districtdatalabs.com).
+
 ### Version 0.3.1
 
 * **tag**: [v0.3.1](https://github.com/bbengfort/baleen/releases/tag/v0.3.1)
 * **deployment**: Thursday, April 7, 2016
-* **commit**: (see tag)
+* **commit**: [121de50](https://github.com/bbengfort/baleen/commit/121de50084aaa29b8098756630c3a7a0a14d8d78)
 
 Very happy to have had [@lauralorenz](https://github.com/lauralorenz) and [@bahadasx](https://github.com/bahadasx) contribute to Baleen by building a web admin app. The app is a very simple Flask app that reads from the database and reports on the status, including the list of available feeds. It also reports information from the log file.
 
