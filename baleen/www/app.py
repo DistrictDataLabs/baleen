@@ -97,6 +97,8 @@ def status():
     # load all data into job_status template
     return render_template('status.html',
                            latest_job=latest_job,
+                           latest_feed=latest_feed,
+                           latest_post=latest_post,
                            version=version,
                            counts=counts,
                            dtfmt=HUMAN_DATETIME,
