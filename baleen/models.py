@@ -21,7 +21,7 @@ import baleen
 import hashlib
 import mongoengine as me
 
-from datetime import datetime
+from datetime import datetime,timedelta
 from baleen.config import settings
 from baleen.utils.timez import humanizedelta
 
@@ -190,6 +190,19 @@ class Job(me.DynamicDocument):
                 microseconds=delta.microseconds
             )
         return delta
+
+    @property
+    def bootstrap_class(self):
+        if self.finished:
+            return ""
+        else:
+            if self.duration() < timedelta(hours=1):
+                return "success"
+            elif timedelta(hours=1) < self.duration() <timedelta(hours=5):
+                return "warning"
+            else:
+                return "danger"
+        return ""
 
     def __unicode__(self):
         return "{} Job {}".format(self.name, self.jobid)

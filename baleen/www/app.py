@@ -92,16 +92,19 @@ def status():
     latest_job = Job.objects.order_by('-started').first()
     latest_feed = Feed.objects.order_by('-updated').first()
     latest_post = Post.objects.order_by('-id').first()
+    recent_jobs = Job.objects.order_by('-started').limit(10)
 
     # load all data into job_status template
-    return render_template('status.html',
-                           latest_job=latest_job,
-                           latest_feed=latest_feed,
-                           latest_post=latest_post,
-                           version=version,
-                           counts=counts,
-                           dtfmt=WEB_UTC_DATETIME,
-                           recent_jobs=Job.objects.order_by('-started').limit(10))
+    return render_template(
+        'status.html',
+        latest_job=latest_job,
+        latest_feed=latest_feed,
+        latest_post=latest_post,
+        version=version,
+        counts=counts,
+        dtfmt=WEB_UTC_DATETIME,
+        recent_jobs=recent_jobs
+    )
 
 
 @app.route("/logs/")
