@@ -39,20 +39,20 @@ Werkzeug==0.11.5
 
 ## Testing
 ## Uncomment and install for development
-#nose==1.3.7
-#coverage==4.0.3
-#mock==1.3.0
-#funcsigs==0.4
-#pbr==1.8.1
-#mongomock==3.2.1
-#sentinels==0.0.6
+nose==1.3.7
+coverage==4.0.3
+mock==1.3.0
+funcsigs==0.4
+pbr==1.8.1
+mongomock==3.2.1
+sentinels==0.0.6
 
 ## Building
 ## Uncomment and install for deployment
 #wheel==0.29.0
 
 ## Pip Freeze Stuff
-#Python==2.7.10
-#pip==8.1.1
-#setuptools==0.9.7
-#wsgiref==0.1.2
+Python==2.7.10
+pip==8.1.1
+setuptools==0.9.7
+wsgiref==0.1.2

@@ -40,6 +40,7 @@ class ServerConfiguration(confire.Configuration):
     """
 
     host = "127.0.0.1"
+    #host = "192.168.99.100"
     port = 5000
 
 
@@ -57,7 +58,7 @@ class BaleenConfiguration(confire.Configuration):
         os.path.abspath("conf/baleen.yaml"),     # Local configuration
     ]
 
-    debug      = True
+    debug      = True 
     database   = MongoConfiguration()
     server     = ServerConfiguration()
     logfile    = 'baleen.log'                    # Location to write log

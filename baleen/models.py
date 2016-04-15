@@ -191,6 +191,16 @@ class Job(me.DynamicDocument):
             )
         return delta
 
+    @property
+    def job_status(self):
+        if self.duration() < timedelta(hours=1):
+            return "green"
+        elif timedelta(hours=1) < self.duration() <timedelta(hours=5):
+            return "yellow"
+        else:
+            return "red"
+        return "red"
+
     def __unicode__(self):
         return "{} Job {}".format(self.name, self.jobid)
 

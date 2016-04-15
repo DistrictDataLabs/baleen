@@ -46,7 +46,10 @@
           </tr>
           <tr>
             <td>Duration</td>
-            <td>{{ latest_job.duration(humanize=True) }}</td>
+            <td>{% if latest_job.job_status == "green" %}<i class="fa fa-cog fa-spin fa-3x fa-fw margin-bottom" style="color:green"></i>{{ latest_job.duration(humanize=True) }}
+                {% else if latest_job.job_status == "yellow" %}<i class="fa fa-cog fa-spin fa-3x fa-fw margin-bottom" style="color:yellow"></i>{{ latest_job.duration(humanize=True) }}
+                {% else if latest_job.job_status == "red" %}<i class="fa fa-cog fa-spin fa-3x fa-fw margin-bottom" style="color:red"></i>{{ latest_job.duration(humanize=True) }}
+            </td>
           </tr>
           {% if latest_job.failed %}
           <tr>
