@@ -45,8 +45,8 @@
             <td>{% if latest_job.finished %}{{ latest_job.finished.strftime(dtfmt) }} ({{ latest_job.finished|humanize('naturaltime') }}){% else %}Currently Running!{% endif %}</td>
           </tr>
           <tr>
-            <td>Duration</td>
-            <td>{{ latest_job.duration(humanize=True) }}</td>
+            <td class="{{ latest_job.bootstrap_class }}">Duration</td>
+            <td class="{{ latest_job.bootstrap_class }}">{{ latest_job.duration(humanize=True) }}</td>
           </tr>
           {% if latest_job.failed %}
           <tr>
