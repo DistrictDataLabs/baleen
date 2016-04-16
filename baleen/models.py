@@ -193,15 +193,28 @@ class Job(me.DynamicDocument):
 
     @property
     def bootstrap_class(self):
-        if self.finished:
-            return ""
-        else:
-            if self.duration() < timedelta(hours=1):
-                return "success"
-            elif timedelta(hours=1) < self.duration() <timedelta(hours=5):
+        """
+        Uses the duration to determine the colorization of the job.
+        """
+        if self.finished and self.failed:
+            return "danger"
+
+        if self.finished and not self.failed:
+            if self.duration() > timedelta(minutes=30):
                 return "warning"
+            return "success"
+
+        if not self.finished:
+
+            if self.duration() < timedelta(minutes=30):
+                return "info"
+
+            elif timedelta(minutes=30) < self.duration() < timedelta(hours=2):
+                return "warning"
+
             else:
                 return "danger"
+
         return ""
 
     def __unicode__(self):
