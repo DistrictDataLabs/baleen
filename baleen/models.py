@@ -207,7 +207,7 @@ class Job(me.DynamicDocument):
         if not self.finished:
 
             if self.duration() < timedelta(minutes=30):
-                return "info"
+                return "success"
 
             elif timedelta(minutes=30) < self.duration() < timedelta(hours=2):
                 return "warning"
