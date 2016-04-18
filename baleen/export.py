@@ -113,7 +113,7 @@ class MongoExporter(object):
         # Iterate through all posts that have the given feed ids without
         # dereferencing the related object. Yield (post, category) tuples.
         # This method also counts the number of posts per category.
-        for post in Post.objects(feed__in=feeds.keys()).no_dereference():
+        for post in Post.objects(feed__in=feeds.keys()).no_dereference().no_cache():
             category = feeds[post.feed.id]
             self.counts[category] += 1
 
