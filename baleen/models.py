@@ -137,18 +137,12 @@ class Post(me.DynamicDocument):
 
     def htmlize(self):
         """
-        Returns an HTML string of the content of the Post
+        Returns an HTML string of the content of the Post.
+        In the future we may use bleach to do sanitization or other simple
+        sanity checks to ensure that things are going ok, which is why this
+        method stub exists. 
         """
-
-        template = (
-            u"<!doctype html>\n"
-            u"<html>\n"
-            u"<head>\n\t<meta charset=\"utf-8\"\n>"
-            u"\t<title>%s</title>\n</head>\n"
-            u"<body>\n\n%s\n\n</body>\n</html>\n"
-        )
-
-        return template % (self.title, self.content)
+        return self.content
 
     def __unicode__(self):
         return self.title if self.title else self.url
