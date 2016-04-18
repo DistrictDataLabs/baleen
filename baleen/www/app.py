@@ -65,6 +65,20 @@ def index():
     feed_count = feeds.count()
     topics = set([feed.category for feed in Feed.objects.only('category')])
     feeds_topics_counts = len(topics)
+    feed_icons = {'gaming':'fa fa-gamepad',
+                  'design':'fa fa-building-o',
+                  'business':'fa fa-briefcase',
+                  'cinema':'fa fa-video-camera',
+                  'data-science':'fa fa-area-chart',
+                  'cooking':'fa fa-cutlery',
+                  'sports':'fa fa-futbol-o',
+                  'books':'fa fa-book',
+                  'tech':'fa fa-cogs',
+                  'politics':'fa fa-university',
+                  'news':'fa fa-newspaper-o',
+                  'essays':'fa fa-pencil-square-o',
+                  'do-it-yourself':'fa fa-wrench'
+                 }
     feeds_topics = {
         topic: Feed.objects(category=topic)
         for topic in topics
@@ -75,8 +89,8 @@ def index():
                            feeds=feeds,
                            feeds_topics=feeds_topics,
                            feed_count=feed_count,
-                           topic_count=feeds_topics_counts)
-
+                           topic_count=feeds_topics_counts,
+                           feed_icons=feed_icons)
 
 @app.route("/status/")
 def status():

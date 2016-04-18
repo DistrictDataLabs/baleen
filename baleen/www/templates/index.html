@@ -20,15 +20,17 @@
       <div class="list-group">
         {% for topic, feeds in feeds_topics|dictsort %}
         <a class="list-group-item" href="#{{ topic|replace(" ", "-")|lower }}">
-          <span class="badge">{{ feeds.count() }}</span>
-          {{ topic|title }}
+        <i class="{{ feed_icons[topic|replace(" ", "-")|lower] }}" aria-hidden="true"></i>{{ feed_icons.topic }}
+        <span class="badge">{{ feeds.count() }}</span>
+        {{ topic|title }}
         </a>
         {% endfor %}
       </div>
 
       <!-- Converted the feeds list into a table -->
         {% for topic, feeds in feeds_topics|dictsort %}
-          <h3 id="{{ topic|replace(" ", "-")|lower }}">{{ topic|title }} <small>({{ feeds.count() }} feeds)</small></h3>
+          <h3 id="{{ topic|replace(" ", "-")|lower }}"><i class="{{ feed_icons[topic|replace(" ", "-")|lower] }}" aria-hidden="true"></i>
+          {{ topic|title }} <small>({{ feeds.count() }} feeds)</small></h3>
           <table class="table table-bordered table-striped table-hover">
             <thead>
               <th>Active</th>
