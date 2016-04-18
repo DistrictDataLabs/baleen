@@ -57,3 +57,10 @@ class FetchError(WranglingError):
     Could not fetch the webpage for the post
     """
     pass
+
+
+class ExportError(BaleenError):
+    """
+    Something went wrong with the export of the corpus
+    """
+    pass
