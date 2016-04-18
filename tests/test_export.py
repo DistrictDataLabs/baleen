@@ -42,11 +42,11 @@ class ExportTests(unittest.TestCase):
         # Make sure good schemes don't error
         for scheme in SCHEMES:
             try:
-                exporter = MongoExporter(scheme=scheme)
+                exporter = MongoExporter("/tmp/corpus", scheme=scheme)
             except ExportError:
                 self.fail("Could not use expected scheme, {}".format(scheme))
 
         # Make sure bad schemes do error
         for scheme in ('text', 'txt', 'bson', 'xml', 'yaml'):
             with self.assertRaises(ExportError):
-                exporter = MongoExporter(scheme=scheme)
+                exporter = MongoExporter("/tmp/corpus", scheme=scheme)
