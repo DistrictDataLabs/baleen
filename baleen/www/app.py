@@ -17,7 +17,6 @@ Flask application definition in Baleen.
 ## Imports
 ##########################################################################
 
-import os
 import baleen
 
 from baleen.config import settings
@@ -65,6 +64,8 @@ def index():
     feed_count = feeds.count()
     topics = set([feed.category for feed in Feed.objects.only('category')])
     feeds_topics_counts = len(topics)
+
+    # TODO: probably should put this in the database along with the feed.
     feed_icons = {'gaming':'fa fa-gamepad',
                   'design':'fa fa-building-o',
                   'business':'fa fa-briefcase',

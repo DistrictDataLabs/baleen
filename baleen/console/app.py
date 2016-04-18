@@ -30,14 +30,14 @@ from baleen.version import get_version
 
 DESCRIPTION = "Management and administration commands for Baleen"
 EPILOG      = "If there are any bugs or concerns, submit an issue on Github"
-COMMANDS    = [
+COMMANDS    = (
     IngestCommand,
     ExportCommand,
     LoadOPMLCommand,
     SummaryCommand,
     RunCommand,
     ServeCommand,
-]
+)
 
 
 ##########################################################################
