@@ -126,7 +126,7 @@ docker build -t "baleen_app_1" -f Dockerfile-app .
 5. Launch a docker container based on `baleen_app_1` image and interact with `baleen` as described in the above setup directions 6-9.
 
     ```
-    docker exec -it baleen_app_1 /bin/bash
+    docker run -it baleen_app_1 /bin/bash
     ```
 
 ## Web Admin
