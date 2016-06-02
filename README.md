@@ -117,13 +117,13 @@ server:
     port: 5000
     ```
 
-4. Type this command to build docker container: 
+4. Type this command to build the docker image: 
 
     ```
 docker build -t "baleen_app_1" -f Dockerfile-app .
     ```
 
-5. Exec interactively into the `baleen_app_1` container to interact with baleen as described in the above setup directions 6-9.
+5. Launch a docker container based on `baleen_app_1` image and interact with `baleen` as described in the above setup directions 6-9.
 
     ```
     docker exec -it baleen_app_1 /bin/bash
