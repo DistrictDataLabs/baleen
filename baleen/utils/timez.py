@@ -51,24 +51,6 @@ def utcnow():
     now = now.replace(tzinfo=tzutc())
     return now
 
-
-zre = re.compile(r'([\-\+]\d{4})')
-def strptimez(dtstr, dtfmt):
-    """
-    Helper function that performs the timezone calculation to correctly
-    compute the '%z' format that is not added by default in Python 2.7.
-    """
-    if '%z' not in dtfmt:
-        return datetime.strptime(dtstr, dtfmt)
-
-    dtfmt  = dtfmt.replace('%z', '')
-    offset = int(zre.search(dtstr).group(1))
-    dtstr  = zre.sub('', dtstr)
-    delta  = timedelta(hours = offset/100)
-    utctsp = datetime.strptime(dtstr, dtfmt) - delta
-    return utctsp.replace(tzinfo=tzutc())
-
-
 def humanizedelta(*args, **kwargs):
     """
     Wrapper around dateutil.relativedelta (same construtor args) and returns
