@@ -18,6 +18,7 @@ This quick start is intended to get you setup with Baleen in development mode (s
 
     ```
 $ git clone git@github.com:bbengfort/baleen.git
+or: git clone https://github.com/DistrictDataLabs/baleen.git
 $ cd baleen
     ```
 
