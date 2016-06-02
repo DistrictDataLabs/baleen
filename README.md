@@ -10,7 +10,7 @@
 
 [![Space Whale](docs/images/spacewhale.jpg)][spacewhale.jpg]
 
-## Quick Start
+## Installtion Option #1: Install on Local Machine 
 
 This quick start is intended to get you setup with Baleen in development mode (since the project is still under development). If you'd like to run Baleen in production, please see the [documentation][rtfd_href].
 
@@ -18,24 +18,30 @@ This quick start is intended to get you setup with Baleen in development mode (s
 
     ```
 $ git clone git@github.com:bbengfort/baleen.git
+or: git clone https://github.com/DistrictDataLabs/baleen.git
 $ cd baleen
     ```
 
 2. Create a virtualenv and install the dependencies
 
     ```
-$ virtualenv venv
+$ pyvenv venv  # or: virtualenv -p python3 venv
 $ source venv/bin/activate
 $ pip install -r requirements.txt
+$ pip install nose==1.3.7 mongomock==3.2.1 coverage==4.0.3
     ```
 
 3. Add the `baleen` module to your `$PYTHONPATH` via the virtualenv.
 
     ```
-$ echo $(pwd) > venv/lib/python2.7/site-packages/baleen.pth
+$ echo $(pwd) > venv/lib/python3.x/site-packages/baleen.pth
     ```
 
-4. Create your local configuration file. Edit it with the connection details to your local MongoDB server.  This is also a good time to check and make sure that you can create a database called Baleen on Mongo.
+   Please replace *3.x* with the exact version of your Python.
+
+4. Install and start mongoDB: https://docs.mongodb.com/manual/installation/
+
+5. Create your local configuration file. Edit it with the connection details to your local MongoDB server.  This is also a good time to check and make sure that you can create a database called Baleen on Mongo.
 
     ```
 $ cp conf/baleen-example.yaml conf/baleen.yaml
@@ -54,26 +60,26 @@ server:
 
     ```
 
-5. Run the tests to make sure everything is ok.
+6. Run the tests to make sure everything is ok.
 
     ```
 $ make test
     ```
 
-6. Make sure that the command line utility is ready to go:
+7. Make sure that the command line utility is ready to go:
 
     ```
 $ bin/baleen --help
     ```
 
-7. Import the feeds from the `feedly.opml` file in the fixtures.
+8. Import the feeds from the `feedly.opml` file in the fixtures.
 
     ```
 $ bin/baleen load tests/fixtures/feedly.opml
 Ingested 36 feeds from 1 OPML files
     ```
 
-8. Perform an ingestion of the feeds that were imported from the `feedly.opml` file.
+9. Perform an ingestion of the feeds that were imported from the `feedly.opml` file.
 
     ```
 $ bin/baleen ingest
@@ -81,7 +87,7 @@ $ bin/baleen ingest
 
 Your Mongo database collections should be created as you add new documents to them, and at this point you're ready to develop!
 
-## Docker Setup
+## Installation Option #2: Docker Setup
 
 Included in this repository are files related to setting up the development environment using docker if you wish.
 
@@ -112,10 +118,16 @@ server:
     port: 5000
     ```
 
-4. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 5-8.
+4. Type this command to build the docker image: 
 
     ```
-    docker exec -it baleen_app_1 /bin/bash
+docker build -t "baleen_app_1" -f Dockerfile-app .
+    ```
+
+5. Launch a docker container based on `baleen_app_1` image and interact with `baleen` as described in the above setup directions 6-9.
+
+    ```
+    docker run -it baleen_app_1 /bin/bash
     ```
 
 ## Web Admin
