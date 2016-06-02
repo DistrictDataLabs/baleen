@@ -16,7 +16,7 @@ confire==0.2.0
 PyYAML==3.11
 
 ## Command Line
-commis==0.2
+commis==0.3
 colorama==0.3.6
 
 ## Utilities

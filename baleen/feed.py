@@ -75,7 +75,7 @@ class FeedSync(object):
         """
         Returns the type of the feed.
         """
-        if isinstance(self.feed, basestring):
+        if isinstance(self.feed, str):
             return self.URL
 
         if isinstance(self.feed, Feed):

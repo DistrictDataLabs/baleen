@@ -68,4 +68,4 @@ class BaleenConfiguration(confire.Configuration):
 settings = BaleenConfiguration.load()
 
 if __name__ == '__main__':
-    print settings
+    print(settings)

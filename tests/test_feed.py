@@ -30,7 +30,7 @@ except ImportError:
 
 from baleen.feed import *
 from baleen.models import *
-from urlparse import urlparse
+from urllib import parse as urlparse
 from baleen.exceptions import FeedTypeError
 
 ##########################################################################

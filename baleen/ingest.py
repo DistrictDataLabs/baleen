@@ -146,7 +146,7 @@ class Ingestor(LoggingMixin):
                 self.errors[stype(e)] += 1
                 self.logger.error(
                     u"Error on Feed {} ({}): {}".format(
-                        idx+1, fsync.feed, unicode(e)
+                        idx+1, fsync.feed, str(e)
                     )
                 )
 
@@ -164,7 +164,7 @@ class Ingestor(LoggingMixin):
                 self.errors[stype(e)] += 1
                 self.logger.error(
                     u"Post Error for feed {} on entry {}: {}".format(
-                        fsync.feed, idx, unicode(e)
+                        fsync.feed, idx, str(e)
                     )
                 )
 
@@ -181,7 +181,7 @@ class Ingestor(LoggingMixin):
                 self.errors[stype(e)] += 1
                 self.logger.error(
                     u"Fetch Error for post \"{}\" ({}): {}".format(
-                        post.post.title, post.post.url, unicode(e)
+                        post.post.title, post.post.url, str(e)
                     )
                 )
 
@@ -242,7 +242,7 @@ class MongoIngestor(Ingestor):
         """
         super(MongoIngestor, self).failed(exception)
         self.job.failed = True
-        self.job.reason = unicode(exception)
+        self.job.reason = str(exception)
         self.job.finished = datetime.now()
         self.job.save()
 
