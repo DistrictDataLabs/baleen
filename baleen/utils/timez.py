@@ -17,11 +17,10 @@ Utility functions for Baleenc
 ## Imports
 ##########################################################################
 
-import re
 import time
 
 from dateutil.tz import tzlocal, tzutc
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 ##########################################################################
