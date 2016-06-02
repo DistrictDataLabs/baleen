@@ -92,20 +92,14 @@ Included in this repository are files related to setting up the development envi
 
 1. Install Docker Machine and Docker Compose e.g. with [Docker Toolbox](https://www.docker.com/products/docker-toolbox).
 
-2. Type this command to build docker container: 
-
-    ```
-docker build -t "baleen_app_1" -f Dockerfile-app .
-    ```
-
-3. Clone the repository
+2. Clone the repository
 
     ```
 $ git clone git@github.com:bbengfort/baleen.git
 $ cd baleen
     ```
 
-4. Create your local configuration file. Edit it with your configuration details; your MongoDB server will be at host `mongo`.
+3. Create your local configuration file. Edit it with your configuration details; your MongoDB server will be at host `mongo`.
 
     ```
 $ cp conf/baleen-example.yaml conf/baleen.yaml
@@ -123,7 +117,13 @@ server:
     port: 5000
     ```
 
-5. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 6-9.
+4. Type this command to build docker container: 
+
+    ```
+docker build -t "baleen_app_1" -f Dockerfile-app .
+    ```
+
+5. Exec interactively into the `baleen_app_1` container to interact with baleen as described in the above setup directions 6-9.
 
     ```
     docker exec -it baleen_app_1 /bin/bash
