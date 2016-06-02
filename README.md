@@ -32,8 +32,10 @@ $ pip install -r requirements.txt
 3. Add the `baleen` module to your `$PYTHONPATH` via the virtualenv.
 
     ```
-$ echo $(pwd) > venv/lib/python2.7/site-packages/baleen.pth
+$ echo $(pwd) > venv/lib/python3.x/site-packages/baleen.pth
     ```
+
+Replace *3.x* with the exact version of your Python.
 
 4. Create your local configuration file. Edit it with the connection details to your local MongoDB server.  This is also a good time to check and make sure that you can create a database called Baleen on Mongo.
 
