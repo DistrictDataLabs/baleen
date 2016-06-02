@@ -70,7 +70,7 @@ class MongoFormatter(logging.Formatter):
             'number': data.pop('levelno'),
             'name': data.pop('levelname'),
         }
-        info      = tuple(unicode(arg) for arg in data.pop('args'))
+        info      = tuple(str(arg) for arg in data.pop('args'))
 
         for key in ('relativeCreated', 'msecs', 'msg'):
             del data[key]

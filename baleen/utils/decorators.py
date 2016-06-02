@@ -87,7 +87,7 @@ def reraise(klass=BaleenError, message=None, trap=Exception):
             try:
                 return func(*args, **kwargs)
             except trap as e:
-                error = klass(message or e.message)
+                error = klass(message or str(e))
                 error.original = e
                 raise error
 

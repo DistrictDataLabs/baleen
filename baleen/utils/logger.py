@@ -56,7 +56,7 @@ configuration = {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': settings.logfile,
-            'maxBytes': '536870912', # 512 MB
+            'maxBytes': 536870912, # 512 MB
             'formatter': 'simple',
         },
 
