@@ -47,9 +47,9 @@ class SummaryCommand(Command):
 
         # Printout configuration details as necessary.
         if args.config:
-            output.append(u"Configuration:")
-            output.append(unicode(settings))
-            output.append(u"")
+            output.append("Configuration:")
+            output.append(settings)
+            output.append("")
 
         output.append(u"Baleen v{} Status:".format(baleen.get_version()))
         output.append(

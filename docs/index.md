@@ -20,7 +20,7 @@ This quick start is intended to get you setup with Baleen in development mode (s
 
 3. Add the `baleen` module to your `$PYTHONPATH` via the virtualenv.
 
-        $ echo $(pwd) > venv/lib/python2.7/site-packages/baleen.pth
+        $ echo $(pwd) > venv/lib/python3.5/site-packages/baleen.pth
 
 4. Create your local configuration file. Edit it with the connection details to your local MongoDB server.  This is also a good time to check and make sure that you can create a database called Baleen on Mongo.
 

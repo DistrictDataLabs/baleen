@@ -75,7 +75,7 @@ class MongoExporter(object):
         During export, this list is used to construct a feed-category mapping
         that is used to perform checking of sequential reads of Posts.
         """
-        if isinstance(categories, basestring):
+        if isinstance(categories, str):
             categories = [categories]
         elif categories is None:
             categories = self.categories
