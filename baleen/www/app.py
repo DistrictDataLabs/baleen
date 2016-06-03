@@ -64,7 +64,6 @@ def index():
     feed_count = feeds.count()
     topics = set([feed.category for feed in Feed.objects.only('category')])
     feeds_topics_counts = len(topics)
-    current_version = baleen.get_version()
 
     # TODO: probably should put this in the database along with the feed.
     feed_icons = {'gaming':'fa fa-gamepad',
@@ -93,7 +92,7 @@ def index():
                            feed_count=feed_count,
                            topic_count=feeds_topics_counts,
                            feed_icons=feed_icons,
-                           current_version=current_version,)
+                           )
 
 @app.route("/status/")
 def status():
@@ -154,6 +153,15 @@ def logs():
         next = nextp,
         prev = prevp,
     )
+
+
+##########################################################################
+## Helpers
+##########################################################################
+
+@app.context_processor
+def inject_current_version():
+    return dict(current_version = baleen.get_version())
 
 
 ##########################################################################
