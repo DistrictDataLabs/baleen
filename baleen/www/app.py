@@ -54,6 +54,7 @@ humanize = Humanize(app)
 ## Routes
 ##########################################################################
 
+
 @app.route("/")
 def index():
     """
@@ -145,13 +146,13 @@ def logs():
 
     return render_template(
         'logs.html',
-        page = page,
-        num_pages = n_pages,
-        per_page  = per_page,
-        logs = logs,
-        num_logs = n_logs,
-        next = nextp,
-        prev = prevp,
+        page=page,
+        num_pages=n_pages,
+        per_page=per_page,
+        logs=logs,
+        num_logs=n_logs,
+        next=nextp,
+        prev=prevp,
     )
 
 
