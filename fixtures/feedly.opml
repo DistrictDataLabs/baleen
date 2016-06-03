@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<opml version="1.0">
+    <head>
+        <title>From Text to Value subscriptions in feedly Cloud</title>
+    </head>
+    <body>
+        <outline text="cooking" title="cooking">
+            <outline type="rss" text="Delicieux" title="Delicieux" xmlUrl="http://feeds.feedblitz.com/delicieux" htmlUrl="http://www.deliciouseveryday.com"/>
+        </outline>
+        <outline text="cinema" title="cinema">
+            <outline type="rss" text="Moviefone News" title="Moviefone News" xmlUrl="http://blog.moviefone.com/rss.xml" htmlUrl="http://news.moviefone.com"/>
+        </outline>
+        <outline text="gaming" title="gaming">
+            <outline type="rss" text="Gamespot's Site Mashup" title="Gamespot's Site Mashup" xmlUrl="http://www.gamespot.com/rss/game_updates.php" htmlUrl="http://www.gamespot.com/mashup/"/>
+        </outline>
+        <outline text="tech" title="tech">
+            <outline type="rss" text="Ars Technica" title="Ars Technica" xmlUrl="http://feeds.arstechnica.com/arstechnica/index/" htmlUrl="http://arstechnica.com"/>
+        </outline>
+        <outline text="business" title="business">
+            <outline type="rss" text="Businessweek.com -- Top News" title="Businessweek.com -- Top News" xmlUrl="http://www.businessweek.com/feeds/homepage.rss" htmlUrl="http://businessweek.com"/>
+        </outline>
+        <outline text="design" title="design">
+            <outline type="rss" text="Oh Happy Day!" title="Oh Happy Day!" xmlUrl="http://ohhappyday.com/feed/" htmlUrl="http://ohhappyday.com"/>
+        </outline>
+        <outline text="sports" title="sports">
+            <outline type="rss" text="BBC Sport - Sport" title="BBC Sport - Sport" xmlUrl="http://newsrss.bbc.co.uk/rss/sportonline_world_edition/front_page/rss.xml" htmlUrl="http://www.bbc.co.uk/sport/0/"/>
+        </outline>
+        <outline text="books" title="books">
+            <outline type="rss" text="Books" title="Books" xmlUrl="http://www.npr.org/rss/rss.php?id=1032" htmlUrl="http://www.npr.org/templates/story/story.php?storyId=1032"/>
+        </outline>
+        <outline text="data science" title="data science">
+            <outline type="rss" text="Geeking with Greg" title="Geeking with Greg" xmlUrl="http://glinden.blogspot.com/feeds/posts/default" htmlUrl="http://glinden.blogspot.com/"/>
+        </outline>
+        <outline text="do it yourself" title="do it yourself">
+            <outline type="rss" text="adafruit industries blog" title="adafruit industries blog" xmlUrl="http://www.adafruit.com/blog/feed/" htmlUrl="http://www.adafruit.com/blog"/>
+        </outline>
+    </body>
+</opml>
