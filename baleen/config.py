@@ -63,6 +63,7 @@ class BaleenConfiguration(confire.Configuration):
     logfile    = 'baleen.log'                    # Location to write log
     loglevel   = 'DEBUG'                         # Log messages to record
     fetch_html = True                            # Actually fetch HTML link
+    timeout    = 180                             # Timeout for fetching posts/feeds
 
 ## Load settings immediately for import
 settings = BaleenConfiguration.load()

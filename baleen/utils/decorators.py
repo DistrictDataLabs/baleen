@@ -17,9 +17,10 @@ Decorators and function utilities for Baleen.
 ## Imports
 ##########################################################################
 
+import signal
 from functools import wraps
 from baleen.utils.timez import Timer
-from baleen.exceptions import BaleenError
+from baleen.exceptions import BaleenError, TimeoutError
 
 ##########################################################################
 ## Memoization
@@ -64,6 +65,30 @@ def timeit(func):
 
     return timer_wrapper
 
+
+def timeout(seconds):
+    """
+    Raises a TimeoutError if a function does not terminate within
+    specified seconds.
+    """
+    def _timeout_error(signal, frame):
+        raise TimeoutError("Operation did not finish within \
+        {} seconds".format(seconds))
+
+    def timeout_decorator(func):
+
+        @wraps(func)
+        def timeout_wrapper(*args, **kwargs):
+            signal.signal(signal.SIGALRM, _timeout_error)
+            signal.alarm(seconds)
+            try:
+                return func(*args, **kwargs)
+            finally:
+                signal.alarm(0)
+
+        return timeout_wrapper
+
+    return timeout_decorator
 
 ##########################################################################
 ## Exception Handling

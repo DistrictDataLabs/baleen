@@ -64,3 +64,10 @@ class ExportError(BaleenError):
     Something went wrong with the export of the corpus
     """
     pass
+
+
+class TimeoutError(Exception):
+    """
+    An operation timed out
+    """
+    pass

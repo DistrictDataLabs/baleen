@@ -19,11 +19,12 @@ Handles the synchronization of documents from an RSS feeds.
 
 import feedparser
 
+from baleen.config import settings
 from baleen.models import Feed
 from baleen.utils.timez import localnow
 from baleen.exceptions import FeedTypeError
 from baleen.exceptions import SynchronizationError
-from baleen.utils.decorators import memoized, reraise
+from baleen.utils.decorators import memoized, reraise, timeout
 
 
 ##########################################################################
@@ -103,6 +104,7 @@ class FeedSync(object):
             self.MODEL: lambda: self.feed.link,
         }[self.type]()
 
+    @timeout(settings.timeout)
     def parse(self):
         """
         Wraps the feedparser.parse function such that if the feed is an model,

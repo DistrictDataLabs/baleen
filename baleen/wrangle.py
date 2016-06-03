@@ -26,6 +26,7 @@ import requests
 from copy import deepcopy
 from dateutil import parser as dtparser
 
+from baleen.config import settings
 from baleen.models import Post
 from baleen.utils.decorators import reraise
 from baleen.exceptions import WranglingError, FetchError
@@ -163,7 +164,7 @@ class PostWrangler(object):
         if not self.is_wrangled():
             raise ValueError("Entry not yet wrangled, cannot fetch.")
 
-        response = requests.get(self.post.url)
+        response = requests.get(self.post.url, timeout=settings.timeout)
         response.raise_for_status()
 
         if response.text:
