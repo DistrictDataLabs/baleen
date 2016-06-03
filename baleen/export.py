@@ -19,9 +19,11 @@ Export an HTML corpus for analyses with NLTK
 
 import os
 import codecs
+import bleach
 
 from datetime import datetime
 from baleen.models import Feed, Post
+from readability.readability import Document
 
 ##########################################################################
 ## Exporter
@@ -109,11 +111,19 @@ class MongoExporter(object):
             for idx, post in enumerate(self.posts(category)):
                 name = os.path.join(dirname, "%03i.html" % idx)
                 with codecs.open(name, 'wb', encoding='utf8') as f:
-                    f.write(post.htmlize())
+                    f.write(self._sanitize_html(post.htmlize()))
 
         readme = os.path.join(root, "README")
         with codecs.open(readme, 'wb', encoding='utf8') as f:
             f.write(self.readme())
+
+    def _sanitize_html(self, html):
+        text = Document(html).get_clean_html()
+        text = bleach.clean(html, tags=['title', 'a'], strip=True)
+        text = text.strip()
+        text = text.replace("\n", "")
+        text = text.replace("&amp;", "&")
+        return text
 
 if __name__ == '__main__':
     from baleen.models import connect
