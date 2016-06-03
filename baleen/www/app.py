@@ -161,7 +161,11 @@ def logs():
 
 @app.context_processor
 def inject_current_version():
-    return dict(current_version = baleen.get_version())
+    """
+    Add the current version to the context
+    so it's available to the footer in all templates
+    """
+    return dict(current_version=baleen.get_version())
 
 
 ##########################################################################
