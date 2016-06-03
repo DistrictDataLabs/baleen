@@ -61,7 +61,7 @@ class IngestCommand(Command):
         db.connect()
         ingestor.ingest()
         return (
-            "Processed {feeds} feeds ({timer}): "
+            "Processed {feeds} ({unchanged_feeds} unchanged) feeds ({timer}): "
             "{posts} posts with {errors} errors"
         ).format(
             timer=ingestor.timer, **ingestor.counts

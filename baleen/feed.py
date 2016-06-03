@@ -18,10 +18,13 @@ Handles the synchronization of documents from an RSS feeds.
 ##########################################################################
 
 import feedparser
+import json
 
 from baleen.models import Feed
+from baleen.utils.cryptography import hash_string
+from baleen.utils.logger import LoggingMixin
 from baleen.utils.timez import localnow
-from baleen.exceptions import FeedTypeError
+from baleen.exceptions import FeedTypeError, UnchangedFeedSyncError
 from baleen.exceptions import SynchronizationError
 from baleen.utils.decorators import memoized, reraise
 
@@ -40,7 +43,7 @@ FEEDPARSER_IGNORABLE_FIELDS = {
 ## Feed Synchronization
 ##########################################################################
 
-class FeedSync(object):
+class FeedSync(LoggingMixin):
     """
     A utility that wraps both a Feed object and the feedparser library.
     The feed that is passed into the FeedSync can be one of the following:
@@ -124,7 +127,7 @@ class FeedSync(object):
         # Otherwise just return the parse of the URL
         return feedparser.parse(self.url)
 
-    @reraise(klass=SynchronizationError)
+    @reraise(klass=SynchronizationError, ignore=UnchangedFeedSyncError)
     def sync(self, save=True):
         """
         Calls the feedparser.parse function correctly but also synchronizes
@@ -173,7 +176,14 @@ class FeedSync(object):
             else:
                 setattr(self.feed, key, val)
 
+        entries = [e.link or e.get('href', None) or e.id for e in result.entries]
+        result_json = json.dumps({'href': result.href, 'entries': entries})
+        feed_hash = hash_string(result_json)
+        old_feeds = Feed.objects.filter(signature=feed_hash)
+        unchanged = len(entries) == 0 or old_feeds.count() > 0
+        setattr(result, 'unchanged', unchanged)
         if save:
+            self.feed.signature = feed_hash
             self.feed.save()
 
         return result
@@ -185,4 +195,8 @@ class FeedSync(object):
         the feed sync object. Note that this just returns raw dicts not Posts.
         """
         result = self.sync(save=save)
-        return result.entries
+        if not getattr(result, 'unchanged', False):
+            return result.entries
+        else:
+            self.logger.info('Feed has not been changed since last run. Feed=%s', self.url)
+            raise UnchangedFeedSyncError()
