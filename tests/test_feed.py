@@ -246,3 +246,24 @@ class FeedSyncTests(unittest.TestCase):
         # Test sync without save
         result = fsync.sync()
         self.assertEqual(Feed.objects.count(), 0)
+
+    @mock.patch('baleen.feed.feedparser.parse')
+    def test_feed_sync_not_changed_feed_raises_error(self, mock_feedparser):
+        """
+        Test the sync MongoDB interaction
+        """
+        # Ensure that the mocking worked out for us
+        assert mock_feedparser is feedparser.parse
+
+        # Give the mock feedparser a result!
+        with open(RESULT, 'rb') as f:
+            mock_feedparser.return_value = pickle.load(f)
+
+        fsync  = FeedSync(MONGO_FEED)
+
+        # First call to entries should not raise UnchangedFeedSyncError
+        result = fsync.entries()
+        self.assertEqual(Feed.objects.count(), 1)
+        # Second should fail
+        with self.assertRaises(UnchangedFeedSyncError):
+            result = fsync.entries()
