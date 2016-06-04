@@ -38,11 +38,16 @@ class ExportCommand(Command):
             'default': None,
             'help': 'Specify categories to export',
         },
+         ('-L', '--level'): {
+            'type': csv(str),
+            'default': 'safe',
+            'help': 'Export as "safe" html (default), "raw" html, "text" only',
+        },
         'location': {
             'nargs': 1,
             'type': str,
             'help': 'Location to write the corpus out to'
-        }
+        },
     }
 
     def handle(self, args):
@@ -51,7 +56,7 @@ class ExportCommand(Command):
 
         # Export from the database
         exporter = MongoExporter()
-        exporter.export(args.location[0], categories=args.categories)
+        exporter.export(args.location[0], categories=args.categories, level=args.level[0])
 
         # Perform counts of export
         root = args.location[0]
