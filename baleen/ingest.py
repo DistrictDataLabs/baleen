@@ -181,7 +181,7 @@ class Ingestor(LoggingMixin):
                 self.errors[stype(e)] += 1
                 self.logger.error(
                     u"Fetch Error for post \"{}\" ({}): {}".format(
-                        post.post.title, post.post.url, str(e)
+                        post.title, post.url, str(e)
                     )
                 )
 
@@ -251,7 +251,7 @@ class MongoIngestor(Ingestor):
         Update the job record in the database.
         """
         super(MongoIngestor, self).finished()
-        self.job.reason = u"OK"
+        self.job.reason = "OK"
         self.job.finished = datetime.now()
         self.job.counts = self.counts
         self.job.errors = self.errors
