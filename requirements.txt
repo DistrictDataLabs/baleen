@@ -11,6 +11,11 @@ blinker==1.4
 beautifulsoup4==4.4.1
 lxml==3.5.0
 
+## Sanitizing
+bleach==1.4.3
+readability-api==1.0.2
+readability-lxml==0.6.2
+
 ## Configuration
 confire==0.2.0
 PyYAML==3.11
