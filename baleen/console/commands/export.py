@@ -77,7 +77,7 @@ class ExportCommand(Command):
             return "\n".join(sorted(exporter.categories))
 
         with Timer() as t:
-            exporter.export()
+            exporter.export(level=args.scheme)
 
         return (
             "Baleen corpus export complete in {}\n"

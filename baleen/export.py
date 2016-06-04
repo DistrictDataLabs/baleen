@@ -19,21 +19,25 @@ Export an HTML corpus for analyses with NLTK
 
 import os
 import codecs
+import bleach
 
 from enum import Enum
 from datetime import datetime
 from baleen.models import Feed, Post
-from baleen.exceptions import ExportError
+
 from collections import Counter
 from operator import itemgetter
+from baleen.exceptions import ExportError
+from readability.readability import Document
 
 ##########################################################################
 ## Module Constants
 ##########################################################################
 
 DTFMT   = "%b %d, %Y at %H:%M"
-SCHEMES = ('json', 'html')
+SCHEMES = ('json', 'html', 'safe', 'raw', 'text')
 State   = Enum('State', 'Init, Started, Finished')
+
 
 ##########################################################################
 ## Exporter
@@ -168,7 +172,7 @@ class MongoExporter(object):
         with open(path, 'w') as f:
             f.write(feeds.to_json(indent=2))
 
-    def export(self):
+    def export(self, root, categories=None, level='safe'):
         """
         Runs the export of the posts to disk.
         """
@@ -212,7 +216,7 @@ class MongoExporter(object):
             with codecs.open(path, 'w', encoding='utf-8') as f:
                 action = {
                     'json': lambda: post.to_json(indent=2),
-                    'html': post.htmlize,
+                    'html': lambda: self.sanitize_html(post.htmlize(), level),
                 }[self.scheme]
 
                 f.write(action())
@@ -222,6 +226,27 @@ class MongoExporter(object):
         self.readme(os.path.join(self.root, "README"))
         self.feedinfo(os.path.join(self.root, "feeds.json"))
 
+    def sanitize_html(self, html, level):
+        if level == 'safe':
+            return self._get_safe_html(html)
+        elif level == 'raw':
+            return self._get_raw_html(html)
+        elif level == 'text':
+            return self._get_text_from_html(html)
+
+    def _get_raw_html(self, html):
+        return html
+
+    def _get_safe_html(self, html):
+        return Document(html).summary()
+
+    def _get_text_from_html(self, html):
+        text = Document(html).summary()
+        text = bleach.clean(text, tags=[], strip=True)
+        text = text.strip()
+        text = text.replace("\n", "")
+        text = text.replace("&amp;", "&")
+        return text
 
 if __name__ == '__main__':
     import baleen.models as db
