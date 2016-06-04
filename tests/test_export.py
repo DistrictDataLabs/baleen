@@ -47,6 +47,6 @@ class ExportTests(unittest.TestCase):
                 self.fail("Could not use expected scheme, {}".format(scheme))
 
         # Make sure bad schemes do error
-        for scheme in ('text', 'txt', 'bson', 'xml', 'yaml'):
+        for scheme in ('bson', 'xml', 'yaml', 'foo', 'bar'):
             with self.assertRaises(ExportError):
                 exporter = MongoExporter("/tmp/corpus", scheme=scheme)
