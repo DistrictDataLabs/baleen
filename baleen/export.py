@@ -91,7 +91,7 @@ class MongoExporter(object):
             counts
         )
 
-    def export(self, root, categories=None):
+    def export(self, root, categories=None, level='safe'):
         """
         In the root directory writes each file and a README
         """
@@ -111,15 +111,29 @@ class MongoExporter(object):
             for idx, post in enumerate(self.posts(category)):
                 name = os.path.join(dirname, "%03i.html" % idx)
                 with codecs.open(name, 'wb', encoding='utf8') as f:
-                    f.write(self._sanitize_html(post.htmlize()))
+                    f.write(self.sanitize_html(post.htmlize(), level))
 
         readme = os.path.join(root, "README")
         with codecs.open(readme, 'wb', encoding='utf8') as f:
             f.write(self.readme())
 
-    def _sanitize_html(self, html):
-        text = Document(html).get_clean_html()
-        text = bleach.clean(html, tags=['title', 'a'], strip=True)
+    def sanitize_html(self, html, level):
+        if level == 'safe':
+            return self._get_safe_html(html)
+        elif level == 'raw':
+            return self._get_raw_html(html)
+        elif level == 'text':
+            return self._get_text_from_html(html)
+
+    def _get_raw_html(self, html):
+        return html
+
+    def _get_safe_html(self, html):
+        return Document(html).summary()
+
+    def _get_text_from_html(self, html):
+        text = Document(html).summary()
+        text = bleach.clean(text, tags=[], strip=True)
         text = text.strip()
         text = text.replace("\n", "")
         text = text.replace("&amp;", "&")
