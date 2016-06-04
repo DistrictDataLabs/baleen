@@ -26,15 +26,15 @@ __version_info__ = {
 }
 
 
-def get_version(short=False):
+def get_version(short=False,version_info=__version_info__):
     """
     Computes a string representation of the version from __version_info__.
     """
-    assert __version_info__['releaselevel'] in ('alpha', 'beta', 'final')
-    vers = ["%(major)i.%(minor)i" % __version_info__, ]
-    if __version_info__['micro']:
-        vers.append(".%(micro)i" % __version_info__)
-    if __version_info__['releaselevel'] != 'final' and not short:
-        vers.append('%s%i' % (__version_info__['releaselevel'][0],
-                              __version_info__['serial']))
+    assert version_info['releaselevel'] in ('alpha', 'beta', 'final')
+    vers = ["%(major)i.%(minor)i" % version_info, ]
+    if version_info['micro']:
+        vers.append(".%(micro)i" % version_info)
+    if version_info['releaselevel'] != 'final' and not short:
+        vers.append('%s%i' % (version_info['releaselevel'][0],
+                              version_info['serial']))
     return ''.join(vers)

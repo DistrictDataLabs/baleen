@@ -54,6 +54,7 @@ humanize = Humanize(app)
 ## Routes
 ##########################################################################
 
+
 @app.route("/")
 def index():
     """
@@ -91,7 +92,8 @@ def index():
                            feeds_topics=feeds_topics,
                            feed_count=feed_count,
                            topic_count=feeds_topics_counts,
-                           feed_icons=feed_icons)
+                           feed_icons=feed_icons,
+                           )
 
 @app.route("/status/")
 def status():
@@ -144,14 +146,27 @@ def logs():
 
     return render_template(
         'logs.html',
-        page = page,
-        num_pages = n_pages,
-        per_page  = per_page,
-        logs = logs,
-        num_logs = n_logs,
-        next = nextp,
-        prev = prevp,
+        page=page,
+        num_pages=n_pages,
+        per_page=per_page,
+        logs=logs,
+        num_logs=n_logs,
+        next=nextp,
+        prev=prevp,
     )
+
+
+##########################################################################
+## Helpers
+##########################################################################
+
+@app.context_processor
+def inject_current_version():
+    """
+    Add the current version to the context
+    so it's available to the footer in all templates
+    """
+    return dict(current_version=baleen.get_version())
 
 
 ##########################################################################
