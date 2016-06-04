@@ -30,7 +30,6 @@ except ImportError:
 
 from baleen.feed import *
 from baleen.models import *
-from urllib import parse as urlparse
 from baleen.exceptions import FeedTypeError
 
 ##########################################################################
@@ -53,6 +52,8 @@ MONGO_FEED   = Feed(
     link = u'http://therumpus.net/feed/',
     urls = {u'htmlurl': u'http://therumpus.net'},
     category = u'books',
+    signature = '27c019245edb10ac1e8b8800aaeb16b3e9ddd361a7550e089398128f9f87c2ff',
+
 )
 
 ##########################################################################
@@ -264,6 +265,34 @@ class FeedSyncTests(unittest.TestCase):
         # First call to entries should not raise UnchangedFeedSyncError
         result = fsync.entries()
         self.assertEqual(Feed.objects.count(), 1)
+
+        # TODO: feed.save() doesn't save some of fields including signature
+        # So, we need to fix mongomock/mongoengine interaction, or just get rid of mongomock
+        self.conn.baleen.feeds.find()[0]['signature'] = MONGO_FEED.signature
+        self.conn.baleen.feeds.update_one({'_id': self.conn.baleen.feeds.find()[0]['_id']},
+                                  {'$set': {'signature': MONGO_FEED.signature}},
+                                  upsert=False)
         # Second should fail
         with self.assertRaises(UnchangedFeedSyncError):
             result = fsync.entries()
+
+    @mock.patch('baleen.feed.feedparser.parse')
+    def test_feed_sync_changed_feed(self, mock_feedparser):
+        """
+        Test the sync MongoDB interaction
+        """
+        # Ensure that the mocking worked out for us
+        assert mock_feedparser is feedparser.parse
+
+        # Give the mock feedparser a result!
+        with open(RESULT, 'rb') as f:
+            mock_feedparser.return_value = pickle.load(f)
+
+        fsync  = FeedSync(MONGO_FEED)
+
+        # First call to entries should not raise UnchangedFeedSyncError
+        result = fsync.entries()
+        self.assertEqual(Feed.objects.count(), 1)
+        # changing list of entries should be enough to make feed ingested again
+        mock_feedparser.return_value.entries.remove(mock_feedparser.return_value.entries[0])
+        result = fsync.entries()

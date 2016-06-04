@@ -176,7 +176,7 @@ class FeedSync(LoggingMixin):
             else:
                 setattr(self.feed, key, val)
 
-        entries = [e.link or e.get('href', None) or e.id for e in result.entries]
+        entries = sorted([e.link or e.get('href', None) or e.id for e in result.entries])
         result_json = json.dumps({'href': result.href, 'entries': entries})
         feed_hash = hash_string(result_json)
         old_feeds = Feed.objects.filter(signature=feed_hash)
