@@ -172,10 +172,11 @@ class MongoExporter(object):
         with open(path, 'w') as f:
             f.write(feeds.to_json(indent=2))
 
-    def export(self, root, categories=None, level='safe'):
+    def export(self, root=None, categories=None, level='safe'):
         """
         Runs the export of the posts to disk.
         """
+        self.root = root or self.root
 
         # Reset the counts object and mark export as started.
         self.counts = Counter()

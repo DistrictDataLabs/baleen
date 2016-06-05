@@ -164,7 +164,7 @@ class IngestLogger(WrappedLogger):
 
     def __init__(self, **kwargs):
         self._user = kwargs.pop('user', None)
-        super(IngestLogger, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @property
     def user(self):
@@ -182,7 +182,7 @@ class IngestLogger(WrappedLogger):
         })
 
         kwargs['extra'] = extra
-        super(IngestLogger, self).log(level, message, *args, **kwargs)
+        super().log(level, message, *args, **kwargs)
 
 
 ##########################################################################

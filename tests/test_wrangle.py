@@ -69,7 +69,7 @@ def mocked_requests_get(*args, **kwargs):
 class PostWranglerTests(MongoTestMixin, unittest.TestCase):
 
     def setUp(self):
-        super(PostWranglerTests, self).setUp()
+        super().setUp()
         self.feed = FEED
         self.feed.save()
 
