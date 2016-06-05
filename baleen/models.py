@@ -18,11 +18,11 @@ Object Document Models for use with Mongo and mongoengine
 ##########################################################################
 
 import baleen
-import hashlib
 import mongoengine as me
 
 from datetime import datetime,timedelta
 from baleen.config import settings
+from baleen.utils.cryptography import hash_string
 from baleen.utils.timez import humanizedelta
 
 
@@ -78,6 +78,7 @@ class Feed(me.DynamicDocument):
     fetched   = me.DateTimeField(default=None)
     created   = me.DateTimeField(default=datetime.now, required=True)
     updated   = me.DateTimeField(default=datetime.now, required=True)
+    signature = me.StringField(max_length=64, min_length=64, unique=False)
 
     @classmethod
     def pre_save(cls, sender, document, **kwargs):
@@ -131,9 +132,7 @@ class Post(me.DynamicDocument):
         """
         Returns the SHA256 hash of the content.
         """
-        sha = hashlib.sha256()
-        sha.update(self.content.encode('UTF-8'))
-        return sha.hexdigest()
+        return hash_string(self.content)
 
     def htmlize(self):
         """
@@ -258,4 +257,4 @@ class Log(me.DynamicDocument):
 
 me.signals.pre_save.connect(Feed.pre_save, sender=Feed)
 me.signals.pre_save.connect(Post.pre_save, sender=Post)
-me.signals.pre_save.connect(Post.pre_save, sender=Post)
+me.signals.pre_save.connect(Job.pre_save, sender=Job)

@@ -81,7 +81,7 @@ class Ingestor(LoggingMixin):
         Keep track of counts and ensure zero keys exist.
         """
         counts = Counter()
-        for key in ('feeds', 'posts', 'errors', 'feed_error'):
+        for key in ('feeds', 'unchanged_feeds', 'posts', 'errors', 'feed_error'):
             counts[key] = 0
         return counts
 
@@ -121,7 +121,7 @@ class Ingestor(LoggingMixin):
         """
         # Notify the results
         results = (
-            "Processed {feeds} feeds ({timer}) "
+            "Processed {feeds} ({unchanged_feeds} unchanged) feeds ({timer}) "
             "{posts} posts with {errors} errors"
         ).format(
             timer=self.timer, **self.counts
@@ -141,6 +141,8 @@ class Ingestor(LoggingMixin):
             try:
                 self.process_feed(fsync)
                 self.counts['feeds'] += 1
+            except UnchangedFeedSyncError:
+                self.counts['unchanged_feeds'] += 1
             except SynchronizationError as e:
                 self.counts['feed_error'] += 1
                 self.errors[stype(e)] += 1
@@ -150,9 +152,10 @@ class Ingestor(LoggingMixin):
                     )
                 )
 
-    def process_feed(self, fsync):
+    def process_feed(self, fsync: FeedSync):
         """
         Synchronizes a feed and catches exceptions
+        :param fsync: FeedSync object
         """
         factory = PostWrangler.factory(fsync.entries(), fsync.feed)
         for idx, post in enumerate(factory):
@@ -232,7 +235,7 @@ class MongoIngestor(Ingestor):
         """
         Save a record about the job start to the database.
         """
-        super(MongoIngestor, self).started()
+        super().started()
         self.job = db.Job(jobid=self.jobid, name=self.name)
         self.job.save()
 
@@ -240,7 +243,7 @@ class MongoIngestor(Ingestor):
         """
         Save information about the failure to the database.
         """
-        super(MongoIngestor, self).failed(exception)
+        super().failed(exception)
         self.job.failed = True
         self.job.reason = str(exception)
         self.job.finished = datetime.now()
@@ -250,7 +253,7 @@ class MongoIngestor(Ingestor):
         """
         Update the job record in the database.
         """
-        super(MongoIngestor, self).finished()
+        super().finished()
         self.job.reason = "OK"
         self.job.finished = datetime.now()
         self.job.counts = self.counts
@@ -273,7 +276,7 @@ class OPMLIngestor(Ingestor):
 
     def __init__(self, path, **options):
         self.opml = OPML(path)
-        super(OPMLIngestor, self).__init__(**options)
+        super().__init__(**options)
 
     def feeds(self):
         """

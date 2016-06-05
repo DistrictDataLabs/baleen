@@ -165,7 +165,7 @@ class IngestorTests(MongoTestMixin, unittest.TestCase):
         ingestor.finished()
 
         logger_calls = [
-            call("Processed 0 feeds (None) 0 posts with 0 errors"),
+            call("Processed 0 (0 unchanged) feeds (None) 0 posts with 0 errors"),
             call("Ingestor job None finished"),
         ]
         mock_logger.info.assert_has_calls(logger_calls, any_order=True)
@@ -278,7 +278,7 @@ class MongoIngestorTests(MongoTestMixin, unittest.TestCase):
 
         # Assert expected behavior
         logger_calls = [
-            call("Processed 0 feeds (None) 0 posts with 0 errors"),
+            call("Processed 0 (0 unchanged) feeds (None) 0 posts with 0 errors"),
             call("MongoIngestor job None finished"),
         ]
         mock_logger.info.assert_has_calls(logger_calls, any_order=True)
