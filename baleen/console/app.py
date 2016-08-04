@@ -36,6 +36,7 @@ COMMANDS    = [
     LoadOPMLCommand,
     SummaryCommand,
     RunCommand,
+    ServeCommand,
 ]
 
 

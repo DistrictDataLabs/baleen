@@ -31,7 +31,7 @@ from baleen.utils.timez import HUMAN_DATETIME
 class SummaryCommand(Command):
 
     name = 'info'
-    help = 'Print info about Baleen from the database'
+    help = 'print info about Baleen from the database'
     args = {
         ('-c', '--config'): {
             'action': 'store_true',
@@ -89,7 +89,7 @@ class SummaryCommand(Command):
             u"    eTag: \"{}\"".format(latest.etag),
             u"    Modified: {}".format(latest.modified),
             u"    Updated: {}".format(latest.updated.strftime(HUMAN_DATETIME)),
-            u"    Posts: {}".format(latest.count_posts()),
+            # u"    Posts: {}".format(latest.count_posts()), # This is very slow need to fix.
         ])
 
         latest = db.Post.objects.order_by('-id').first()

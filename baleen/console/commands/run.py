@@ -34,7 +34,7 @@ from baleen.utils.logger import IngestLogger
 class RunCommand(Command):
 
     name = 'run'
-    help = 'Runs the ingest command every hour'
+    help = 'runs the ingest command every hour'
     args = {}
 
     def ingest(self, args):
