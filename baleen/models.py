@@ -18,11 +18,11 @@ Object Document Models for use with Mongo and mongoengine
 ##########################################################################
 
 import baleen
-import hashlib
 import mongoengine as me
 
-from datetime import datetime
+from datetime import datetime,timedelta
 from baleen.config import settings
+from baleen.utils.cryptography import hash_string
 from baleen.utils.timez import humanizedelta
 
 
@@ -78,6 +78,7 @@ class Feed(me.DynamicDocument):
     fetched   = me.DateTimeField(default=None)
     created   = me.DateTimeField(default=datetime.now, required=True)
     updated   = me.DateTimeField(default=datetime.now, required=True)
+    signature = me.StringField(max_length=64, min_length=64, unique=False)
 
     @classmethod
     def pre_save(cls, sender, document, **kwargs):
@@ -131,24 +132,16 @@ class Post(me.DynamicDocument):
         """
         Returns the SHA256 hash of the content.
         """
-        sha = hashlib.sha256()
-        sha.update(self.content.encode('UTF-8'))
-        return sha.hexdigest()
+        return hash_string(self.content)
 
     def htmlize(self):
         """
-        Returns an HTML string of the content of the Post
+        Returns an HTML string of the content of the Post.
+        In the future we may use bleach to do sanitization or other simple
+        sanity checks to ensure that things are going ok, which is why this
+        method stub exists. 
         """
-
-        template = (
-            u"<!doctype html>\n"
-            u"<html>\n"
-            u"<head>\n\t<meta charset=\"utf-8\"\n>"
-            u"\t<title>%s</title>\n</head>\n"
-            u"<body>\n\n%s\n\n</body>\n</html>\n"
-        )
-
-        return template % (self.title, self.content)
+        return self.content
 
     def __unicode__(self):
         return self.title if self.title else self.url
@@ -190,6 +183,32 @@ class Job(me.DynamicDocument):
                 microseconds=delta.microseconds
             )
         return delta
+
+    @property
+    def bootstrap_class(self):
+        """
+        Uses the duration to determine the colorization of the job.
+        """
+        if self.finished and self.failed:
+            return "danger"
+
+        if self.finished and not self.failed:
+            if self.duration() > timedelta(minutes=30):
+                return "warning"
+            return "success"
+
+        if not self.finished:
+
+            if self.duration() < timedelta(minutes=30):
+                return "success"
+
+            elif timedelta(minutes=30) < self.duration() < timedelta(hours=2):
+                return "warning"
+
+            else:
+                return "danger"
+
+        return ""
 
     def __unicode__(self):
         return "{} Job {}".format(self.name, self.jobid)
@@ -238,4 +257,4 @@ class Log(me.DynamicDocument):
 
 me.signals.pre_save.connect(Feed.pre_save, sender=Feed)
 me.signals.pre_save.connect(Post.pre_save, sender=Post)
-me.signals.pre_save.connect(Post.pre_save, sender=Post)
+me.signals.pre_save.connect(Job.pre_save, sender=Job)

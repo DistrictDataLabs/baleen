@@ -69,7 +69,7 @@ def timeit(func):
 ## Exception Handling
 ##########################################################################
 
-def reraise(klass=BaleenError, message=None, trap=Exception):
+def reraise(klass=BaleenError, message=None, trap=Exception, ignore=()):
     """
     Catches exceptions (those specified by trap) and then reraises the
     exception type specified by class. Also embeds the original exception as
@@ -87,7 +87,9 @@ def reraise(klass=BaleenError, message=None, trap=Exception):
             try:
                 return func(*args, **kwargs)
             except trap as e:
-                error = klass(message or e.message)
+                if isinstance(e, ignore):
+                    raise
+                error = klass(message or str(e))
                 error.original = e
                 raise error
 

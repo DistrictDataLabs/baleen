@@ -17,7 +17,6 @@ Flask application definition in Baleen.
 ## Imports
 ##########################################################################
 
-import os
 import baleen
 
 from baleen.config import settings
@@ -55,6 +54,7 @@ humanize = Humanize(app)
 ## Routes
 ##########################################################################
 
+
 @app.route("/")
 def index():
     """
@@ -65,6 +65,22 @@ def index():
     feed_count = feeds.count()
     topics = set([feed.category for feed in Feed.objects.only('category')])
     feeds_topics_counts = len(topics)
+
+    # TODO: probably should put this in the database along with the feed.
+    feed_icons = {'gaming':'fa fa-gamepad',
+                  'design':'fa fa-building-o',
+                  'business':'fa fa-briefcase',
+                  'cinema':'fa fa-video-camera',
+                  'data-science':'fa fa-area-chart',
+                  'cooking':'fa fa-cutlery',
+                  'sports':'fa fa-futbol-o',
+                  'books':'fa fa-book',
+                  'tech':'fa fa-cogs',
+                  'politics':'fa fa-university',
+                  'news':'fa fa-newspaper-o',
+                  'essays':'fa fa-pencil-square-o',
+                  'do-it-yourself':'fa fa-wrench'
+                 }
     feeds_topics = {
         topic: Feed.objects(category=topic)
         for topic in topics
@@ -75,8 +91,9 @@ def index():
                            feeds=feeds,
                            feeds_topics=feeds_topics,
                            feed_count=feed_count,
-                           topic_count=feeds_topics_counts)
-
+                           topic_count=feeds_topics_counts,
+                           feed_icons=feed_icons,
+                           )
 
 @app.route("/status/")
 def status():
@@ -92,16 +109,19 @@ def status():
     latest_job = Job.objects.order_by('-started').first()
     latest_feed = Feed.objects.order_by('-updated').first()
     latest_post = Post.objects.order_by('-id').first()
+    recent_jobs = Job.objects.order_by('-started').limit(10)
 
     # load all data into job_status template
-    return render_template('status.html',
-                           latest_job=latest_job,
-                           latest_feed=latest_feed,
-                           latest_post=latest_post,
-                           version=version,
-                           counts=counts,
-                           dtfmt=WEB_UTC_DATETIME,
-                           recent_jobs=Job.objects.order_by('-started').limit(10))
+    return render_template(
+        'status.html',
+        latest_job=latest_job,
+        latest_feed=latest_feed,
+        latest_post=latest_post,
+        version=version,
+        counts=counts,
+        dtfmt=WEB_UTC_DATETIME,
+        recent_jobs=recent_jobs
+    )
 
 
 @app.route("/logs/")
@@ -126,14 +146,27 @@ def logs():
 
     return render_template(
         'logs.html',
-        page = page,
-        num_pages = n_pages,
-        per_page  = per_page,
-        logs = logs,
-        num_logs = n_logs,
-        next = nextp,
-        prev = prevp,
+        page=page,
+        num_pages=n_pages,
+        per_page=per_page,
+        logs=logs,
+        num_logs=n_logs,
+        next=nextp,
+        prev=prevp,
     )
+
+
+##########################################################################
+## Helpers
+##########################################################################
+
+@app.context_processor
+def inject_current_version():
+    """
+    Add the current version to the context
+    so it's available to the footer in all templates
+    """
+    return dict(current_version=baleen.get_version())
 
 
 ##########################################################################

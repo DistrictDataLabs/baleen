@@ -20,20 +20,16 @@ Test the ingestor mechanism in an integration fashion.
 import unittest
 
 from .test_models import MongoTestMixin
-
-try:
-    from unittest import mock
-except ImportError:
-    import mock
+from unittest import mock
+from unittest.mock import call
+from collections import Counter
 
 import baleen.models as db
-
-from baleen.ingest import stype
-from baleen.ingest import Ingestor
-from baleen.ingest import MongoIngestor
-from baleen.ingest import OPMLIngestor
-from baleen.utils.decorators import reraise
 from baleen.exceptions import *
+from baleen.feed import FeedSync
+from baleen.ingest import stype, Ingestor, MongoIngestor, OPMLIngestor
+from baleen.models import Feed, Post
+from baleen.utils.decorators import reraise
 from baleen.utils.logger import IngestLogger
 
 
@@ -84,6 +80,8 @@ def reset_mock_method(obj, method):
     setattr(obj, method, action.__get__(obj, klass))
     return obj
 
+def change_class_logger(mock_logger, klass):
+    setattr(klass, 'logger', mock_logger)
 
 ##########################################################################
 ## Test Ingestor
@@ -155,3 +153,160 @@ class IngestorTests(MongoTestMixin, unittest.TestCase):
 
         self.assertIsNotNone(ingestor.jobid)
         self.assertIsNotNone(ingestor.timer)
+
+    def test_ingestor_finished(self):
+        """
+        Ensure that the Ingestor finished method has no errors
+        """
+        ingestor = Ingestor()
+        mock_logger = mock.MagicMock()
+        change_class_logger(mock_logger, ingestor.__class__)
+
+        ingestor.finished()
+
+        logger_calls = [
+            call("Processed 0 (0 unchanged) feeds (None) 0 posts with 0 errors"),
+            call("Ingestor job None finished"),
+        ]
+        mock_logger.info.assert_has_calls(logger_calls, any_order=True)
+
+    def test_process_feed(self):
+        """
+        Ensure process_feed can be called successfully
+        """
+        ingestor = get_ingest_mock()
+        test_post = Post(title="My Awesome Post", content="socks")
+        ingestor.process_post = mock.MagicMock(return_value=test_post)
+
+        fsync = FeedSync("http://somesite.net/feeds")
+        fsync.entries = mock.MagicMock(return_value=["stuff"])
+        ingestor.process_feed(fsync)
+
+        self.assertEqual(ingestor.counts["posts"], 1)
+        self.assertEqual(ingestor.counts["errors"], 0)
+
+    def test_process_feed_with_error(self):
+        """
+        Ensure process_feed behaves correctly on error
+        """
+        ingestor = get_ingest_mock()
+        ingestor.process_post = mock.MagicMock()
+        ingestor.process_post.side_effect = WranglingError("Things went wrong!")
+
+        fsync = FeedSync("http://somesite.net/feeds")
+        fsync.entries = mock.MagicMock(return_value=["stuff"])
+        ingestor.process_feed(fsync)
+
+        self.assertEqual(ingestor.counts["posts"], 0)
+        self.assertEqual(ingestor.counts["errors"], 1)
+        self.assertEqual(ingestor.errors["WranglingError"], 1)
+
+    def test_process(self):
+        """
+        Ensure process can be called successfully
+        """
+        feed = Feed(title="A News Feed", category="news", link="https://example.com/feed.atom")
+        ingestor = Ingestor(feeds=[feed])
+        ingestor.process_feed = mock.MagicMock()
+
+        ingestor.process()
+
+        self.assertEqual(ingestor.counts["feeds"], 1)
+        self.assertEqual(ingestor.counts["feed_error"], 0)
+        self.assertFalse(ingestor.errors) # Empty is considered 'False'
+
+    def test_process_with_error(self):
+        """
+        Ensure process behaves correctly on error
+        """
+        feed = Feed(title="A News Feed", category="news", link="https://example.com/feed.atom")
+        ingestor = Ingestor(feeds=[feed])
+        ingestor.process_feed = mock.MagicMock()
+        ingestor.process_feed.side_effect = SynchronizationError("Things went wrong!")
+
+        ingestor.process()
+
+        self.assertEqual(ingestor.counts["feeds"], 0)
+        self.assertEqual(ingestor.counts["feed_error"], 1)
+        self.assertEqual(ingestor.errors["SynchronizationError"], 1)
+
+    def test_process_post(self):
+        """
+        Ensure process_post can be called successfully
+        """
+        post = Post(title="My Awesome Post", content="socks", url="http://example.com/socks.html")
+        post.wrangle = mock.MagicMock()
+        post.fetch = mock.MagicMock()
+
+        ingestor = get_ingest_mock()
+        ingestor.process_post(post)
+
+        self.assertEqual(ingestor.counts["fetch_error"], 0)
+        self.assertFalse(ingestor.errors) # Empty is considered 'False'
+
+    def test_process_post_with_error(self):
+        """
+        Ensure process_post behaves correctly on error
+        """
+        post = Post(title="My Awesome Post", content="socks", url="http://example.com/socks.html")
+        post.wrangle = mock.MagicMock()
+        post.fetch = mock.MagicMock()
+        post.fetch.side_effect = FetchError("Things went wrong!")
+
+        ingestor = get_ingest_mock()
+        ingestor.process_post(post)
+
+        self.assertEqual(ingestor.counts["fetch_error"], 1)
+        self.assertEqual(ingestor.errors["FetchError"], 1)
+
+class MongoIngestorTests(MongoTestMixin, unittest.TestCase):
+
+    def test_mongo_ingestor_finished(self):
+        """
+        Ensure that the MongoIngestor finished method has no errors
+        """
+        ingestor = MongoIngestor()
+        mock_logger = mock.MagicMock()
+        change_class_logger(mock_logger, ingestor.__class__)
+
+        # Instance mocked actions
+        mock_job = mock.MagicMock()
+        ingestor.job = mock_job
+
+        # Call
+        ingestor.finished()
+
+        # Assert expected behavior
+        logger_calls = [
+            call("Processed 0 (0 unchanged) feeds (None) 0 posts with 0 errors"),
+            call("MongoIngestor job None finished"),
+        ]
+        mock_logger.info.assert_has_calls(logger_calls, any_order=True)
+
+        mock_job.save.assert_called_once_with()
+        self.assertEqual(mock_job.reason, "OK")
+
+    def test_mongo_ingestor_failed(self):
+        """
+        Ensure that the MongoIngestor failed method has no errors
+        """
+        ingestor = MongoIngestor()
+        mock_logger = mock.MagicMock()
+        change_class_logger(mock_logger, ingestor.__class__)
+
+        # Instance mocked actions
+        mock_job = mock.MagicMock()
+        ingestor.job = mock_job
+
+        # Call
+        ingestor.failed(FetchError("Something went wrong!"))
+
+        # Assert expected behavior
+        logger_calls = [
+            call.error("Ingestion Error: Something went wrong!"),
+            call.critical("MongoIngestor job None failed!"),
+        ]
+        mock_logger.assert_has_calls(logger_calls, any_order=True)
+
+        self.assertTrue(mock_job.failed)
+        mock_job.save.assert_called_once_with()

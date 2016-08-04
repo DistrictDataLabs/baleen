@@ -8,8 +8,8 @@
   <div id="top" class="row">
     <div class="col-xs-12">
       <div class="page-header">
-        <h1>Baleen v{{ version }} Status</h1>
-        <p class="lead">{{ counts['posts']|humanize('intcomma') }} posts for {{ counts['feeds']|humanize('intcomma') }} feeds after {{ counts['jobs']|humanize('intcomma') }} jobs</p>
+        <h1>Status <small>{{ counts['posts']|humanize('intcomma') }} posts for {{ counts['feeds']|humanize('intcomma') }} feeds after {{ counts['jobs']|humanize('intcomma') }} jobs</small</h1>
+        <!--p class="lead">{{ counts['posts']|humanize('intcomma') }} posts for {{ counts['feeds']|humanize('intcomma') }} feeds after {{ counts['jobs']|humanize('intcomma') }} jobs</p-->
       </div>
 
       <h2>Latest Job</h2>
@@ -17,93 +17,100 @@
   </div>
 
   <div class="row">
-    <div class="col-xs-6">
+    <div class="col-md-6">
 
       <!-- Info Panel -->
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <!-- Default panel contents -->
-        <div class="panel-heading {% if latest_job.failed %}panel-danger{% elif not latest_job.finished %}panel-info{% endif %}">
+        <div class="panel-heading panel-info">
           Job Info
         </div>
 
         <!-- Table -->
         <table class="table table-hover">
           <tr>
-            <td>Type</td>
+            {% if not latest_job.finished %}
+            <td><i class="fa fa-play"></i> Status</td>
+            <td>Job Running</td>
+            {% elif latest_job.failed %}
+            <td><i class="fa fa-exclamation-circle" style="color:red" ></i> Status</td>
+            <td>Job Failed</td>
+            <td>{{ latest_job.reason }}</td>
+            {% else  %}
+            <td><i class="fa fa-check-circle" style="color:green" ></i> Status</td>
+            <td>Job Complete</td>
+            {% endif  %}
+          </tr>
+          <tr>
+            <td><i class="fa fa-gears"></i>  Type</td>
             <td>{{ latest_job.name }} v{{ latest_job.version }}</td>
           </tr>
           <tr>
-            <td>Job ID</td>
+            <td><i class="fa fa-info-circle"></i> Job ID</td>
             <td>{{ latest_job.jobid }}</td>
           </tr>
           <tr>
-            <td>Started</td>
+            <td><i class="fa fa-clock-o"></i>  Started</td>
             <td>{{ latest_job.started.strftime(dtfmt) }} ({{ latest_job.started|humanize('naturaltime') }})</td>
           </tr>
           <tr>
-            <td>Finished</td>
-            <td>{% if latest_job.finished %}{{ latest_job.finished.strftime(dtfmt) }} ({{ latest_job.finished|humanize('naturaltime') }}){% else %}Currently Running!{% endif %}</td>
+            <td><i class="fa fa-flag-checkered"></i> Finished</td>
+            <td>{% if latest_job.finished %}{{ latest_job.finished.strftime(dtfmt) }} ({{ latest_job.finished|humanize('naturaltime') }}){% endif %}</td>
           </tr>
           <tr>
-            <td>Duration</td>
-            <td>{{ latest_job.duration(humanize=True) }}</td>
+            <td class="{{ latest_job.bootstrap_class }}"><i class="fa fa-hourglass-end"></i> Duration</td>
+            <td class="{{ latest_job.bootstrap_class }}">{{ latest_job.duration(humanize=True) }}</td>
           </tr>
-          {% if latest_job.failed %}
-          <tr>
-            <td>Failed!</td>
-            <td>{{ latest_job.reason }}</td>
-          </tr>
-          {% endif %}
         </table>
       </div>
 
       <!-- Post Panel -->
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <!-- Default panel contents -->
         <div class="panel-heading">Latest Post</div>
 
         <!-- Table -->
         <table class="table table-hover">
           <tr>
-            <td>Title</td>
+            <td><i class="fa fa-quote-left"></i> Title</td>
             <td><a href="{{ latest_post.url }}" target="_blank">{{ latest_post.title }}</a></td>
           </tr>
           <tr>
-            <td>Feed</td>
+            <td><i class="fa fa-rss"></i> Feed</td>
             <td>{{ latest_post.feed.title }}</td>
           </tr>
           <tr>
-            <td>Published</td>
+            <td><i class="fa fa-calendar"></i> Published</td>
             <td>{{ latest_post.pubdate.strftime(dtfmt) }}</td>
           </tr>
           <tr>
-            <td>Fetched</td>
+            <td><i class="fa fa-download"></i> Fetched</td>
             <td>{{ latest_post.updated.strftime(dtfmt) }} ({{ latest_post.updated|humanize('naturaltime') }})</td>
           </tr>
         </table>
       </div>
 
       <!-- Feed Panel -->
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <!-- Default panel contents -->
         <div class="panel-heading">Latest Feed</div>
 
         <!-- Table -->
         <table class="table table-hover">
           <tr>
-            <td>Title</td>
+            <td><i class="fa fa-quote-left"></i> Title</td>
             <td><a href="{{ latest_feed.link }}" target="_blank">{{ latest_feed.title }}</a></td>
           </tr>
           <tr>
-            <td>eTag</td>
+            <td><i class="fa fa-tag"></i> eTag</td>
             <td>{{ latest_feed.etag }}</td>
           </tr>
           <tr>
-            <td>Modified</td>
+            <td><i class="fa fa-calendar-plus-o"></i> Modified</td>
             <td>{{ latest_feed.modified }}</td>
           </tr>
           <tr>
-            <td>Updated</td>
+            <td><i class="fa fa-calendar-check-o"></i> Updated</td>
             <td>{{ latest_feed.updated.strftime(dtfmt) }} ({{ latest_feed.updated|humanize('naturaltime') }})</td>
           </tr>
         </table>
@@ -111,10 +118,10 @@
 
     </div><!-- left column ends -->
 
-    <div class="col-xs-6">
+    <div class="col-md-6">
 
       <!-- Counts Panel -->
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <!-- Default panel contents -->
         <div class="panel-heading">Counts</div>
 
@@ -130,7 +137,7 @@
       </div>
 
       <!-- Errors Panel -->
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <!-- Default panel contents -->
         <div class="panel-heading">Errors</div>
 
@@ -150,7 +157,7 @@
 
   <!-- Jobs listing -->
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-xs-12">
 
       <h2>Job History</h2>
 
@@ -171,7 +178,7 @@
             <td>{% if 'posts' in job.counts %}{{ job.counts['posts']|humanize('intcomma') }}{% else %}N/A{% endif %}</td>
             <td>{% if 'errors' in job.counts %}{{ job.counts['errors']|humanize('intcomma') }}{% else %}N/A{% endif %}</td>
             <td>{{ job.started|humanize('naturaltime') }}</td>
-            <td>{{ job.duration(humanize=True) }}</td>
+            <td><span class="text-{{ job.bootstrap_class }}">{{ job.duration(humanize=True) }}</span></td>
           </tr>
           {% endfor %}
         </tbody>

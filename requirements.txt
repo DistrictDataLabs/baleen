@@ -3,7 +3,7 @@ feedparser==5.2.1
 requests==2.9.1
 
 ## Database
-pymongo==3.2.1
+pymongo==3.2.2
 mongoengine==0.10.6
 blinker==1.4
 
@@ -11,17 +11,25 @@ blinker==1.4
 beautifulsoup4==4.4.1
 lxml==3.5.0
 
+## Sanitizing
+bleach==1.4.3
+readability-lxml==0.6.2
+#chardet==2.3.0
+#cssselect==0.9.1
+#html5lib==0.9999999
+
 ## Configuration
 confire==0.2.0
 PyYAML==3.11
 
 ## Command Line
-commis==0.2
+commis==0.3
 colorama==0.3.6
 
 ## Utilities
 schedule==0.3.2
 python-dateutil==2.4.2
+enum34==1.1.3
 six==1.10.0
 
 ## Web Admin
@@ -41,18 +49,15 @@ Werkzeug==0.11.5
 ## Uncomment and install for development
 #nose==1.3.7
 #coverage==4.0.3
-#mock==1.3.0
 #funcsigs==0.4
-#pbr==1.8.1
-#mongomock==3.2.1
+#pbr==1.10.0
+#mongomock==3.4.0
 #sentinels==0.0.6
 
 ## Building
 ## Uncomment and install for deployment
 #wheel==0.29.0
 
-## Pip Freeze Stuff
-#Python==2.7.10
-#pip==8.1.1
-#setuptools==0.9.7
-#wsgiref==0.1.2
+## Pip stuff
+pip==8.1.2
+setuptools==22.0.0

@@ -23,7 +23,7 @@ import unittest
 ## Module Constants
 ##########################################################################
 
-TEST_VERSION = "0.3.2" ## Also the expected version onf the package
+TEST_VERSION = "0.3.3" ## Also the expected version onf the package
 
 ##########################################################################
 ## Test Cases

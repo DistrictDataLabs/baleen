@@ -35,7 +35,7 @@ from pymongo.errors import PyMongoError
 class MongoFormatter(logging.Formatter):
 
     def __init__(self, fmt='%(name)s %(levelname)s [%(asctime)s] -- %(message)s', datefmt=COMMON_DATETIME):
-        super(MongoFormatter, self).__init__(fmt, datefmt)
+        super().__init__(fmt, datefmt)
 
     def format(self, record):
         """
@@ -46,7 +46,7 @@ class MongoFormatter(logging.Formatter):
         data    = record.__dict__.copy()
 
         ## Get the log message as intended via super
-        message   = super(MongoFormatter, self).format(record)
+        message   = super().format(record)
         timestamp = datetime.fromtimestamp(data.pop('created'))
         location  = {
             'module': data.pop('module'),
@@ -70,7 +70,7 @@ class MongoFormatter(logging.Formatter):
             'number': data.pop('levelno'),
             'name': data.pop('levelname'),
         }
-        info      = tuple(unicode(arg) for arg in data.pop('args'))
+        info      = tuple(str(arg) for arg in data.pop('args'))
 
         for key in ('relativeCreated', 'msecs', 'msg'):
             del data[key]
@@ -93,7 +93,7 @@ class MongoFormatter(logging.Formatter):
 class MongoHandler(logging.Handler):
 
     def __init__(self, level=logging.NOTSET, **kwargs):
-        super(MongoHandler, self).__init__(level)
+        super().__init__(level)
         self.host            = kwargs.get('host', settings.database.host)
         self.port            = kwargs.get('port', settings.database.port)
         self.database_name   = kwargs.get('database', settings.database.name)

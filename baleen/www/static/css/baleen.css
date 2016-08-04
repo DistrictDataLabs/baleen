@@ -41,3 +41,8 @@ body {
 #loading img {
     margin: 200px auto;
 }
+
+th {
+    background-color: #008CBA;
+    color: white;
+} 

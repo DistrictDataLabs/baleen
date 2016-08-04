@@ -22,7 +22,8 @@ import baleen.models as db
 
 from commis import Command
 from baleen.console.utils import csv
-from baleen.export import MongoExporter
+from baleen.export import MongoExporter, SCHEMES
+from baleen.utils.timez import Timer
 
 ##########################################################################
 ## Command
@@ -33,36 +34,56 @@ class ExportCommand(Command):
     name = 'export'
     help = 'export the raw HTML corpus for doing NLP'
     args = {
+        '--list-categories': {
+            'action': 'store_true',
+            'default': False,
+            'help': 'show the available categories and exit',
+        },
         ('-C', '--categories'): {
             'type': csv(str),
             'default': None,
-            'help': 'Specify categories to export',
+            'metavar': 'csv',
+            'help': 'specify a list of categories to export',
+        },
+        ('-S', '--scheme'): {
+            'type': str,
+            'default': 'json',
+            'choices': SCHEMES,
+            'help': 'specify the output format for the corpus',
         },
         'location': {
             'nargs': 1,
             'type': str,
-            'help': 'Location to write the corpus out to'
-        }
+            'metavar': 'corpus directory',
+            'help': 'location to write the corpus out to'
+        },
     }
 
     def handle(self, args):
         # Connect to database
         db.connect()
 
-        # Export from the database
-        exporter = MongoExporter()
-        exporter.export(args.location[0], categories=args.categories)
+        # Expand vars and user on the location passed
+        root = os.path.expanduser(args.location[0])
+        root = os.path.expandvars(root)
 
-        # Perform counts of export
-        root = args.location[0]
-        cats = filter(
-            os.path.isdir, [os.path.join(root, cat) for cat in os.listdir(root)]
+        # Create the exporter object
+        exporter = MongoExporter(
+            root, categories=args.categories, scheme=args.scheme
         )
-        docs = sum(len(os.listdir(d)) for d in cats)
+
+        # If list categories is true, list them and exit.
+        if args.list_categories:
+            return "\n".join(sorted(exporter.categories))
+
+        with Timer() as t:
+            exporter.export(level=args.scheme)
 
         return (
-            "Exported {} documents in {} categories "
-            "as well as a readme to {}.".format(
-                docs, len(cats), root
-            )
+            "Baleen corpus export complete in {}\n"
+            "Exported {} posts in {} categories\n"
+            "More information is in README in {}"
+        ).format(
+            t, sum(exporter.counts.values()),
+            len(exporter.categories), root
         )

@@ -18,10 +18,13 @@ Handles the synchronization of documents from an RSS feeds.
 ##########################################################################
 
 import feedparser
+import json
 
 from baleen.models import Feed
+from baleen.utils.cryptography import hash_string
+from baleen.utils.logger import LoggingMixin
 from baleen.utils.timez import localnow
-from baleen.exceptions import FeedTypeError
+from baleen.exceptions import FeedTypeError, UnchangedFeedSyncError
 from baleen.exceptions import SynchronizationError
 from baleen.utils.decorators import memoized, reraise
 
@@ -40,7 +43,7 @@ FEEDPARSER_IGNORABLE_FIELDS = {
 ## Feed Synchronization
 ##########################################################################
 
-class FeedSync(object):
+class FeedSync(LoggingMixin):
     """
     A utility that wraps both a Feed object and the feedparser library.
     The feed that is passed into the FeedSync can be one of the following:
@@ -75,7 +78,7 @@ class FeedSync(object):
         """
         Returns the type of the feed.
         """
-        if isinstance(self.feed, basestring):
+        if isinstance(self.feed, str):
             return self.URL
 
         if isinstance(self.feed, Feed):
@@ -124,7 +127,7 @@ class FeedSync(object):
         # Otherwise just return the parse of the URL
         return feedparser.parse(self.url)
 
-    @reraise(klass=SynchronizationError)
+    @reraise(klass=SynchronizationError, ignore=UnchangedFeedSyncError)
     def sync(self, save=True):
         """
         Calls the feedparser.parse function correctly but also synchronizes
@@ -133,6 +136,8 @@ class FeedSync(object):
         Note: If the feed isn't a model, it just does the same as parse.
 
         If save is True (default) will save the Feed back to MongoDB.
+        Note, that if save is false, the latest signature will not be saved.
+        (which means we could duplicate the wrangling of each post).
         """
         # Get the result from the parse function.
         result = self.parse()
@@ -173,9 +178,15 @@ class FeedSync(object):
             else:
                 setattr(self.feed, key, val)
 
+        # Compute the feed hash to determine if the feed has changed.
+        feed_hash = self.compute_feed_signature(result)
+
+        # If save, store the signature and write back to disk.
         if save:
+            self.feed.signature = feed_hash
             self.feed.save()
 
+        # Note that result has been updated in compute_feed_signature.
         return result
 
     def entries(self, save=True):
@@ -185,4 +196,37 @@ class FeedSync(object):
         the feed sync object. Note that this just returns raw dicts not Posts.
         """
         result = self.sync(save=save)
-        return result.entries
+        if not getattr(result, 'unchanged', False):
+            return result.entries
+        else:
+            self.logger.info('Feed has not been changed since last run. Feed=%s', self.url)
+            raise UnchangedFeedSyncError()
+
+    def compute_feed_signature(self, parsed_feed):
+        """
+        Given a feedparser dictionary with the parsed XML, compute the
+        signature based on available entries and other feed unique info.
+        """
+        # Extract information from the entities to hash.
+        entries = sorted([
+            e.link or e.get('href', None) or e.id for e in parsed_feed.entries
+        ])
+
+        # Data structure to create signature upon.
+        result = {
+            'href': parsed_feed.get('href') or self.feed.link,
+            'entries': entries,
+        }
+
+        # Create JSON data representation of result and hash.
+        result_json = json.dumps(result)
+        feed_hash = hash_string(result_json)
+
+        # Detect if the feed has changed or not and modfiy the parsed feed
+        if len(entries) == 0 or Feed.objects(signature=feed_hash).count() > 0:
+            setattr(parsed_feed, 'unchanged', True)
+        else:
+            setattr(parsed_feed, 'unchanged', False)
+
+        # Return feed_hash to store on the feed model.
+        return feed_hash

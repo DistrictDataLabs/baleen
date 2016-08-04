@@ -63,7 +63,7 @@ class LoadOPMLTests(MongoTestMixin, unittest.TestCase):
         self.assertEqual(load_opml(FEEDLY), 36)
         self.assertEqual(Feed.objects.count(), 36)
 
-        for _ in xrange(10):
+        for _ in range(10):
             self.assertEqual(load_opml(FEEDLY), 0)
             self.assertEqual(Feed.objects.count(), 36)
 
@@ -101,7 +101,7 @@ class OPMLTests(unittest.TestCase):
             u'design'
         ]
 
-        print list(opml.categories())
+        print(list(opml.categories()))
 
         self.assertEqual(list(opml.categories()), expected)
 
@@ -147,7 +147,7 @@ class OPMLTests(unittest.TestCase):
         """
 
         opml  = OPML(FEEDLY)
-        attrs = ['category', 'title', 'text', 'htmlUrl', 'xmlUrl', 'type']
+        attrs = ['category', 'htmlUrl', 'text', 'title', 'type', 'xmlUrl']
         for item in opml:
             self.assertTrue(isinstance(item, dict))
-            self.assertEqual(item.keys(), attrs)
+            self.assertEqual(sorted(item.keys()), attrs)

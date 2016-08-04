@@ -70,60 +70,6 @@ class TimezHelpersTests(unittest.TestCase):
         # Case without seconds present
         self.assertEqual(humanizedelta(milliseconds=456875), '7 minutes 36 seconds')
 
-    def test_strptimez(self):
-        """
-        Test the parsing of timezone aware date strings
-        """
-        dtfmt = "%Y-%m-%dT%H:%M:%S%z"
-
-        cases = (
-            ('2012-12-27T12:53:12-0500', datetime(2012, 12, 27, 17, 53, 12, tzinfo=tzutc())),
-            ('2012-12-27T12:53:12+0800', datetime(2012, 12, 27, 4, 53, 12, tzinfo=tzutc())),
-        )
-
-        for dtstr, dt in cases:
-            self.assertEqual(dt, strptimez(dtstr, dtfmt))
-
-        # Non-timezone case
-        self.assertEqual(
-            strptimez('2012-12-27T12:53:12', "%Y-%m-%dT%H:%M:%S"),
-            datetime(2012, 12, 27, 12, 53, 12)
-        )
-
-    def test_strptimez_no_z(self):
-        """
-        Assert that strptimez works with no '%z'
-        This should return a timezone naive datetime
-        """
-        dtfmt = "%a %b %d %H:%M:%S %Y"
-        dtstr = self.localnow.strftime(dtfmt)
-        self.assertEqual(strptimez(dtstr, dtfmt), self.localnow.replace(tzinfo=None))
-
-
-    def test_strptimez_no_space(self):
-        """
-        Non-space delimited '%z' works
-        """
-        dtfmt = "%Y-%m-%dT%H:%M:%S%z"
-        dtstr = self.localnow.strftime(dtfmt)
-        self.assertEqual(strptimez(dtstr, dtfmt), self.utcnow)
-
-    def test_begin_z(self):
-        """
-        Test fmt that begins with '%z'
-        """
-        dtfmt = "%z %H:%M:%S for %Y-%m-%d"
-        dtstr = self.localnow.strftime(dtfmt)
-        self.assertEqual(strptimez(dtstr, dtfmt), self.utcnow)
-
-    def test_middle_z(self):
-        """
-        Test fmt that contains '%z'
-        """
-        dtfmt = "time is: %H:%M:%S %z on %Y-%m-%d "
-        dtstr = self.localnow.strftime(dtfmt)
-        self.assertEqual(strptimez(dtstr, dtfmt), self.utcnow)
-
     def test_timer(self):
         """
         Test the Timer context manager
