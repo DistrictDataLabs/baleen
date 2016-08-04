@@ -105,7 +105,9 @@ database:
     name: baleen
     ```
     
-4. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 5-8.
+4. From your Docker Machine installation (i.e. the Docker Quickstart Terminal), build and start the stack with `docker-compose up -d`. This will start a MongoDB container and an application container with the requirements needed to run baleen.
+
+5. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 5-8.
 
     ```
     docker exec -it baleen_app_1 /bin/bash
