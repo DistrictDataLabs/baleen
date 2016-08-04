@@ -108,7 +108,7 @@ database:
     port: 27017
     name: baleen
 server:
-    host: 127.0.0.1
+    host: 0.0.0.0
     port: 5000
     ```
     
@@ -127,6 +127,15 @@ There is a simple Flask application that ships with Baleen that provides informa
     $ bin/baleen serve
 
 You can then reach the website at [http://127.0.0.1:5000/](http://127.0.0.1:5000/). Note that the host and port can be configured in the YAML configuration file or as command line arguments to the serve command.
+
+If you are using the Docker setup, the web admin is accessible against the IP of your Docker Machine; i.e. if
+
+```bash
+baleen $ docker-machine ip default # my Docker Machine is called 'default'
+192.168.99.100
+```
+
+Then you could reach the web admin at http://192.168.99.100:5000. 
 
 ### Deployment
 
