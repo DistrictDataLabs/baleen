@@ -4,7 +4,7 @@ app:
    build: .
    dockerfile: Dockerfile-app
    environment:
-      - VIRTUAL_ENV=/usr/local/
+      - VIRTUAL_ENV=/usr/local
    volumes:
       - .:/baleen
    links:

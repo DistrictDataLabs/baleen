@@ -66,6 +66,7 @@ database:
 server:
     host: 127.0.0.1
     port: 5000
+
     ```
 
 6. Run the tests to make sure everything is ok.
@@ -117,27 +118,21 @@ $ cp conf/baleen-example.yaml conf/baleen.yaml
     ```yaml
 debug: true
 testing: false
-
 database:
     host: mongo
     port: 27017
     name: baleen
-
 server:
-    host: 127.0.0.1
+    host: 0.0.0.0
     port: 5000
     ```
+    
+4. From your Docker Machine installation (i.e. the Docker Quickstart Terminal), build and start the stack with `docker-compose up -d`. This will start a MongoDB container and an application container with the requirements needed to run baleen.
 
-4. Type this command to build the docker image:
-
-    ```
-docker build -t "baleen_app_1" -f Dockerfile-app .
-    ```
-
-5. Launch a docker container based on `baleen_app_1` image and interact with `baleen` as described in the above setup directions 6-9.
+5. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 5-8.
 
     ```
-    docker run -it baleen_app_1 /bin/bash
+    docker exec -it baleen_app_1 /bin/bash
     ```
 
 ## Web Admin
@@ -149,6 +144,15 @@ $ bin/baleen serve
 ```
 
 You can then reach the website at [http://127.0.0.1:5000/](http://127.0.0.1:5000/). Note that the host and port can be configured in the YAML configuration file or as command line arguments to the serve command.
+
+If you are using the Docker setup, the web admin is accessible against the IP of your Docker Machine; i.e. if
+
+```bash
+baleen $ docker-machine ip default # my Docker Machine is called 'default'
+192.168.99.100
+```
+
+Then you could reach the web admin at http://192.168.99.100:5000. 
 
 ### Deployment
 
