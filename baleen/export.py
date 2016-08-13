@@ -25,10 +25,12 @@ from enum import Enum
 from datetime import datetime
 from baleen.models import Feed, Post
 
+from tqdm import tqdm
 from collections import Counter
 from operator import itemgetter
 from baleen.exceptions import ExportError
 from readability.readability import Document
+
 
 ##########################################################################
 ## Module Constants
@@ -209,7 +211,7 @@ class MongoExporter(object):
 
         # Iterate through all posts, writing them to disk correctly.
         # Right now we will simply write them based on their object id.
-        for post, category in self.posts():
+        for post, category in tqdm(self.posts(), total=Post.objects.count(), unit="docs"):
             path = os.path.join(
                 self.root, catdir[category], "{}.{}".format(post.id, self.scheme)
             )
