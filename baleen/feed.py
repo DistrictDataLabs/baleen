@@ -20,6 +20,7 @@ Handles the synchronization of documents from an RSS feeds.
 import feedparser
 import json
 
+from baleen.config import settings
 from baleen.models import Feed
 from baleen.utils.cryptography import hash_string
 from baleen.utils.logger import LoggingMixin

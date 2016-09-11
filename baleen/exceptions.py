@@ -71,3 +71,10 @@ class UnchangedFeedSyncError(SynchronizationError):
     Attempt to sync unchanged Feed
     """
     pass
+
+
+class BaleenTimeout(BaleenError):
+    """
+    An operation timed out
+    """
+    pass
