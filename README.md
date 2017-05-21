@@ -15,41 +15,34 @@
 This quick start is intended to get you setup with Baleen in development mode (since the project is still under development). If you'd like to run Baleen in production, please see the [documentation][rtfd_href].
 
 1. Clone the repository
-
-  ```
-  $ git clone git@github.com:bbengfort/baleen.git
-  $ cd baleen
-  ```
-
-  **Note**: This repository will be moved to District Data Labs and the clone will be:
-
-  ```
-  $ git clone https://github.com/DistrictDataLabs/baleen.git
-  ```
+    ```bash
+    $ git clone https://github.com/DistrictDataLabs/baleen.git
+    $ cd baleen
+    ```
 
 2. Create a virtualenv and install the dependencies
 
-    ```
-$ pyvenv venv  # or: virtualenv -p python3 venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-$ pip install nose==1.3.7 mongomock==3.2.1 coverage==4.0.3
+    ```bash
+    $ pyvenv venv  # or: virtualenv -p python3 venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    $ pip install nose==1.3.7 mongomock==3.2.1 coverage==4.0.3
     ```
 
 3. Add the `baleen` module to your `$PYTHONPATH` via the virtualenv.
 
-    ```
-$ echo $(pwd) > venv/lib/python3.x/site-packages/baleen.pth
+    ```bash
+    $ echo $(pwd) > venv/lib/python3.x/site-packages/baleen.pth
     ```
 
-   Please replace *3.x* with the exact version of your Python.
+    Please replace *3.x* with the exact version of your Python.
 
 4. Install and start MongoDB: https://docs.mongodb.com/manual/installation/
 
 5. Create your local configuration file. Edit it with the connection details to your local MongoDB server.  This is also a good time to check and make sure that you can create a database called Baleen on Mongo.
 
-    ```
-$ cp conf/baleen-example.yaml conf/baleen.yaml
+    ```bash
+    $ cp conf/baleen-example.yaml conf/baleen.yaml
     ```
 
     Edit the YAML file as follows:
@@ -70,27 +63,27 @@ $ cp conf/baleen-example.yaml conf/baleen.yaml
 
 6. Run the tests to make sure everything is ok.
 
-    ```
-$ make test
+    ```bash
+    $ make test
     ```
 
 7. Make sure that the command line utility is ready to go:
 
-    ```
-$ bin/baleen --help
+    ```bash
+    $ bin/baleen --help
     ```
 
 8. Import the feeds from the `feedly.opml` file in the fixtures.
 
-    ```
-$ bin/baleen load tests/fixtures/feedly.opml
-Ingested 36 feeds from 1 OPML files
+    ```bash
+    $ bin/baleen load tests/fixtures/feedly.opml
+    Ingested 36 feeds from 1 OPML files
     ```
 
 9. Perform an ingestion of the feeds that were imported from the `feedly.opml` file.
 
-    ```
-$ bin/baleen ingest
+    ```bash
+    $ bin/baleen ingest
     ```
 
 Your Mongo database collections should be created as you add new documents to them, and at this point you're ready to develop!
