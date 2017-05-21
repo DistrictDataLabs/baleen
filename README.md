@@ -16,16 +16,16 @@ This quick start is intended to get you setup with Baleen in development mode (s
 
 1. Clone the repository
 
-    ```
-$ git clone git@github.com:bbengfort/baleen.git
-$ cd baleen
-    ```
+  ```
+  $ git clone git@github.com:bbengfort/baleen.git
+  $ cd baleen
+  ```
 
-    **Note**: This repository will be moved to District Data Labs and the clone will be:
+  **Note**: This repository will be moved to District Data Labs and the clone will be:
 
-    ```
-$ git clone https://github.com/DistrictDataLabs/baleen.git
-    ```
+  ```
+  $ git clone https://github.com/DistrictDataLabs/baleen.git
+  ```
 
 2. Create a virtualenv and install the dependencies
 
@@ -55,18 +55,17 @@ $ cp conf/baleen-example.yaml conf/baleen.yaml
     Edit the YAML file as follows:
 
     ```yaml
-debug: true
-testing: false
+    debug: true
+    testing: false
 
-database:
-    host: localhost
-    port: 27017
-    name: baleen
+    database:
+      host: localhost
+      port: 27017
+      name: baleen
 
-server:
-    host: 127.0.0.1
-    port: 5000
-
+    server:
+      host: 127.0.0.1
+      port: 5000
     ```
 
 6. Run the tests to make sure everything is ok.
@@ -126,7 +125,7 @@ server:
     host: 0.0.0.0
     port: 5000
     ```
-    
+
 4. From your Docker Machine installation (i.e. the Docker Quickstart Terminal), build and start the stack with `docker-compose up -d`. This will start a MongoDB container and an application container with the requirements needed to run baleen.
 
 5. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 5-8.
@@ -152,7 +151,7 @@ baleen $ docker-machine ip default # my Docker Machine is called 'default'
 192.168.99.100
 ```
 
-Then you could reach the web admin at http://192.168.99.100:5000. 
+Then you could reach the web admin at http://192.168.99.100:5000.
 
 ### Deployment
 
