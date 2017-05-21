@@ -96,34 +96,34 @@ Included in this repository are files related to setting up the development envi
 
 2. Clone the repository
 
-    ```
-$ git clone git@github.com:bbengfort/baleen.git
-$ cd baleen
+    ```bash
+    $ git clone https://github.com/DistrictDataLabs/baleen.git
+    $ cd baleen
     ```
 
 3. Create your local configuration file. Edit it with your configuration details; your MongoDB server will be at host `mongo`.
 
-    ```
-$ cp conf/baleen-example.yaml conf/baleen.yaml
+    ```bash
+    $ cp conf/baleen-example.yaml conf/baleen.yaml
     ```
 
     ```yaml
-debug: true
-testing: false
-database:
-    host: mongo
-    port: 27017
-    name: baleen
-server:
-    host: 0.0.0.0
-    port: 5000
+    debug: true
+    testing: false
+    database:
+      host: mongo
+      port: 27017
+      name: baleen
+    server:
+      host: 0.0.0.0
+      port: 5000
     ```
 
 4. From your Docker Machine installation (i.e. the Docker Quickstart Terminal), build and start the stack with `docker-compose up -d`. This will start a MongoDB container and an application container with the requirements needed to run baleen.
 
 5. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 5-8.
 
-    ```
+    ```bash
     docker exec -it baleen_app_1 /bin/bash
     ```
 
@@ -131,7 +131,7 @@ server:
 
 There is a simple Flask application that ships with Baleen that provides information about the current status of the Baleen ingestion. This app can be run locally in development with the following command:
 
-```
+```bash
 $ bin/baleen serve
 ```
 
