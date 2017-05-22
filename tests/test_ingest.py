@@ -32,6 +32,7 @@ from baleen.models import Feed, Post
 from baleen.utils.decorators import reraise
 from baleen.utils.logger import IngestLogger
 
+from mongoengine.errors import NotUniqueError
 
 ##########################################################################
 ## Helper Functions
@@ -165,7 +166,7 @@ class IngestorTests(MongoTestMixin, unittest.TestCase):
         ingestor.finished()
 
         logger_calls = [
-            call("Processed 0 (0 unchanged) feeds (None) 0 posts with 0 errors"),
+            call("Processed 0 (0 unchanged) feeds (None) 0 posts with 0 errors and 0 duplicate posts"),
             call("Ingestor job None finished"),
         ]
         mock_logger.info.assert_has_calls(logger_calls, any_order=True)
@@ -259,6 +260,39 @@ class IngestorTests(MongoTestMixin, unittest.TestCase):
         self.assertEqual(ingestor.counts["fetch_error"], 1)
         self.assertEqual(ingestor.errors["FetchError"], 1)
 
+    def test_process_post_with_duplicate_post_error(self):
+        """
+        Ensure process_post behaves correctly on duplicate post
+        """
+        post = Post(title="Some Duplicate Post", content="socks", url="http://example.com/socks.html")
+        post.wrangle = mock.MagicMock()
+        duplicate_post_error = WranglingError("This is a duplicate")
+        duplicate_post_error.original = NotUniqueError("Document already exists")
+        post.wrangle.side_effect = duplicate_post_error
+        post.fetch = mock.MagicMock()
+
+        ingestor = get_ingest_mock()
+        ingestor.process_post(post)
+
+        self.assertEqual(ingestor.counts["duplicate_posts"], 1)
+
+    def test_process_post_with_wrangle_error_on_non_duplicate(self):
+        """
+        Ensure process_post behaves correctly without a duplicate post
+        """
+        post = Post(title="Some Duplicate Post", content="socks", url="http://example.com/socks.html")
+        post.wrangle = mock.MagicMock()
+        wrangle_error = WranglingError("There was a wrangle error")
+        wrangle_error.original = Exception("Some non-duplicate related error")
+        post.wrangle.side_effect = wrangle_error
+        post.fetch = mock.MagicMock()
+
+        ingestor = get_ingest_mock()
+        with self.assertRaises(WranglingError):
+            ingestor.process_post(post)
+
+        self.assertEqual(ingestor.counts["duplicate_posts"], 0)
+
 class MongoIngestorTests(MongoTestMixin, unittest.TestCase):
 
     def test_mongo_ingestor_finished(self):
@@ -278,7 +312,7 @@ class MongoIngestorTests(MongoTestMixin, unittest.TestCase):
 
         # Assert expected behavior
         logger_calls = [
-            call("Processed 0 (0 unchanged) feeds (None) 0 posts with 0 errors"),
+            call("Processed 0 (0 unchanged) feeds (None) 0 posts with 0 errors and 0 duplicate posts"),
             call("MongoIngestor job None finished"),
         ]
         mock_logger.info.assert_has_calls(logger_calls, any_order=True)

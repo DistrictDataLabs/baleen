@@ -14,6 +14,8 @@
 
 This quick start is intended to get you setup with Baleen in development mode (since the project is still under development). If you'd like to run Baleen in production, please see the [documentation][rtfd_href].
 
+**This guide assumes you are using Python 3.6 or later.**
+
 1. Clone the repository
     ```bash
     $ git clone https://github.com/DistrictDataLabs/baleen.git
@@ -23,8 +25,8 @@ This quick start is intended to get you setup with Baleen in development mode (s
 2. Create a virtualenv and install the dependencies
 
     ```bash
-    $ pyvenv venv  # or: virtualenv -p python3 venv
-    $ source venv/bin/activate
+    $ python3 -m venv vrt_env
+    $ source vrt_env/bin/activate
     $ pip install -r requirements.txt
     $ pip install nose==1.3.7 mongomock==3.2.1 coverage==4.0.3
     ```
@@ -32,10 +34,9 @@ This quick start is intended to get you setup with Baleen in development mode (s
 3. Add the `baleen` module to your `$PYTHONPATH` via the virtualenv.
 
     ```bash
-    $ echo $(pwd) > venv/lib/python3.x/site-packages/baleen.pth
+    $ echo $(pwd) > vrt_env/lib/python3.6/site-packages/baleen.pth
     ```
-
-    Please replace *3.x* with the exact version of your Python.
+    Please replace *3.6* with the exact version of your Python.
 
 4. Install and start MongoDB: https://docs.mongodb.com/manual/installation/
 
