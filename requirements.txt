@@ -61,5 +61,5 @@ Werkzeug==0.11.5
 #wheel==0.29.0
 
 ## Pip stuff
-pip==8.1.2
+pip==9.0.1
 setuptools==22.0.0
