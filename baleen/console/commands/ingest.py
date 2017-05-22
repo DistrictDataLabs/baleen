@@ -62,7 +62,7 @@ class IngestCommand(Command):
         ingestor.ingest()
         return (
             "Processed {feeds} ({unchanged_feeds} unchanged) feeds ({timer}): "
-            "{posts} posts with {errors} errors"
+            "{posts} posts with {errors} errors and {duplicate_posts} duplicate posts"
         ).format(
             timer=ingestor.timer, **ingestor.counts
         )

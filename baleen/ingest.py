@@ -32,6 +32,8 @@ from baleen.utils.decorators import memoized
 from datetime import datetime
 from collections import Counter
 
+from mongoengine.errors import NotUniqueError
+
 
 ##########################################################################
 ## Helper Functions
@@ -81,7 +83,7 @@ class Ingestor(LoggingMixin):
         Keep track of counts and ensure zero keys exist.
         """
         counts = Counter()
-        for key in ('feeds', 'unchanged_feeds', 'posts', 'errors', 'feed_error'):
+        for key in ('feeds', 'unchanged_feeds', 'posts', 'errors', 'feed_error', 'duplicate_posts'):
             counts[key] = 0
         return counts
 
@@ -122,7 +124,7 @@ class Ingestor(LoggingMixin):
         # Notify the results
         results = (
             "Processed {feeds} ({unchanged_feeds} unchanged) feeds ({timer}) "
-            "{posts} posts with {errors} errors"
+            "{posts} posts with {errors} errors and {duplicate_posts} duplicate posts"
         ).format(
             timer=self.timer, **self.counts
         )
@@ -175,7 +177,16 @@ class Ingestor(LoggingMixin):
         """
         Wrangles a post from a single feed and catches exceptions
         """
-        post.wrangle()
+        try:
+            post.wrangle()
+        except WranglingError as e:
+            if type(e.original) is NotUniqueError:
+                self.logger.debug("Caught WranglingError while wrangling post, "\
+                                  "but MongoDB has reported post as a duplicate. Ignoring.")
+                self.counts["duplicate_posts"] += 1
+            else:
+                raise e
+
         if settings.fetch_html:
             try:
                 post.fetch()
