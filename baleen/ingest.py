@@ -184,7 +184,7 @@ class Ingestor(LoggingMixin):
                 self.errors[stype(e)] += 1
                 self.logger.error(
                     u"Fetch Error for post \"{}\" ({}): {}".format(
-                        post.title, post.url, str(e)
+                        post.post.title, post.post.url, str(e)
                     )
                 )
 
