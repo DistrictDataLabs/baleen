@@ -156,7 +156,7 @@ Baleen is a tool for ingesting _formal_ natural language data from the discourse
 
 ### Throughput
 
-[![Throughput Graph](https://graphs.waffle.io/bbengfort/baleen/throughput.svg)](https://waffle.io/bbengfort/baleen/metrics)
+[![Throughput Graph](https://graphs.waffle.io/DistrictDataLabs/baleen/throughput.svg)](https://waffle.io/DistrictDataLabs/baleen/metrics)
 
 ### Attribution
 
@@ -166,14 +166,14 @@ The image used in this README, ["Space Whale"][spacewhale.jpg] by [hbitik](http:
 <!-- References -->
 [pypi_img]: https://badge.fury.io/py/baleen.svg
 [pypi_href]: https://badge.fury.io/py/baleen
-[travis_img]: https://travis-ci.org/bbengfort/baleen.svg?branch=master
-[travis_href]: https://travis-ci.org/bbengfort/baleen/
-[coveralls_img]: https://coveralls.io/repos/github/bbengfort/baleen/badge.svg?branch=master
-[coverals_href]: https://coveralls.io/github/bbengfort/baleen?branch=master
-[health_img]: https://landscape.io/github/bbengfort/baleen/master/landscape.svg?style=flat
-[health_href]: https://landscape.io/github/bbengfort/baleen/master
-[waffle_img]: https://badge.waffle.io/bbengfort/baleen.png?label=ready&title=Ready
-[waffle_href]: https://waffle.io/bbengfort/baleen
+[travis_img]: https://travis-ci.org/DistrictDataLabs/baleen.svg?branch=master
+[travis_href]: https://travis-ci.org/DistrictDataLabs/baleen/
+[coveralls_img]: https://coveralls.io/repos/github/DistrictDataLabs/baleen/badge.svg?branch=master
+[coverals_href]: https://coveralls.io/github/DistrictDataLabs/baleen?branch=master
+[health_img]: https://landscape.io/github/DistrictDataLabs/baleen/master/landscape.svg?style=flat
+[health_href]: https://landscape.io/github/DistrictDataLabs/baleen/master
+[waffle_img]: https://badge.waffle.io/DistrictDataLabs/baleen.png?label=ready&title=Ready
+[waffle_href]: https://waffle.io/DistrictDataLabs/baleen
 [rtfd_img]: https://readthedocs.org/projects/baleen-ingest/badge/?version=latest
 [rtfd_href]: http://baleen-ingest.readthedocs.org/
 [spacewhale.jpg]: http://fav.me/d4736q3
