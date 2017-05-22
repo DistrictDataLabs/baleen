@@ -55,6 +55,7 @@ Werkzeug==0.11.5
 #pbr==1.10.0
 #mongomock==3.4.0
 #sentinels==0.0.6
+#pep8==1.7.0
 
 ## Building
 ## Uncomment and install for deployment
