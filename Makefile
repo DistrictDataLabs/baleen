@@ -23,8 +23,10 @@ clean:
 test:
 	$(PYTHON_BIN)/nosetests -v --with-coverage --cover-package=$(PROJECT) --cover-inclusive --cover-erase tests
 
-	echo "Checkin PEP8 style guide..."
-	$(PYTHON_BIN)/pep8
+pep8:
+	echo "Checking PEP8 style guide..."
+	$(PYTHON_BIN)/pep8 baleen/
+
 # Publish to gh-pages
 publish:
 	git subtree push --prefix=deploy origin gh-pages
