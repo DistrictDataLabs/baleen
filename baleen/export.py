@@ -178,7 +178,7 @@ class MongoExporter(object):
         with open(path, 'w') as f:
             f.write(feeds.to_json(indent=2))
 
-    def export(self, root=None, categories=None, level='safe'):
+    def export(self, root=None, categories=None, level=SAFE):
         """
         Runs the export of the posts to disk.
         """
