@@ -37,7 +37,11 @@ from readability.readability import Document
 ##########################################################################
 
 DTFMT   = "%b %d, %Y at %H:%M"
-SCHEMES = ('json', 'html', 'safe', 'raw', 'text')
+RAW = 'raw'
+SAFE = 'safe'
+TEXT = 'text'
+SANITIZE_LEVELS = (RAW, SAFE, TEXT)
+SCHEMES = ('json', 'html') + SANITIZE_LEVELS
 State   = Enum('State', 'Init, Started, Finished')
 
 
@@ -174,7 +178,7 @@ class MongoExporter(object):
         with open(path, 'w') as f:
             f.write(feeds.to_json(indent=2))
 
-    def export(self, root=None, categories=None, level='safe'):
+    def export(self, root=None, categories=None, level=SAFE):
         """
         Runs the export of the posts to disk.
         """
@@ -230,21 +234,50 @@ class MongoExporter(object):
         self.feedinfo(os.path.join(self.root, "feeds.json"))
 
     def sanitize_html(self, html, level):
-        if level == 'safe':
+        """
+        Return a sanitized version of html content
+        :param html: the content to sanitized
+        :param level: the type of sanitization - one of ['raw', 'safe', 'text', None]
+        :return: sanitized content
+        """
+        if level == SAFE:
             return self._get_safe_html(html)
-        elif level == 'raw':
+        elif level == RAW:
             return self._get_raw_html(html)
-        elif level == 'text':
+        elif level == TEXT:
             return self._get_text_from_html(html)
+        elif level is None:
+            return html
+
+        raise ExportError(
+            "{level} is not a supported sanitize_html level.".format(
+                level=level
+            )
+        )
 
     def _get_raw_html(self, html):
+        """
+        :param html: html content
+        :return: the unmodified html
+        """
         return html
 
     def _get_safe_html(self, html):
+        """
+        Applies Readability's sanitize() method to content.
+        :param html: the content to sanitize
+        :return: the body of the html content minus html tags
+        """
         return Document(html).summary()
 
     def _get_text_from_html(self, html):
-        text = Document(html).summary()
+        """
+        Applies the 'safe' level of sanitization, removes newlines,
+        and converts the html entity for ampersand into the ampersand character.
+        :param html: the content to sanitize
+        :return: sanitized content
+        """
+        text = self._get_safe_html(html)
         text = bleach.clean(text, tags=[], strip=True)
         text = text.strip()
         text = text.replace("\n", "")
