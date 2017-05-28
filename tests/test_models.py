@@ -35,7 +35,6 @@ from baleen.models import *
 ##########################################################################
 
 class MongoTestMixin(object):
-
     def setUp(self):
         """
         Create the mongomock connection
@@ -44,8 +43,10 @@ class MongoTestMixin(object):
         assert isinstance(self.conn, MockMongoClient)
 
         # Clear out the database
-        for feed in Feed.objects(): feed.delete()
-        for post in Post.objects(): post.delete()
+        for feed in Feed.objects():
+            feed.delete()
+        for post in Post.objects():
+            post.delete()
 
     def tearDown(self):
         """
@@ -70,12 +71,12 @@ class MongoTestMixin(object):
 
         self.assertEqual(dta, dtb)
 
+
 ##########################################################################
 ## Feed Model Tests
 ##########################################################################
 
 class FeedModelTests(MongoTestMixin, unittest.TestCase):
-
     def test_link_requred(self):
         """
         Assert that the feed link is required
@@ -134,7 +135,6 @@ class FeedModelTests(MongoTestMixin, unittest.TestCase):
 ##########################################################################
 
 class PostModelTests(MongoTestMixin, unittest.TestCase):
-
     def test_url_requred(self):
         """
         Assert that the post url is required

@@ -28,6 +28,7 @@ def csv(ptype=int):
     """
     Argparse type for comma seperated values. Also parses the type, e.g. int.
     """
+
     def parser(s):
         try:
             parse = lambda p: ptype(p.strip())

@@ -31,18 +31,17 @@ from operator import itemgetter
 from baleen.exceptions import ExportError
 from readability.readability import Document
 
-
 ##########################################################################
 ## Module Constants
 ##########################################################################
 
-DTFMT   = "%b %d, %Y at %H:%M"
+DTFMT = "%b %d, %Y at %H:%M"
 RAW = 'raw'
 SAFE = 'safe'
 TEXT = 'text'
 SANITIZE_LEVELS = (RAW, SAFE, TEXT)
 SCHEMES = ('json', 'html') + SANITIZE_LEVELS
-State   = Enum('State', 'Init, Started, Finished')
+State = Enum('State', 'Init, Started, Finished')
 
 
 ##########################################################################
@@ -56,11 +55,11 @@ class MongoExporter(object):
     """
 
     def __init__(self, root, categories=None, scheme='json'):
-        self.root   = root              # Location on disk to write to
-        self.scheme = scheme.lower()    # Output format of the data
-        self.state  = State.Init        # Current state of the export
-        self.counts = Counter()         # Counts of posts per category
-        self.categories = categories    # Specific categories to export
+        self.root = root  # Location on disk to write to
+        self.scheme = scheme.lower()  # Output format of the data
+        self.state = State.Init  # Current state of the export
+        self.counts = Counter()  # Counts of posts per category
+        self.categories = categories  # Specific categories to export
 
         if self.scheme not in SCHEMES:
             raise ExportError(
@@ -118,7 +117,7 @@ class MongoExporter(object):
         feeds = {
             feed.id: feed.category
             for feed in self.feeds(categories)
-        }
+            }
 
         # Iterate through all posts that have the given feed ids without
         # dereferencing the related object. Yield (post, category) tuples.
@@ -186,7 +185,7 @@ class MongoExporter(object):
 
         # Reset the counts object and mark export as started.
         self.counts = Counter()
-        self.state  = State.Started
+        self.state = State.Started
 
         # Make the directory to export if it doesn't exist.
         if not os.path.exists(self.root):
@@ -283,6 +282,7 @@ class MongoExporter(object):
         text = text.replace("\n", "")
         text = text.replace("&amp;", "&")
         return text
+
 
 if __name__ == '__main__':
     import baleen.models as db

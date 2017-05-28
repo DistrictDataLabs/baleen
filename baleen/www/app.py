@@ -39,7 +39,7 @@ app.debug = settings.debug
 
 # configure the app with the confire settings
 app.config['MONGODB_SETTINGS'] = {
-    'db':   settings.database.name,
+    'db': settings.database.name,
     'host': settings.database.host,
     'port': settings.database.port,
 }
@@ -49,6 +49,7 @@ db = MongoEngine(app)
 
 # add the humanize extension
 humanize = Humanize(app)
+
 
 ##########################################################################
 ## Routes
@@ -67,24 +68,24 @@ def index():
     feeds_topics_counts = len(topics)
 
     # TODO: probably should put this in the database along with the feed.
-    feed_icons = {'gaming':'fa fa-gamepad',
-                  'design':'fa fa-building-o',
-                  'business':'fa fa-briefcase',
-                  'cinema':'fa fa-video-camera',
-                  'data-science':'fa fa-area-chart',
-                  'cooking':'fa fa-cutlery',
-                  'sports':'fa fa-futbol-o',
-                  'books':'fa fa-book',
-                  'tech':'fa fa-cogs',
-                  'politics':'fa fa-university',
-                  'news':'fa fa-newspaper-o',
-                  'essays':'fa fa-pencil-square-o',
-                  'do-it-yourself':'fa fa-wrench'
-                 }
+    feed_icons = {'gaming': 'fa fa-gamepad',
+                  'design': 'fa fa-building-o',
+                  'business': 'fa fa-briefcase',
+                  'cinema': 'fa fa-video-camera',
+                  'data-science': 'fa fa-area-chart',
+                  'cooking': 'fa fa-cutlery',
+                  'sports': 'fa fa-futbol-o',
+                  'books': 'fa fa-book',
+                  'tech': 'fa fa-cogs',
+                  'politics': 'fa fa-university',
+                  'news': 'fa fa-newspaper-o',
+                  'essays': 'fa fa-pencil-square-o',
+                  'do-it-yourself': 'fa fa-wrench'
+                  }
     feeds_topics = {
         topic: Feed.objects(category=topic)
         for topic in topics
-    }
+        }
 
     # load all the data into the templates/feed_list.html template
     return render_template('index.html',
@@ -95,6 +96,7 @@ def index():
                            feed_icons=feed_icons,
                            )
 
+
 @app.route("/status/")
 def status():
     """
@@ -104,7 +106,7 @@ def status():
     counts = {
         'feeds': Feed.objects.count(),
         'posts': Post.objects.count(),
-        'jobs':  Job.objects.count(),
+        'jobs': Job.objects.count(),
     }
     latest_job = Job.objects.order_by('-started').first()
     latest_feed = Feed.objects.order_by('-updated').first()
@@ -135,14 +137,14 @@ def logs():
     per_page = min(int(request.args.get('per_page', 50)), 200)
 
     # Compute the pagination variables
-    n_logs   = Log.objects.count()
-    n_pages  = (n_logs + per_page // 2) // per_page
-    nextp    = page + 1 if page + 1 <= n_pages else None
-    prevp    = page - 1 if page > 1 else None
+    n_logs = Log.objects.count()
+    n_pages = (n_logs + per_page // 2) // per_page
+    nextp = page + 1 if page + 1 <= n_pages else None
+    prevp = page - 1 if page > 1 else None
 
     # Perform query
-    offset   = (page - 1) * per_page
-    logs     = Log.objects.order_by('-id').skip(offset).limit(per_page)
+    offset = (page - 1) * per_page
+    logs = Log.objects.order_by('-id').skip(offset).limit(per_page)
 
     return render_template(
         'logs.html',

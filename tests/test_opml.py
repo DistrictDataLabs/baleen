@@ -35,14 +35,14 @@ from baleen.models import Feed
 ##########################################################################
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
-FEEDLY   = os.path.join(FIXTURES, "feedly.opml")
+FEEDLY = os.path.join(FIXTURES, "feedly.opml")
+
 
 ##########################################################################
 ## Test Load OPML command
 ##########################################################################
 
 class LoadOPMLTests(MongoTestMixin, unittest.TestCase):
-
     def test_load_opml_integrated(self):
         """
         Test the integration of the ingest helper function
@@ -67,12 +67,12 @@ class LoadOPMLTests(MongoTestMixin, unittest.TestCase):
             self.assertEqual(load_opml(FEEDLY), 0)
             self.assertEqual(Feed.objects.count(), 36)
 
+
 ##########################################################################
 ## OPML Reader Test
 ##########################################################################
 
 class OPMLTests(unittest.TestCase):
-
     def test_fixture(self):
         """
         Assert the required opml fixture is available
@@ -146,7 +146,7 @@ class OPMLTests(unittest.TestCase):
         Test the XML result returned from OPML iteration
         """
 
-        opml  = OPML(FEEDLY)
+        opml = OPML(FEEDLY)
         attrs = ['category', 'htmlUrl', 'text', 'title', 'type', 'xmlUrl']
         for item in opml:
             self.assertTrue(isinstance(item, dict))

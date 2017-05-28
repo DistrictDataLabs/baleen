@@ -21,12 +21,12 @@ from commis import Command
 from baleen import models as db
 from baleen.opml import load_opml
 
+
 ##########################################################################
 ## Command
 ##########################################################################
 
 class LoadOPMLCommand(Command):
-
     name = 'load'
     help = 'loads an OPML file from disk into the database'
     args = {

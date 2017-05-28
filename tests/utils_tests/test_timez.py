@@ -24,15 +24,15 @@ from datetime import datetime
 from dateutil.tz import tzutc
 from baleen.utils.timez import *
 
+
 ##########################################################################
 ## Helper Functions Test Cases
 ##########################################################################
 
 class TimezHelpersTests(unittest.TestCase):
-
     def setUp(self):
         self.localnow = datetime.now(tzlocal()).replace(microsecond=0)
-        self.utcnow   = self.localnow.astimezone(tzutc())
+        self.utcnow = self.localnow.astimezone(tzutc())
 
     def tearDown(self):
         self.localnow = self.utcnow = None
@@ -78,5 +78,5 @@ class TimezHelpersTests(unittest.TestCase):
             time.sleep(1)
 
         self.assertGreater(t.finished, t.started)
-        self.assertEqual(t.elapsed, t.finished-t.started)
+        self.assertEqual(t.elapsed, t.finished - t.started)
         self.assertEqual(str(t), '1 seconds')

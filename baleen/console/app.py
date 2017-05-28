@@ -29,8 +29,8 @@ from baleen.version import get_version
 ##########################################################################
 
 DESCRIPTION = "Management and administration commands for Baleen"
-EPILOG      = "If there are any bugs or concerns, submit an issue on Github"
-COMMANDS    = (
+EPILOG = "If there are any bugs or concerns, submit an issue on Github"
+COMMANDS = (
     IngestCommand,
     ExportCommand,
     LoadOPMLCommand,
@@ -45,10 +45,9 @@ COMMANDS    = (
 ##########################################################################
 
 class BaleenUtility(ConsoleProgram):
-
     description = color.format(DESCRIPTION, color.CYAN)
-    epilog      = color.format(EPILOG, color.MAGENTA)
-    version     = color.format("baleen v{}", color.CYAN, get_version())
+    epilog = color.format(EPILOG, color.MAGENTA)
+    version = color.format("baleen v{}", color.CYAN, get_version())
 
     @classmethod
     def load(klass, commands=COMMANDS):

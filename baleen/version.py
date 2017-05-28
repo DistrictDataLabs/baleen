@@ -26,7 +26,7 @@ __version_info__ = {
 }
 
 
-def get_version(short=False,version_info=__version_info__):
+def get_version(short=False, version_info=__version_info__):
     """
     Computes a string representation of the version from __version_info__.
     """

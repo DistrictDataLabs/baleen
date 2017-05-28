@@ -22,6 +22,7 @@ from functools import wraps
 from baleen.utils.timez import Timer
 from baleen.exceptions import BaleenError, BaleenTimeout
 
+
 ##########################################################################
 ## Memoization
 ##########################################################################
@@ -71,6 +72,7 @@ def timeout(seconds):
     Raises a TimeoutError if a function does not terminate within
     specified seconds.
     """
+
     def _timeout_error(signal, frame):
         raise TimeoutError("Operation did not finish within \
         {} seconds".format(seconds))
@@ -89,6 +91,7 @@ def timeout(seconds):
         return timeout_wrapper
 
     return timeout_decorator
+
 
 ##########################################################################
 ## Exception Handling

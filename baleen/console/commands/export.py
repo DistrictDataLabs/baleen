@@ -25,12 +25,12 @@ from baleen.console.utils import csv
 from baleen.export import MongoExporter, SCHEMES
 from baleen.utils.timez import Timer
 
+
 ##########################################################################
 ## Command
 ##########################################################################
 
 class ExportCommand(Command):
-
     name = 'export'
     help = 'export the raw HTML corpus for doing NLP'
     args = {

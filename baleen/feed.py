@@ -29,7 +29,6 @@ from baleen.exceptions import FeedTypeError, UnchangedFeedSyncError
 from baleen.exceptions import SynchronizationError
 from baleen.utils.decorators import memoized, reraise
 
-
 ##########################################################################
 ## Module Constants
 ##########################################################################
@@ -56,8 +55,8 @@ class FeedSync(LoggingMixin):
     The feed synchronization utility is smart enough to access what it needs.
     """
 
-    URL   = "FEED_URL"
-    DICT  = "FEED_DICT"
+    URL = "FEED_URL"
+    DICT = "FEED_DICT"
     MODEL = "FEED_MODEL"
 
     @classmethod
@@ -209,9 +208,7 @@ class FeedSync(LoggingMixin):
         signature based on available entries and other feed unique info.
         """
         # Extract information from the entities to hash.
-        entries = sorted([
-            e.link or e.get('href', None) or e.id for e in parsed_feed.entries
-        ])
+        entries = sorted([e.link or e.get('href', None) or e.id for e in parsed_feed.entries])
 
         # Data structure to create signature upon.
         result = {

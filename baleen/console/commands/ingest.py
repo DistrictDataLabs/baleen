@@ -23,12 +23,12 @@ from commis import Command
 from commis.exceptions import ConsoleError
 from baleen.ingest import Ingestor, MongoIngestor, OPMLIngestor
 
+
 ##########################################################################
 ## Command
 ##########################################################################
 
 class IngestCommand(Command):
-
     name = 'ingest'
     help = 'ingests the RSS feeds to MongoDB'
     args = {

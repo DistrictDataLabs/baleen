@@ -37,8 +37,9 @@ from baleen.exceptions import WranglingError, FetchError
 
 FEEDPARSER_REMOVABLE_FIELDS = (
     'id', 'published_parsed', 'expired_parsed',
-    'updated', 'updated_parsed',  'created', 'created_parsed',
+    'updated', 'updated_parsed', 'created', 'created_parsed',
 )
+
 
 ##########################################################################
 ## Post Wrangling Object
@@ -114,7 +115,8 @@ class PostWrangler(object):
 
         ## Remove unwanted fields
         for field in FEEDPARSER_REMOVABLE_FIELDS:
-            if field in post: del post[field]
+            if field in post:
+                del post[field]
 
         ## Handle the pubdate and published strings
         post['pubdate'] = dtparser.parse(post.pop('published')) if 'published' in post else None
@@ -124,7 +126,8 @@ class PostWrangler(object):
 
         ## Rename the link field to url
         post['url'] = self.post.link or post.get('href', None) or self.post.id
-        if 'link' in post: del post['link']
+        if 'link' in post:
+            del post['link']
 
         ## Handle the content
         if 'content' not in post:
@@ -142,7 +145,7 @@ class PostWrangler(object):
             # Update the post with the content info
             post['language'] = selected.get('language')
             post['mimetype'] = selected.get('type')
-            post['content']  = selected.get('value')
+            post['content'] = selected.get('value')
 
         ## Create the post object
         ## Start using self.post here!

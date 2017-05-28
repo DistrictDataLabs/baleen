@@ -19,12 +19,12 @@ Testing for the baleen module
 import unittest
 import baleen
 
+
 ##########################################################################
 ## Test Cases
 ##########################################################################
 
 class GetVersionTest(unittest.TestCase):
-
     def test_final_version(self):
         """
         Assert that the final version is correct
@@ -36,9 +36,9 @@ class GetVersionTest(unittest.TestCase):
             'releaselevel': 'final',
             'serial': 0,
         }
-        
-        self.assertEqual("0.3.3", baleen.get_version(short=True,version_info=test_version_info))
-        self.assertEqual("0.3.3", baleen.get_version(short=False,version_info=test_version_info))
+
+        self.assertEqual("0.3.3", baleen.get_version(short=True, version_info=test_version_info))
+        self.assertEqual("0.3.3", baleen.get_version(short=False, version_info=test_version_info))
 
     def test_non_final_version(self):
         """
@@ -52,5 +52,5 @@ class GetVersionTest(unittest.TestCase):
             'serial': 0,
         }
 
-        self.assertEqual("0.3.3", baleen.get_version(short=True,version_info=test_version_info))
+        self.assertEqual("0.3.3", baleen.get_version(short=True, version_info=test_version_info))
         self.assertEqual("0.3.3a0", baleen.get_version(short=False, version_info=test_version_info))

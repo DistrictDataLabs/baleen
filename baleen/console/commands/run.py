@@ -27,12 +27,12 @@ from functools import partial
 from baleen.ingest import MongoIngestor
 from baleen.utils.logger import IngestLogger
 
+
 ##########################################################################
 ## Command
 ##########################################################################
 
 class RunCommand(Command):
-
     name = 'run'
     help = 'runs the ingest command every hour'
     args = {}

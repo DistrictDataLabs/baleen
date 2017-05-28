@@ -20,6 +20,7 @@ Uses confire to get meaningful configurations from a yaml file
 import os
 import confire
 
+
 ##########################################################################
 ## Configuration
 ##########################################################################
@@ -52,18 +53,19 @@ class BaleenConfiguration(confire.Configuration):
     """
 
     CONF_PATHS = [
-        "/etc/baleen.yaml",                      # System configuration
-        os.path.expanduser("~/.baleen.yaml"),    # User specific config
-        os.path.abspath("conf/baleen.yaml"),     # Local configuration
+        "/etc/baleen.yaml",  # System configuration
+        os.path.expanduser("~/.baleen.yaml"),  # User specific config
+        os.path.abspath("conf/baleen.yaml"),  # Local configuration
     ]
 
-    debug      = True
-    database   = MongoConfiguration()
-    server     = ServerConfiguration()
-    logfile    = 'baleen.log'                    # Location to write log
-    loglevel   = 'DEBUG'                         # Log messages to record
-    fetch_html = True                            # Actually fetch HTML link
-    timeout    = 180                             # Timeout for fetching posts/feeds
+    debug = True
+    database = MongoConfiguration()
+    server = ServerConfiguration()
+    logfile = 'baleen.log'  # Location to write log
+    loglevel = 'DEBUG'  # Log messages to record
+    fetch_html = True  # Actually fetch HTML link
+    timeout = 180  # Timeout for fetching posts/feeds
+
 
 ## Load settings immediately for import
 settings = BaleenConfiguration.load()

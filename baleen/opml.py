@@ -22,6 +22,7 @@ from bs4 import BeautifulSoup
 from collections import Counter
 from mongoengine.errors import *
 
+
 ##########################################################################
 ## Load Database function
 ##########################################################################
@@ -35,14 +36,14 @@ def load_opml(path):
     opml = OPML(path)
     rows = 0
     for feed in opml:
-        feed.pop('type')                    # Unneeded for database
-        feed.pop('text')                    # Unneeded for database
-        feed['link'] = feed.pop('xmlUrl')   # Rename the XML URL
+        feed.pop('type')  # Unneeded for database
+        feed.pop('text')  # Unneeded for database
+        feed['link'] = feed.pop('xmlUrl')  # Rename the XML URL
         feed['urls'] = {
-            'xmlUrl':  feed['link'],        # Add xmlUrl to urls
-            'htmlUrl': feed.pop('htmlUrl'), # Add htmlUrl to urls
+            'xmlUrl': feed['link'],  # Add xmlUrl to urls
+            'htmlUrl': feed.pop('htmlUrl'),  # Add htmlUrl to urls
         }
-        feed = db.Feed(**feed)              # Construct without an ObjectId
+        feed = db.Feed(**feed)  # Construct without an ObjectId
 
         try:
             feed.save()
@@ -51,12 +52,12 @@ def load_opml(path):
             continue
     return rows
 
+
 ##########################################################################
 ## OPMLReader
 ##########################################################################
 
 class OPML(object):
-
     def __init__(self, path):
         """
         Reader for OPML XML files.
