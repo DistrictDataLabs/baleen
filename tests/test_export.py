@@ -34,10 +34,10 @@ from baleen.exceptions import ExportError
 ##########################################################################
 
 BOOKS_FEED = Feed(
-    title = 'The Rumpus.net',
-    link = 'http://therumpus.net/feed/',
-    urls = {'htmlurl': 'http://therumpus.net'},
-    category = 'books',
+    title='The Rumpus.net',
+    link='http://therumpus.net/feed/',
+    urls={'htmlurl': 'http://therumpus.net'},
+    category='books',
 )
 BOOKS_POST = Post(
     feed=BOOKS_FEED,
@@ -47,10 +47,10 @@ BOOKS_POST = Post(
 )
 
 POLITICS_FEED = Feed(
-    title = 'The Politics Site',
-    link = 'http://politicsrock.net/feed/',
-    urls = {'htmlurl': 'http://politicsrock.net'},
-    category = 'politics',
+    title='The Politics Site',
+    link='http://politicsrock.net/feed/',
+    urls={'htmlurl': 'http://politicsrock.net'},
+    category='politics',
 )
 POLITICS_POST = Post(
     feed=POLITICS_FEED,
@@ -60,10 +60,10 @@ POLITICS_POST = Post(
 )
 
 FOOD_FEED = Feed(
-    title = 'I love food',
-    link = 'http://foodisthebest.com/atom',
-    urls = {'htmlurl': 'http://foodisthebest.com'},
-    category = 'food',
+    title='I love food',
+    link='http://foodisthebest.com/atom',
+    urls={'htmlurl': 'http://foodisthebest.com'},
+    category='food',
 )
 FOOD_POST = Post(
     feed=FOOD_FEED,
@@ -78,12 +78,12 @@ CATEGORIES_IN_DB = [
     FOOD_FEED.category,
 ]
 
+
 ##########################################################################
 ## Export Tests
 ##########################################################################
 
 class ExportTests(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         """
@@ -93,8 +93,10 @@ class ExportTests(unittest.TestCase):
         assert isinstance(cls.conn, MockMongoClient)
 
         # Clear out the database
-        for feed in Feed.objects(): feed.delete()
-        for post in Post.objects(): post.delete()
+        for feed in Feed.objects():
+            feed.delete()
+        for post in Post.objects():
+            post.delete()
         assert Feed.objects.count() == 0
         assert Post.objects.count() == 0
 
@@ -157,7 +159,7 @@ class ExportTests(unittest.TestCase):
         exporter = MongoExporter("/tmp/corpus", categories=CATEGORIES_IN_DB)
         expected_feeds = [POLITICS_FEED, FOOD_FEED]
         test_categories = ["politics", "food"]
-        self.assertCountEqual(expected_feeds , exporter.feeds(categories=test_categories))
+        self.assertCountEqual(expected_feeds, exporter.feeds(categories=test_categories))
 
     def test_feeds_for_category_string(self):
         """
@@ -207,6 +209,7 @@ class ExportTests(unittest.TestCase):
 
     This forces us to mock the post() method here.
     """
+
     def test_export(self):
         """
         Assert that we can export posts
@@ -229,7 +232,7 @@ class ExportTests(unittest.TestCase):
         root_path = "/tmp/corpus"
         exporter = MongoExporter(root_path, categories=CATEGORIES_IN_DB)
         os.path.exists = lambda path: False if path == root_path else True
-        os.mkdir = lambda success: True # Mock directory creation
+        os.mkdir = lambda success: True  # Mock directory creation
         os.path.isdir = lambda path: False if path == root_path else True
 
         with self.assertRaises(ExportError):
@@ -244,7 +247,7 @@ class ExportTests(unittest.TestCase):
         for category in CATEGORIES_IN_DB:
             category_path = os.path.join(root_path, category)
             os.path.exists = lambda path: False if path == category_path else True
-            os.mkdir = lambda success: True # Mock directory creation
+            os.mkdir = lambda success: True  # Mock directory creation
             os.path.isdir = lambda path: False if path == category_path else True
 
             with self.assertRaises(ExportError):

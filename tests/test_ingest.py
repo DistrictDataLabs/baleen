@@ -40,6 +40,7 @@ from mongoengine.errors import NotUniqueError
 
 ACTION_METHODS = ('started', 'finished', 'failed', 'process')
 
+
 def get_ingest_mock(klass=Ingestor):
     """
     Mocks all functions of the ingestor that are called in ingest.
@@ -75,21 +76,22 @@ def reset_mock_method(obj, method):
     """
     Resets a mock object's method to the orignal
     """
-    klass  = obj.__class__
+    klass = obj.__class__
     action = getattr(klass, method)
 
     setattr(obj, method, action.__get__(obj, klass))
     return obj
 
+
 def change_class_logger(mock_logger, klass):
     setattr(klass, 'logger', mock_logger)
+
 
 ##########################################################################
 ## Test Ingestor
 ##########################################################################
 
 class IngestorTests(MongoTestMixin, unittest.TestCase):
-
     def test_stype_helper(self):
         """
         Test the stype helper function
@@ -214,7 +216,7 @@ class IngestorTests(MongoTestMixin, unittest.TestCase):
 
         self.assertEqual(ingestor.counts["feeds"], 1)
         self.assertEqual(ingestor.counts["feed_error"], 0)
-        self.assertFalse(ingestor.errors) # Empty is considered 'False'
+        self.assertFalse(ingestor.errors)  # Empty is considered 'False'
 
     def test_process_with_error(self):
         """
@@ -243,7 +245,7 @@ class IngestorTests(MongoTestMixin, unittest.TestCase):
         ingestor.process_post(post)
 
         self.assertEqual(ingestor.counts["fetch_error"], 0)
-        self.assertFalse(ingestor.errors) # Empty is considered 'False'
+        self.assertFalse(ingestor.errors)  # Empty is considered 'False'
 
     def test_process_post_with_error(self):
         """
@@ -293,8 +295,8 @@ class IngestorTests(MongoTestMixin, unittest.TestCase):
 
         self.assertEqual(ingestor.counts["duplicate_posts"], 0)
 
-class MongoIngestorTests(MongoTestMixin, unittest.TestCase):
 
+class MongoIngestorTests(MongoTestMixin, unittest.TestCase):
     def test_mongo_ingestor_finished(self):
         """
         Ensure that the MongoIngestor finished method has no errors

@@ -21,12 +21,12 @@ from commis import Command
 from baleen.www.app import app
 from baleen.config import settings
 
+
 ##########################################################################
 ## Command
 ##########################################################################
 
 class ServeCommand(Command):
-
     name = 'serve'
     help = 'serve the Flask administration application'
     args = {

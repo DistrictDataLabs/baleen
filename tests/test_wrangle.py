@@ -36,12 +36,12 @@ from baleen.models import Feed, Post
 ## Fixtures
 ##########################################################################
 
-FIXTURES  = os.path.join(os.path.dirname(__file__), "fixtures")
-RESULT    = os.path.join(FIXTURES, "feedparser_result.pickle")
-FEED      = Feed(
-    title = u'The Rumpus.net',
-    link  = u'http://therumpus.net/feed/',
-    urls  = {u'htmlurl': u'http://therumpus.net'}, category = u'books',
+FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
+RESULT = os.path.join(FIXTURES, "feedparser_result.pickle")
+FEED = Feed(
+    title=u'The Rumpus.net',
+    link=u'http://therumpus.net/feed/',
+    urls={u'htmlurl': u'http://therumpus.net'}, category=u'books',
 )
 
 
@@ -62,12 +62,12 @@ def mocked_requests_get(*args, **kwargs):
 
     return MockResponse("??", 404)
 
+
 ##########################################################################
 ## Test Wrangling Posts
 ##########################################################################
 
 class PostWranglerTests(MongoTestMixin, unittest.TestCase):
-
     def setUp(self):
         super().setUp()
         self.feed = FEED
@@ -91,7 +91,7 @@ class PostWranglerTests(MongoTestMixin, unittest.TestCase):
         self.assertEqual(Post.objects.count(), 0)
         for wrangle in PostWrangler.factory(self.entries, feed=self.feed):
             wrangle.wrangle()
-            wrangle.wrangle() # Make sure that double wrangle does nothing.
+            wrangle.wrangle()  # Make sure that double wrangle does nothing.
 
         self.assertEqual(Post.objects.count(), 10)
 
@@ -139,7 +139,7 @@ class PostWranglerTests(MongoTestMixin, unittest.TestCase):
         Test can be saved with or without a feed
         """
         withfeed = PostWrangler(self.entries[0], feed=self.feed)
-        nofeed   = PostWrangler(self.entries[1])
+        nofeed = PostWrangler(self.entries[1])
 
         post = withfeed.wrangle()
         self.assertEqual(post.feed, self.feed)
@@ -209,4 +209,3 @@ class PostWranglerTests(MongoTestMixin, unittest.TestCase):
         with self.assertRaises(FetchError):
             wrangle.post.url = 'http://example.com/obiwan/'
             wrangle.fetch()
-        

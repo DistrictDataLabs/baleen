@@ -30,6 +30,7 @@ except ImportError:
 from baleen.utils import mongolog as ml
 from .test_logger import tmsgf
 
+
 ##########################################################################
 ## Mongo Log Handler Tests
 ##########################################################################

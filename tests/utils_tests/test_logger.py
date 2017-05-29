@@ -27,7 +27,6 @@ except ImportError:
 
 from baleen.utils.logger import *
 
-
 ##########################################################################
 ## Module Helpers
 ##########################################################################
@@ -35,8 +34,10 @@ from baleen.utils.logger import *
 PREFIX = "TEST LOG"
 IGNORE = "IGNORE: This should not be in a log file or database!"
 
+
 def tmsgf(message, prefix=PREFIX, ignore=IGNORE):
     return "{}: {} ({})".format(prefix, message, ignore)
+
 
 ##########################################################################
 ## Logger Test
@@ -53,7 +54,7 @@ class IngestLoggerTests(unittest.TestCase):
         Assert that extra (user) is passed to logger
         """
 
-        logger  = IngestLogger()
+        logger = IngestLogger()
 
         assert logger.logger is mock_logger
 
@@ -68,7 +69,7 @@ class IngestLoggerTests(unittest.TestCase):
         Test the debug logger
         """
 
-        logger  = IngestLogger()
+        logger = IngestLogger()
 
         assert logger.logger is mock_logger
 
@@ -83,7 +84,7 @@ class IngestLoggerTests(unittest.TestCase):
         Test the info logger
         """
 
-        logger  = IngestLogger()
+        logger = IngestLogger()
 
         assert logger.logger is mock_logger
 
@@ -98,7 +99,7 @@ class IngestLoggerTests(unittest.TestCase):
         Test the warn logger
         """
 
-        logger  = IngestLogger()
+        logger = IngestLogger()
 
         assert logger.logger is mock_logger
 
@@ -113,7 +114,7 @@ class IngestLoggerTests(unittest.TestCase):
         Test the error logger
         """
 
-        logger  = IngestLogger()
+        logger = IngestLogger()
 
         assert logger.logger is mock_logger
 
@@ -128,7 +129,7 @@ class IngestLoggerTests(unittest.TestCase):
         Test the critical logger
         """
 
-        logger  = IngestLogger()
+        logger = IngestLogger()
 
         assert logger.logger is mock_logger
 

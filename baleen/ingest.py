@@ -67,11 +67,11 @@ class Ingestor(LoggingMixin):
     """
 
     def __init__(self, feeds=None, **options):
-        self.timer   = None         # Processing timer
-        self.jobid   = None         # Unique job id for every run
-        self.options = options      # Any other options passed in
-        self._feeds  = feeds        # Allows pass in feed collection
-        self.errors  = Counter()    # Count the number of error types
+        self.timer = None  # Processing timer
+        self.jobid = None  # Unique job id for every run
+        self.options = options  # Any other options passed in
+        self._feeds = feeds  # Allows pass in feed collection
+        self.errors = Counter()  # Count the number of error types
 
     @property
     def name(self):
@@ -131,7 +131,7 @@ class Ingestor(LoggingMixin):
         self.logger.info(results)
 
         # Notify job finished
-        message  = "{} job {} finished".format(self.name, self.jobid)
+        message = "{} job {} finished".format(self.name, self.jobid)
         self.logger.info(message)
 
     def process(self):
@@ -150,7 +150,7 @@ class Ingestor(LoggingMixin):
                 self.errors[stype(e)] += 1
                 self.logger.error(
                     u"Error on Feed {} ({}): {}".format(
-                        idx+1, fsync.feed, str(e)
+                        idx + 1, fsync.feed, str(e)
                     )
                 )
 
@@ -181,7 +181,7 @@ class Ingestor(LoggingMixin):
             post.wrangle()
         except WranglingError as e:
             if type(e.original) is NotUniqueError:
-                self.logger.debug("Caught WranglingError while wrangling post, "\
+                self.logger.debug("Caught WranglingError while wrangling post, "
                                   "but MongoDB has reported post as a duplicate. Ignoring.")
                 self.counts["duplicate_posts"] += 1
             else:
@@ -275,6 +275,7 @@ class MongoIngestor(Ingestor):
             "jobs": db.Job.objects.count(),
         }
         self.job.save()
+
 
 ##########################################################################
 ## OPML Ingestion Class

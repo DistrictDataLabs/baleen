@@ -20,11 +20,10 @@ Object Document Models for use with Mongo and mongoengine
 import baleen
 import mongoengine as me
 
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 from baleen.config import settings
 from baleen.utils.cryptography import hash_string
 from baleen.utils.timez import humanizedelta
-
 
 ##########################################################################
 ## Module Constants
@@ -47,6 +46,7 @@ FEEDTYPES = (
     'rss20',
 )
 
+
 ##########################################################################
 ## Helper Functions
 ##########################################################################
@@ -61,30 +61,30 @@ def connect(**kwargs):
 
     return me.connect(name, host=host, port=port, **kwargs)
 
+
 ##########################################################################
 ## Models
 ##########################################################################
 
 class Feed(me.DynamicDocument):
-
-    version   = me.StringField(choices=FEEDTYPES)
-    etag      = me.StringField()
-    modified  = me.StringField()
-    title     = me.StringField(max_length=256)
-    link      = me.URLField(required=True, unique=True)
-    urls      = me.DictField()
-    category  = me.StringField(required=True)
-    active    = me.BooleanField(default=True)
-    fetched   = me.DateTimeField(default=None)
-    created   = me.DateTimeField(default=datetime.now, required=True)
-    updated   = me.DateTimeField(default=datetime.now, required=True)
+    version = me.StringField(choices=FEEDTYPES)
+    etag = me.StringField()
+    modified = me.StringField()
+    title = me.StringField(max_length=256)
+    link = me.URLField(required=True, unique=True)
+    urls = me.DictField()
+    category = me.StringField(required=True)
+    active = me.BooleanField(default=True)
+    fetched = me.DateTimeField(default=None)
+    created = me.DateTimeField(default=datetime.now, required=True)
+    updated = me.DateTimeField(default=datetime.now, required=True)
     signature = me.StringField(max_length=64, min_length=64, unique=False)
 
     @classmethod
     def pre_save(cls, sender, document, **kwargs):
         document.updated = datetime.now()
 
-    meta      = {
+    meta = {
         'collection': 'feeds',
     }
 
@@ -107,24 +107,24 @@ class Feed(me.DynamicDocument):
     def __unicode__(self):
         return self.title if self.title else self.link
 
-class Post(me.DynamicDocument):
 
-    feed      = me.ReferenceField(Feed)
-    title     = me.StringField( max_length=512 )
-    url       = me.URLField( required=True, unique=True )
-    pubdate   = me.DateTimeField()
-    content   = me.StringField( required=True )
-    tags      = me.ListField(me.StringField(max_length=256))
-    signature = me.StringField( required=True, max_length=64, min_length=64, unique=True )
-    created   = me.DateTimeField(default=datetime.now, required=True)
-    updated   = me.DateTimeField(default=datetime.now, required=True)
+class Post(me.DynamicDocument):
+    feed = me.ReferenceField(Feed)
+    title = me.StringField(max_length=512)
+    url = me.URLField(required=True, unique=True)
+    pubdate = me.DateTimeField()
+    content = me.StringField(required=True)
+    tags = me.ListField(me.StringField(max_length=256))
+    signature = me.StringField(required=True, max_length=64, min_length=64, unique=True)
+    created = me.DateTimeField(default=datetime.now, required=True)
+    updated = me.DateTimeField(default=datetime.now, required=True)
 
     @classmethod
     def pre_save(cls, sender, document, **kwargs):
-        document.updated   = datetime.now()
+        document.updated = datetime.now()
         document.signature = document.hash()
 
-    meta      = {
+    meta = {
         'collection': 'posts',
     }
 
@@ -139,7 +139,7 @@ class Post(me.DynamicDocument):
         Returns an HTML string of the content of the Post.
         In the future we may use bleach to do sanitization or other simple
         sanity checks to ensure that things are going ok, which is why this
-        method stub exists. 
+        method stub exists.
         """
         return self.content
 
@@ -148,24 +148,23 @@ class Post(me.DynamicDocument):
 
 
 class Job(me.DynamicDocument):
-
-    jobid     = me.UUIDField(binary=False, required=True)
-    name      = me.StringField(max_length=128, default="Unknown")
-    failed    = me.BooleanField(default=False)
-    reason    = me.StringField(max_length=512)
-    version   = me.StringField(max_length=10, default=baleen.get_version)
-    started   = me.DateTimeField(default=datetime.now, required=True)
-    finished  = me.DateTimeField(default=None)
-    updated   = me.DateTimeField(default=datetime.now, required=True)
-    errors    = me.MapField(field=me.IntField())
-    counts    = me.MapField(field=me.IntField())
-    totals    = me.MapField(field=me.IntField())
+    jobid = me.UUIDField(binary=False, required=True)
+    name = me.StringField(max_length=128, default="Unknown")
+    failed = me.BooleanField(default=False)
+    reason = me.StringField(max_length=512)
+    version = me.StringField(max_length=10, default=baleen.get_version)
+    started = me.DateTimeField(default=datetime.now, required=True)
+    finished = me.DateTimeField(default=None)
+    updated = me.DateTimeField(default=datetime.now, required=True)
+    errors = me.MapField(field=me.IntField())
+    counts = me.MapField(field=me.IntField())
+    totals = me.MapField(field=me.IntField())
 
     @classmethod
     def pre_save(cls, sender, document, **kwargs):
         document.updated = datetime.now()
 
-    meta      = {
+    meta = {
         'collection': 'jobs',
     }
 
@@ -215,17 +214,16 @@ class Job(me.DynamicDocument):
 
 
 class Log(me.DynamicDocument):
-
-    level     = me.DictField()
-    message   = me.StringField(max_length=4096)
-    host      = me.StringField(max_length=255)
-    user      = me.StringField(max_length=255)
-    error     = me.DictField()
-    logger    = me.StringField(max_length=255)
-    asctime   = me.StringField(max_length=64)
+    level = me.DictField()
+    message = me.StringField(max_length=4096)
+    host = me.StringField(max_length=255)
+    user = me.StringField(max_length=255)
+    error = me.DictField()
+    logger = me.StringField(max_length=255)
+    asctime = me.StringField(max_length=64)
     timestamp = me.DateTimeField()
 
-    meta      = {
+    meta = {
         'collection': 'logs',
     }
 
@@ -250,6 +248,7 @@ class Log(me.DynamicDocument):
 
     def __unicode__(self):
         return self.message
+
 
 ##########################################################################
 ## Signals

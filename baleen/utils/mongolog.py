@@ -28,12 +28,12 @@ from socket import gethostname
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
+
 ##########################################################################
 ## Mongo Formatter/Handler
 ##########################################################################
 
 class MongoFormatter(logging.Formatter):
-
     def __init__(self, fmt='%(name)s %(levelname)s [%(asctime)s] -- %(message)s', datefmt=COMMON_DATETIME):
         super().__init__(fmt, datefmt)
 
@@ -43,34 +43,34 @@ class MongoFormatter(logging.Formatter):
         """
 
         ## Get the dictionary ready for Mongo
-        data    = record.__dict__.copy()
+        data = record.__dict__.copy()
 
         ## Get the log message as intended via super
-        message   = super().format(record)
+        message = super().format(record)
         timestamp = datetime.fromtimestamp(data.pop('created'))
-        location  = {
+        location = {
             'module': data.pop('module'),
             'file': data.pop('pathname'),
             'filename': data.pop('filename'),
             'lineno': data.pop('lineno'),
             'method': data.pop('funcName')
         }
-        error     = {
+        error = {
             'info': data.pop('exc_info'),
             'text': data.pop('exc_text'),
         }
-        process   = {
+        process = {
             'process': data.pop('process'),
             'processName': data.pop('processName'),
             'thread': data.pop('thread'),
             'threadName': data.pop('threadName'),
         }
-        logger    = data.pop('name')
-        level     = {
+        logger = data.pop('name')
+        level = {
             'number': data.pop('levelno'),
             'name': data.pop('levelname'),
         }
-        info      = tuple(str(arg) for arg in data.pop('args'))
+        info = tuple(str(arg) for arg in data.pop('args'))
 
         for key in ('relativeCreated', 'msecs', 'msg'):
             del data[key]
@@ -90,20 +90,20 @@ class MongoFormatter(logging.Formatter):
 
         return data
 
-class MongoHandler(logging.Handler):
 
+class MongoHandler(logging.Handler):
     def __init__(self, level=logging.NOTSET, **kwargs):
         super().__init__(level)
-        self.host            = kwargs.get('host', settings.database.host)
-        self.port            = kwargs.get('port', settings.database.port)
-        self.database_name   = kwargs.get('database', settings.database.name)
+        self.host = kwargs.get('host', settings.database.host)
+        self.port = kwargs.get('port', settings.database.port)
+        self.database_name = kwargs.get('database', settings.database.name)
         self.collection_name = kwargs.get('collection', 'logs')
-        self.fail_silently   = kwargs.get('fail_silently', False)
-        self.formatter       = kwargs.get('formatter', MongoFormatter())
+        self.fail_silently = kwargs.get('fail_silently', False)
+        self.formatter = kwargs.get('formatter', MongoFormatter())
 
-        self.connection      = None
-        self.database        = None
-        self.collection      = None
+        self.connection = None
+        self.database = None
+        self.collection = None
         self.connect()
 
     def connect(self):
@@ -118,7 +118,7 @@ class MongoHandler(logging.Handler):
             else:
                 raise
 
-        self.database   = self.connection[self.database_name]
+        self.database = self.connection[self.database_name]
         self.collection = self.database[self.collection_name]
 
     def close(self):
@@ -138,6 +138,7 @@ class MongoHandler(logging.Handler):
             except Exception:
                 if not self.fail_silently:
                     self.handleError(record)
+
 
 if __name__ == '__main__':
     logger = logging.getLogger('demo')

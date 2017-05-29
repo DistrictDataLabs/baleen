@@ -37,31 +37,31 @@ from baleen.exceptions import FeedTypeError
 ##########################################################################
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "fixtures")
-FEEDLY   = os.path.join(FIXTURES, "feedly.opml")
-RESULT   = os.path.join(FIXTURES, "feedparser_result.pickle")
+FEEDLY = os.path.join(FIXTURES, "feedly.opml")
+RESULT = os.path.join(FIXTURES, "feedparser_result.pickle")
 
 # Feed Fixtures
-STR_FEED     = 'http://freakonomics.blogs.nytimes.com/feed/'
+STR_FEED = 'http://freakonomics.blogs.nytimes.com/feed/'
 UNICODE_FEED = u'http://blog.kaggle.com/feed/'
-OPML_FEED    = {
-    "type":"rss", "text":"The Daily Notebook", "title":"The Daily Notebook",
-    "xmlUrl":"https://mubi.com/notebook/posts.atom", "htmlUrl":"https://mubi.com/notebook/posts",
+OPML_FEED = {
+    "type": "rss", "text": "The Daily Notebook", "title": "The Daily Notebook",
+    "xmlUrl": "https://mubi.com/notebook/posts.atom", "htmlUrl": "https://mubi.com/notebook/posts",
 }
-MONGO_FEED   = Feed(
-    title = u'The Rumpus.net',
-    link = u'http://therumpus.net/feed/',
-    urls = {u'htmlurl': u'http://therumpus.net'},
-    category = u'books',
-    signature = '27c019245edb10ac1e8b8800aaeb16b3e9ddd361a7550e089398128f9f87c2ff',
+MONGO_FEED = Feed(
+    title=u'The Rumpus.net',
+    link=u'http://therumpus.net/feed/',
+    urls={u'htmlurl': u'http://therumpus.net'},
+    category=u'books',
+    signature='27c019245edb10ac1e8b8800aaeb16b3e9ddd361a7550e089398128f9f87c2ff',
 
 )
+
 
 ##########################################################################
 ## Feed Synchronization Tests
 ##########################################################################
 
 class FeedSyncTests(unittest.TestCase):
-
     def setUp(self):
         """
         Create the mongomock connection
@@ -70,8 +70,10 @@ class FeedSyncTests(unittest.TestCase):
         assert isinstance(self.conn, MockMongoClient)
 
         # Clear out the database
-        for feed in Feed.objects(): feed.delete()
-        for post in Post.objects(): post.delete()
+        for feed in Feed.objects():
+            feed.delete()
+        for post in Post.objects():
+            post.delete()
 
     def tearDown(self):
         """
@@ -111,7 +113,7 @@ class FeedSyncTests(unittest.TestCase):
         Test that bad types raise an exception in sync
         """
         cases = (
-            10, {u'htmlurl': u'https://mubi.com/notebook/posts'}, ['a','b','c']
+            10, {u'htmlurl': u'https://mubi.com/notebook/posts'}, ['a', 'b', 'c']
         )
 
         for case in cases:
@@ -151,7 +153,7 @@ class FeedSyncTests(unittest.TestCase):
         )
 
         for feed, url in cases:
-            fsync  = FeedSync(feed)
+            fsync = FeedSync(feed)
             result = fsync.parse()
             mock_feedparser.assert_called_with(url)
 
@@ -164,7 +166,7 @@ class FeedSyncTests(unittest.TestCase):
         # Ensure that the mocking worked out for us
         assert mock_feedparser is feedparser.parse
 
-        feed = Feed(link = u'https://mubi.com/notebook/posts.atom')
+        feed = Feed(link=u'https://mubi.com/notebook/posts.atom')
         feed.etag = 'abcdefg'
 
         # Test Case 1: etag but no modified
@@ -194,7 +196,7 @@ class FeedSyncTests(unittest.TestCase):
         with open(RESULT, 'rb') as f:
             mock_feedparser.return_value = pickle.load(f)
 
-        fsync  = FeedSync(MONGO_FEED)
+        fsync = FeedSync(MONGO_FEED)
         result = fsync.sync()
 
         # Fetch the feed from the database.
@@ -220,7 +222,7 @@ class FeedSyncTests(unittest.TestCase):
         with open(RESULT, 'rb') as f:
             mock_feedparser.return_value = pickle.load(f)
 
-        fsync  = FeedSync(MONGO_FEED)
+        fsync = FeedSync(MONGO_FEED)
 
         # Test sync without save
         result = fsync.sync(save=False)
@@ -242,7 +244,7 @@ class FeedSyncTests(unittest.TestCase):
         with open(RESULT, 'rb') as f:
             mock_feedparser.return_value = pickle.load(f)
 
-        fsync  = FeedSync(OPML_FEED)
+        fsync = FeedSync(OPML_FEED)
 
         # Test sync without save
         result = fsync.sync()
@@ -260,7 +262,7 @@ class FeedSyncTests(unittest.TestCase):
         with open(RESULT, 'rb') as f:
             mock_feedparser.return_value = pickle.load(f)
 
-        fsync  = FeedSync(MONGO_FEED)
+        fsync = FeedSync(MONGO_FEED)
 
         # First call to entries should not raise UnchangedFeedSyncError
         result = fsync.entries()
@@ -269,8 +271,8 @@ class FeedSyncTests(unittest.TestCase):
         # TODO: feed.save() doesn't save some of fields including signature
         # So, we need to fix mongomock/mongoengine interaction, or just get rid of mongomock
         self.conn.baleen.feeds.update_one({'_id': self.conn.baleen.feeds.find()[0]['_id']},
-                                  {'$set': {'signature': MONGO_FEED.signature}},
-                                  upsert=False)
+                                          {'$set': {'signature': MONGO_FEED.signature}},
+                                          upsert=False)
         # Second should fail
         with self.assertRaises(UnchangedFeedSyncError):
             result = fsync.entries()
@@ -287,7 +289,7 @@ class FeedSyncTests(unittest.TestCase):
         with open(RESULT, 'rb') as f:
             mock_feedparser.return_value = pickle.load(f)
 
-        fsync  = FeedSync(MONGO_FEED)
+        fsync = FeedSync(MONGO_FEED)
 
         # First call to entries should not raise UnchangedFeedSyncError
         result = fsync.entries()

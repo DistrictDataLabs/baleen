@@ -24,12 +24,12 @@ from commis import Command
 from baleen.config import settings
 from baleen.utils.timez import HUMAN_DATETIME
 
+
 ##########################################################################
 ## Command
 ##########################################################################
 
 class SummaryCommand(Command):
-
     name = 'info'
     help = 'print info about Baleen from the database'
     args = {

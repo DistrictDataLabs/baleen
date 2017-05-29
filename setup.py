@@ -31,20 +31,20 @@ from setuptools import find_packages
 ##########################################################################
 
 ## Basic information
-NAME         = "baleen"
-DESCRIPTION  = "An automated ingestion service for blogs to construct a corpus for NLP research."
-AUTHOR       = "Benjamin Bengfort"
-EMAIL        = "benjamin@bengfort.com"
-LICENSE      = "MIT"
-REPOSITORY   = "https://github.com/bbengfort/baleen"
-PACKAGE      = "baleen"
+NAME = "baleen"
+DESCRIPTION = "An automated ingestion service for blogs to construct a corpus for NLP research."
+AUTHOR = "Benjamin Bengfort"
+EMAIL = "benjamin@bengfort.com"
+LICENSE = "MIT"
+REPOSITORY = "https://github.com/bbengfort/baleen"
+PACKAGE = "baleen"
 
 ## Define the keywords
-KEYWORDS     = ('nlp', 'baleen', 'ingestion', 'blogs', 'rss')
+KEYWORDS = ('nlp', 'baleen', 'ingestion', 'blogs', 'rss')
 
 ## Define the classifiers
 ## See https://pypi.python.org/pypi?%3Aaction=list_classifiers
-CLASSIFIERS  = (
+CLASSIFIERS = (
     'Development Status :: 4 - Beta',
     'Environment :: Console',
     'Intended Audience :: Developers',
@@ -59,19 +59,20 @@ CLASSIFIERS  = (
 )
 
 ## Important Paths
-PROJECT      = os.path.abspath(os.path.dirname(__file__))
+PROJECT = os.path.abspath(os.path.dirname(__file__))
 REQUIRE_PATH = "requirements.txt"
 VERSION_PATH = os.path.join(PACKAGE, "version.py")
 PKG_DESCRIBE = "DESCRIPTION.txt"
 
 ## Directories to ignore in find_packages
-EXCLUDES     = (
+EXCLUDES = (
     "tests", "bin", "docs", "fixtures", "register", "notebooks",
 )
 
 ##########################################################################
 ## Helper Functions
 ##########################################################################
+
 
 def read(*parts):
     """
