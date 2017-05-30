@@ -125,7 +125,7 @@ The strategy we'll use to deploy Baleen is to clone the repository to `/var/apps
 
 ```bash
 $ cd /var/apps
-$ git clone https://github.com/bbengfort/baleen.git
+$ git clone https://github.com/districtdatalabs/baleen.git
 $ cd baleen/
 $ venv.init -a $(pwd) -r requirements.txt
 (baleen) $ echo $(pwd) > $(get_python_lib)/baleen.pth

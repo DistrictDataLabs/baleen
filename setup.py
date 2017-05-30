@@ -36,7 +36,7 @@ DESCRIPTION = "An automated ingestion service for blogs to construct a corpus fo
 AUTHOR = "Benjamin Bengfort"
 EMAIL = "benjamin@bengfort.com"
 LICENSE = "MIT"
-REPOSITORY = "https://github.com/bbengfort/baleen"
+REPOSITORY = "https://github.com/districtdatalabs/baleen"
 PACKAGE = "baleen"
 
 ## Define the keywords
