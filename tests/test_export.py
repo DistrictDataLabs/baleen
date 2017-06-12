@@ -18,20 +18,13 @@ Test the export module - to generate a corpus for machine learning.
 ##########################################################################
 
 import unittest
-import logging
+from unittest.mock import MagicMock
 
 from mongomock import MongoClient as MockMongoClient
-from unittest import mock
-from unittest.mock import MagicMock
 
 from baleen.export import *
 from baleen.feed import *
 from baleen.models import connect
-from baleen.exceptions import ExportError
-
-##########################################################################
-## Fixtures
-##########################################################################
 
 BOOKS_FEED = Feed(
     title='The Rumpus.net',
@@ -254,57 +247,3 @@ class ExportTests(unittest.TestCase):
                 exporter.export()
 
 
-class SanitizeHtmlTests(unittest.TestCase):
-    """ Tests the exporter's HTML sanitize methods """
-
-    @classmethod
-    def setUpClass(cls):
-        cls.sample_html = ('<html>'
-                           '<head><script>javascript here</script></head>'
-                           '<body><b>body &amp;\n mind</b></body>'
-                           '</html>')
-
-        cls.conn = connect(host='mongomock://localhost')
-        assert isinstance(cls.conn, MockMongoClient)
-        root_path = '/tmp/corpus'
-        cls.exporter = MongoExporter(root_path, categories=CATEGORIES_IN_DB)
-
-    @classmethod
-    def tearDownClass(self):
-        """
-        Drop the mongomock connection
-        """
-        assert isinstance(self.conn, MockMongoClient)
-        self.conn = None
-
-    def test_sanitize_requires_a_valid_level(self):
-        """  Sanitize_html requires a supported level """
-        with self.assertRaises(ExportError):
-            self.exporter.sanitize_html(self.sample_html, "bogus")
-
-    def test_sanitize_returns_input_for_level_none(self):
-        """  sanitize_html returns unmodified input for level None """
-        self.assertEqual(self.exporter.sanitize_html(self.sample_html, None), self.sample_html)
-
-    def test_sanitize_raw(self):
-        """  Sanitize level raw returns the content as submitted """
-        self.assertEqual(self.exporter.sanitize_html(self.sample_html, RAW), self.sample_html)
-
-    def test_sanitize_safe(self):
-        """  Sanitize level safe applies Readability and returns the body """
-
-        # Give Readability a simpler HTML sample to keep its parse strategy simple
-        sample_html = ('<html>'
-                       '<head><script>javascript here</script></head>'
-                       '<body>body</body>'
-                       '</html>')
-        expected = '<body id="readabilityBody">body</body>'
-        self.assertEqual(self.exporter.sanitize_html(sample_html, SAFE), expected)
-
-    def test_sanitize_text(self):
-        """
-        Sanitize level text strips HTML tags, removes newlines,
-         and converts the html entity ampersand into an ampersand character
-        """
-        expected = 'body & mind'
-        self.assertEqual(self.exporter.sanitize_html(self.sample_html, TEXT), expected)

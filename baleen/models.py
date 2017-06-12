@@ -24,6 +24,8 @@ from datetime import datetime, timedelta
 from baleen.config import settings
 from baleen.utils.cryptography import hash_string
 from baleen.utils.timez import humanizedelta
+from baleen.utils.text import sanitize_html, SAFE, RAW, SANITIZE_LEVELS
+
 
 ##########################################################################
 ## Module Constants
@@ -134,13 +136,15 @@ class Post(me.DynamicDocument):
         """
         return hash_string(self.content)
 
-    def htmlize(self):
+    def htmlize(self, sanitize=None):
         """
-        Returns an HTML string of the content of the Post.
-        In the future we may use bleach to do sanitization or other simple
-        sanity checks to ensure that things are going ok, which is why this
-        method stub exists.
+        Returns the content of the Post with html sanitized
+        :param sanitize: the level of sanitizing, default to None
+        :return: the content
         """
+        if sanitize:
+            return sanitize_html(html=self.content, level=sanitize)
+
         return self.content
 
     def __unicode__(self):

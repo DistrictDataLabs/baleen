@@ -17,30 +17,22 @@ Export an HTML corpus for analyses with NLTK
 ## Imports
 ##########################################################################
 
-import os
 import codecs
-import bleach
-
-from enum import Enum
+import os
+from collections import Counter
 from datetime import datetime
-from baleen.models import Feed, Post
+from enum import Enum
+from operator import itemgetter
 
 from tqdm import tqdm
-from collections import Counter
-from operator import itemgetter
-from baleen.exceptions import ExportError
-from readability.readability import Document
 
-##########################################################################
-## Module Constants
-##########################################################################
+from baleen.exceptions import ExportError
+from baleen.models import Feed, Post
+from baleen.utils.text import sanitize_html, SAFE, SANITIZE_LEVELS
 
 DTFMT = "%b %d, %Y at %H:%M"
-RAW = 'raw'
-SAFE = 'safe'
-TEXT = 'text'
-SANITIZE_LEVELS = (RAW, SAFE, TEXT)
-SCHEMES = ('json', 'html') + SANITIZE_LEVELS
+EXPORT_FORMATS = ('json', 'html')
+SCHEMES = EXPORT_FORMATS + SANITIZE_LEVELS
 State = Enum('State', 'Init, Started, Finished')
 
 
@@ -222,7 +214,7 @@ class MongoExporter(object):
             with codecs.open(path, 'w', encoding='utf-8') as f:
                 action = {
                     'json': lambda: post.to_json(indent=2),
-                    'html': lambda: self.sanitize_html(post.htmlize(), level),
+                    'html': lambda: post.htmlize(sanitize=level)
                 }[self.scheme]
 
                 f.write(action())
@@ -231,57 +223,6 @@ class MongoExporter(object):
         self.state = State.Finished
         self.readme(os.path.join(self.root, "README"))
         self.feedinfo(os.path.join(self.root, "feeds.json"))
-
-    def sanitize_html(self, html, level):
-        """
-        Return a sanitized version of html content
-        :param html: the content to sanitized
-        :param level: the type of sanitization - one of ['raw', 'safe', 'text', None]
-        :return: sanitized content
-        """
-        if level == SAFE:
-            return self._get_safe_html(html)
-        elif level == RAW:
-            return self._get_raw_html(html)
-        elif level == TEXT:
-            return self._get_text_from_html(html)
-        elif level is None:
-            return html
-
-        raise ExportError(
-            "{level} is not a supported sanitize_html level.".format(
-                level=level
-            )
-        )
-
-    def _get_raw_html(self, html):
-        """
-        :param html: html content
-        :return: the unmodified html
-        """
-        return html
-
-    def _get_safe_html(self, html):
-        """
-        Applies Readability's sanitize() method to content.
-        :param html: the content to sanitize
-        :return: the body of the html content minus html tags
-        """
-        return Document(html).summary()
-
-    def _get_text_from_html(self, html):
-        """
-        Applies the 'safe' level of sanitization, removes newlines,
-        and converts the html entity for ampersand into the ampersand character.
-        :param html: the content to sanitize
-        :return: sanitized content
-        """
-        text = self._get_safe_html(html)
-        text = bleach.clean(text, tags=[], strip=True)
-        text = text.strip()
-        text = text.replace("\n", "")
-        text = text.replace("&amp;", "&")
-        return text
 
 
 if __name__ == '__main__':
