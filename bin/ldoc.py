@@ -3,13 +3,13 @@ from pymongo import MongoClient
 
 
 def main():
-	connection = connection = MongoClient()
+	connection = MongoClient()
 	db = connection.baleen
 	collection = db.posts
 	col_size = collection.count()
 	print("Found %d documents in baleen:posts", col_size)
 	idx = 1
-	
+
 	col_sizes = {}
 	for  post in collection.find():
 		print("Item {} of {}".format(idx, col_size))
@@ -24,4 +24,6 @@ def main():
 	for w in sorted(col_sizes, key=col_sizes.get, reverse=True):
   		print w, col_sizes[w]
 
-main()
+
+if __name__ == '__main__':
+    main()
