@@ -16,32 +16,32 @@ This quick start is intended to get you setup with Baleen in development mode (s
 
 1. Clone the repository
 
-    ```
+```
 $ git clone git@github.com:bbengfort/baleen.git
 $ cd baleen
-    ```
+```
 
 2. Create a virtualenv and install the dependencies
 
-    ```
+```
 $ virtualenv venv
 $ source venv/bin/activate
 $ pip install -r requirements.txt
-    ```
+```
 
 3. Add the `baleen` module to your `$PYTHONPATH` via the virtualenv.
 
-    ```
+```
 $ echo $(pwd) > venv/lib/python2.7/site-packages/baleen.pth
-    ```
+```
 
 4. Create your local configuration file. Edit it with the connection details to your local MongoDB server.  This is also a good time to check and make sure that you can create a database called Baleen on Mongo.
 
-    ```
+```
 $ cp conf/baleen-example.yaml conf/baleen.yaml
-    ```
+```
 
-    ```yaml
+```yaml
 debug: true
 testing: false
 database:
@@ -52,32 +52,32 @@ server:
     host: 127.0.0.1
     port: 5000
 
-    ```
+```
 
 5. Run the tests to make sure everything is ok.
 
-    ```
+```
 $ make test
-    ```
+```
 
 6. Make sure that the command line utility is ready to go:
 
-    ```
+```
 $ bin/baleen --help
-    ```
+```
 
 7. Import the feeds from the `feedly.opml` file in the fixtures.
 
-    ```
+```
 $ bin/baleen load tests/fixtures/feedly.opml
 Ingested 36 feeds from 1 OPML files
-    ```
+```
 
 8. Perform an ingestion of the feeds that were imported from the `feedly.opml` file.
 
-    ```
+```
 $ bin/baleen ingest
-    ```
+```
 
 Your Mongo database collections should be created as you add new documents to them, and at this point you're ready to develop!
 
@@ -89,18 +89,18 @@ Included in this repository are files related to setting up the development envi
 
 2. Clone the repository
 
-    ```
+```
 $ git clone git@github.com:bbengfort/baleen.git
 $ cd baleen
-    ```
+```
 
 3. Create your local configuration file. Edit it with your configuration details; your MongoDB server will be at host `mongo`.
 
-    ```
+```
 $ cp conf/baleen-example.yaml conf/baleen.yaml
-    ```
+```
 
-    ```yaml
+```yaml
 debug: true
 testing: false
 database:
@@ -110,13 +110,13 @@ database:
 server:
     host: 127.0.0.1
     port: 5000
-    ```
+```
 
 4. Exec interactively into the `app` container to interact with baleen as described in the above setup directions 5-8.
 
-    ```
+```
     docker exec -it baleen_app_1 /bin/bash
-    ```
+```
 
 ## Web Admin
 
