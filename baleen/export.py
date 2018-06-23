@@ -208,7 +208,7 @@ class MongoExporter(object):
         # Right now we will simply write them based on their object id.
         for post, category in tqdm(self.posts(), total=Post.objects.count(), unit="docs"):
             path = os.path.join(
-                self.root, catdir[category], "{}.{}".format(post.id, self.scheme)
+                catdir[category], "{}.{}".format(post.id, self.scheme)
             )
 
             with codecs.open(path, 'w', encoding='utf-8') as f:
